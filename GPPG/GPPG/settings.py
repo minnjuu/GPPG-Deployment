@@ -13,23 +13,31 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 from django.contrib.messages import constants as messages
 import os
+import dj_database_url
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+env = environ.Env()
+
+environ.Env.read_env()
+
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-sw$g&yej(s(5k4p0t1k)3hyag-w#m=*%nf9(p2ei2c90mao^_g'
+SECRET_KEY = env('SEC_KEY')
 GEMINI_API_KEY = 'AIzaSyAmEY3lb3x-6CihX2J1_2kSZEsyRRNaV8M'
 SITE_NAME = 'Guardians of the Palawan Pangolin Guild'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -130,13 +138,20 @@ WSGI_APPLICATION = 'GPPG.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
+
+
+DATABASES = {
+
+    'default': dj_database_url.parse(env('DATABASE_URL'))
+
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
