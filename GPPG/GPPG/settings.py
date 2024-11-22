@@ -35,7 +35,7 @@ GEMINI_API_KEY = 'AIzaSyAmEY3lb3x-6CihX2J1_2kSZEsyRRNaV8M'
 SITE_NAME = 'Guardians of the Palawan Pangolin Guild'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -196,7 +196,21 @@ USE_I18N = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
+AWS_ACCESS_KEY_ID = env('ACCESS_KEY')
+AWS_SECRET_ACCESS_KEY = env('SECRET_ACCESS_KEY')
 
+AWS_STORAGE_BUCKET_NAME = 'gppg-bucket'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_FILE_OVERWRITE = False
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
+    },
+}
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
