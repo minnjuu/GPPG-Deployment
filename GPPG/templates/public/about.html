@@ -1,0 +1,82 @@
+{% extends "public/landing_page.html" %} {% load static %} {% block title %}GPPG - About Us{% endblock title %}
+<header>
+  {% block nav %} {% include 'public/includes/nav.html' %}
+  <div
+    id="headers_img"
+    class="h-72 bg-no-repeat bg-cover bg-center flex justify-center items-center">
+    <h2 class="text-white text-3xl font-bold">About Us</h2>
+  </div>
+  {% endblock nav%}
+</header>
+{% block content %}
+<section class="container mx-auto rounded-3xl my-16">
+  <div class="container p-2 flex flex-col sm:flex-row items-center mx-auto gap-8 sm:gap-28 justify-center w-full h-fit">
+    <img
+      class="w-[240px] h-[240px] sm:w-[360px] sm:h-[358px] rounded-full"
+      src="{% static 'img/logo.jpg' %}" />
+    <span class="text-center text-black text-[20px] md:text-[32px] font-bold font-['Bahnschrift']">Guardians of the Palawan Pangolin Guild  (GGPG)</span>
+  </div>
+</section>
+
+<section class="container mx-auto rounded-3xl my-20 shadow-lg bg-[#3f0703]">
+  <div class="container mx-auto flex flex-wrap justify-center gap-20 p-12">
+    <div class="text-content w-full p-6 text-white">
+      <h2 class="text-left text-2xl md:text-3xl capitalize font-extrabold leading-tight text-dark-grey-900 font-['Bahnschrift'] mb-5">History</h2>
+      <p class="text-left text-lg md:text-xl font-medium leading-7 font-['Roboto']">
+        The Guardians of the Palawan Pangolin Guild was conceptualized last February 15, 2023 (Wednesday), timely the celebration of 2nd World Pangolin Day here in Palawan State University. This
+        student organization is the first student organization here in the university as species-specific. It aims to promote and support the conservation of the Palawan pangolin (Manis culionensis),
+        and integrating advance researches in the protection and conservation efforts through empowering the community in the development and promotion of critical research studies and innovation with
+        attainable projects and programs, hosting environmentally-activities incorporating various fields of expertise. Also, the community will be enlightened on the importance of existence, biology
+        and ecology of Palawan pangolin as well as other endemic fauna species of the province of Palawan. Through this organization, it will bridge gaps between different sectors of the community
+        through student collaboration in promoting intensive Information, Education, and Communication endeavors.
+      </p>
+    </div>
+  </div>
+</section>
+<section class="container mx-auto rounded-3xl my-10">
+  <div class="container mx-auto flex flex-wrap justify-center gap-10 flex-row">
+    <div class="flex h-fit flex-col md:flex-row justify-center w-max gap-10 md:gap-24">
+      <div class="md:w-2/5 p-10 px-16 text-black border hover:shadow-lg transition ease-in-out duration-500 rounded-2xl">
+        <h2 class="text-center text-2xl md:text-3xl capitalize font-extrabold leading-tight text-dark-grey-900 font-['Bahnschrift'] mb-5">Our vision</h2>
+        <p class="text-left text-lg md:text-xl font-medium font-['Roboto']">
+          The Guardians of the Palawan Pangolin Guild (GPPG) is a university wide organization that bolster collaboration between different sectors of the community in promoting intensive information,
+          education, and communication endeavors.
+        </p>
+      </div>
+      <div class="md:w-2/5 h-fit p-10 px-16 text-black border hover:shadow-lg transition ease-in-out duration-500 rounded-2xl">
+        <h2 class="text-center text-2xl md:text-3xl capitalize font-extrabold leading-tight text-dark-grey-900 font-['Bahnschrift'] mb-5">Our mission</h2>
+        <p class="text-left text-lg md:text-xl font-medium font-['Roboto']">
+          The Guardians of the Palawan Pangolin Guild (GPPG) promotes and support the conservation of the Palawan pangolin (Manis culionensis), integrating advance researches in the protection and
+          conservation efforts of Palawan as well as other endemic fauna species of the province.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="container mx-auto rounded-3xl my-20 shadow-lg bg-[#3f0703]">
+  <div class="container mx-auto flex flex-wrap justify-center gap-20 p-12">
+    <div class="text-content w-full p-6 text-white">
+      <h2 class="text-center text-2xl md:text-3xl capitalize font-extrabold leading-tight text-dark-grey-900 font-['Bahnschrift'] mb-5">History</h2>
+      <div>
+        <h2 class="text-left text-xl md:text-2xl capitalize font-extrabold leading-tight text-dark-grey-900 font-['Bahnschrift'] mb-5">Objective 1</h2>
+        <p class="text-left text-lg md:text-xl font-medium leading-7 font-['Roboto']">
+          To raise awareness on the existence, biology and ecology of this endemic mammal and other endemic fauna of Palawan province.
+        </p>
+      </div>
+      <hr class="h-px my-8 bg-white/50 border-0" />
+      <div>
+        <h2 class="text-left text-xl md:text-2xl capitalize font-extrabold leading-tight text-dark-grey-900 font-['Bahnschrift'] mb-5">Objective 2</h2>
+        <p class="text-left text-lg md:text-xl font-medium leading-7 font-['Roboto']">
+          To conduct collaborative researches and other environmental related activities on Palawan pangolin and other endemic fauna of the province.
+        </p>
+      </div>
+      <hr class="h-px my-8 bg-white/50 border-0" />
+      <div>
+        <h2 class="text-left text-xl md:text-2xl capitalize font-extrabold leading-tight text-dark-grey-900 font-['Bahnschrift'] mb-5">Objective 3</h2>
+        <p class="text-left text-lg md:text-xl font-medium leading-7 font-['Roboto']">To be guardians of Palawan pangolin.</p>
+      </div>
+      <hr class="h-px my-8 bg-white/50 border-0" />
+    </div>
+  </div>
+</section>
+{% include 'public/includes/footer.html' %} {% endblock %}

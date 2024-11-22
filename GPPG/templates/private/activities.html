@@ -1,0 +1,87 @@
+{% extends "private/index.html" %} {% load static %} {% block title %}GPPG - Activities{% endblock title %}
+<header>
+  {% block nav %} {% include 'private/includes/nav.html' %}
+  <div class="flex flex-col m-5 mt-8 ml-16">
+    <h2 class="text-2xl font-bold">Activities</h2>
+  </div>
+  {% endblock nav %}
+</header>
+{% block content %}
+<section class="mx-16 h-fit">
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+    {% for event in latest_events %} {% if forloop.last and forloop.counter == 6 %}
+    <div
+      class="overflow-hidden hidden 2xl:flex 2xl:flex-col rounded-xl group bg-white shadow-lg stat-card animate-slideIn"
+      style="animation-delay: {% widthratio forloop.counter 10 0.5 %}s">
+      {% if event.event_image %}
+      <img
+        src="{{ event.event_image.url }}"
+        alt="{{ event.name }}"
+        class="w-full h-60 object-cover"
+        onclick="openModal(this)"
+        oncontextmenu="return false;"
+        draggable="false" />
+      {% endif %}
+      <p class="text-left m-5 text-black text-base font-semibold font-['Bahnschrift']">{{ event.name }}</p>
+    </div>
+    {% else %}
+    <div
+      class="overflow-hidden hidden 2xl:flex 2xl:flex-col rounded-xl group bg-white shadow-lg stat-card animate-slideIn"
+      style="animation-delay: {% widthratio forloop.counter 10 0.5 %}s">
+      {% if event.event_image %}
+      <img
+        src="{{ event.event_image.url }}"
+        alt="{{ event.name }}"
+        class="w-full h-60 object-cover"
+        onclick="openModal(this)"
+        oncontextmenu="return false;"
+        draggable="false" />
+      {% endif %}
+      <p class="text-left m-5 text-black text-base font-semibold font-['Bahnschrift']">{{ event.name }}</p>
+    </div>
+    {% endif %} {% endfor %}
+  </div>
+</section>
+<section class="mt-8 mb-5 mx-16 h-screen scroll-thin overflow-y-auto">
+  <div class="mx-auto flex flex-wrap justify-center gap-10">
+    {% for event in all_events %} {% if forloop.counter|divisibleby:2 %}
+    <div class="mx-auto flex flex-wrap md:flex-nowrap justify-center gap-10 w-full p-6 bg-[#3f0703] py-16 shadow-xl rounded-3xl">
+      <div class="text-content w-full md:w-1/2 p-6 text-white">
+        <h2 class="text-left text-3xl md:text-4xl capitalize font-extrabold leading-tight text-dark-grey-900 font-['Bahnschrift'] mb-5">{{ event.name }}</h2>
+        <p class="text-left text-lg md:text-lg font-normal leading-7 font-['Roboto']">{{ event.description }}</p>
+        <div class="mt-4">
+          <p class="text-left text-lg font-normal leading-7">{{ event.date }}</p>
+        </div>
+      </div>
+      <div class="image-content w-full md:w-1/4 flex justify-center items-center md:order-last order-first">
+        {% if event.event_image %}
+        <img
+          src="{{ event.event_image.url }}"
+          alt="{{ event.name }}"
+          class="w-auto h-72 rounded-lg shadow-lg" />
+        {% endif %}
+      </div>
+    </div>
+    {% else %}
+    <div class="mx-auto flex flex-wrap justify-center gap-10 p-6 w-full bg-[#3f0703] py-16 shadow-xl rounded-3xl">
+      <div class="image-content w-full md:w-1/4 flex justify-center items-center">
+        {% if event.event_image %}
+        <img
+          src="{{ event.event_image.url }}"
+          alt="{{ event.name }}"
+          class="w-auto h-72 rounded-lg shadow-lg" />
+        {% endif %}
+      </div>
+      <div class="text-content w-full md:w-1/2 p-6 text-white">
+        <h2 class="text-left text-3xl md:text-4xl capitalize font-extrabold leading-tight text-dark-grey-900 font-['Bahnschrift'] mb-5">{{ event.name }}</h2>
+        <p class="text-left text-lg md:text-lg font-normal leading-7 font-['Roboto']">{{ event.description }}</p>
+        <div class="mt-4">
+          <p class="text-left text-lg font-normal leading-7">{{ event.date }}</p>
+        </div>
+      </div>
+    </div>
+    {% endif %} {% endfor %}
+  </div>
+</section>
+
+{% include 'private/includes/footer.html' %} {% endblock %}

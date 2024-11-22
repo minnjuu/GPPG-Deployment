@@ -1,0 +1,107 @@
+{% extends "private/index.html" %} {% load static %} {% block title %}GPPG - Maps{% endblock title %} {% block css %}
+<script src="{% static 'maps/ol.js' %}"></script>
+<link rel="stylesheet" href="{% static "maps/ol.css" %}"> {% endblock css%}
+
+<!-- Navigation menu -->
+{% block nav %} {% include 'private/includes/nav.html' %} {% endblock nav %}
+
+<!-- Content -->
+{% block content %}
+<div x-data="{ isOpen: true }">
+  <div class="w-full h-screen bg-blue-200 p-5 relative">
+    <!-- Map Information Header -->
+    <div
+      class="absolute top-0 left-0 h-full bg-white overflow-hidden w-[400px] transform transition-transform duration-500 ease-in-out shadow-lg z-50"
+      :class="isOpen ? 'translate-x-0' : '-translate-x-full'">
+      <!-- Previous side panel content -->
+      <div class="p-4">
+        <!-- Header -->
+        <div class="mb-8">
+          <h1 class="text-2xl text-center font-bold text-gray-900 mb-2">Palawan Pangolin Poaching Incidents Map</h1>
+          <p class="text-gray-600 text-center">Geographic visualization of reported wildlife poaching cases across Palawan 3 clusters</p>
+        </div>
+
+        <hr class="my-6 border-gray-200" />
+
+        <!-- Purpose Section -->
+        <div class="mb-8">
+          <h2 class="text-lg font-semibold mb-3">Map Purpose</h2>
+          <ul class="space-y-2 text-gray-700 ml-6">
+            <li class="transition-transform duration-300 hover:translate-x-2 flex items-center gap-2"><span class="text-gray-400">•</span> Tracks and displays verified poaching incidents</li>
+            <li class="transition-transform duration-300 hover:translate-x-2 flex items-center gap-2"><span class="text-gray-400">•</span> Identifies high-risk areas for wildlife trafficking</li>
+            <li class="transition-transform duration-300 hover:translate-x-2 flex items-center gap-2"><span class="text-gray-400">•</span> Aids in resource allocation for anti-poaching efforts</li>
+          </ul>
+        </div>
+
+        <hr class="my-6 border-gray-200" />
+
+        <!-- Important Notes Section -->
+        <div class="mb-4">
+          <h2 class="text-lg font-semibold mb-3">Important Notes</h2>
+          <ul class="space-y-2 text-gray-700 ml-6">
+            <li class="transition-transform duration-300 hover:translate-x-2 flex items-center gap-2"><span class="text-gray-400">•</span> Data represents confirmed incidents only</li>
+            <li class="transition-transform duration-300 hover:translate-x-2 flex items-center gap-2"><span class="text-gray-400">•</span> Updated regularly with new reports</li>
+            <li class="transition-transform duration-300 hover:translate-x-2 flex items-center gap-2"><span class="text-gray-400">•</span> Historical data from verified sources</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toggle Button -->
+    <button
+      @click="isOpen = !isOpen"
+      class="fixed top-1/2 -translate-y-1/2 z-50 bg-white p-2 rounded-r-lg shadow-lg transition-all duration-500 ease-in-out hover:bg-gray-50 focus:outline-none"
+      :class="isOpen ? 'left-[400px]' : 'left-0'">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6 text-gray-600 transition-transform duration-500"
+        :class="isOpen ? 'rotate-180' : ''"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round">
+        <path d="M15 18l-6-6 6-6" />
+      </svg>
+    </button>
+
+    <!-- Legend Section -->
+    <section class="absolute bottom-4 left-4 md:right-12 md:bottom-auto md:left-auto bg-white rounded-2xl shadow-lg flex md:flex-col px-4 md:px-8 py-4 md:py-6 z-40 w-[calc(100%-2rem)] md:w-fit">
+      <h3 class="text-base md:text-lg font-semibold mb-0 md:mb-4 mr-4 md:mr-0 whitespace-nowrap">Cluster Legend</h3>
+      <div class="flex md:flex-col gap-4 w-fit overflow-x-auto md:overflow-x-visible">
+        <div class="flex items-center w-full gap-2 whitespace-nowrap">
+          <div class="w-3 h-3 bg-[#f4ad5e] rounded-full flex-shrink-0"></div>
+          <p class="font-['Roboto'] text-sm md:text-md">North</p>
+        </div>
+        <div class="flex items-center w-full gap-2 whitespace-nowrap">
+          <div class="w-3 h-3 bg-[#9c5f32] rounded-full flex-shrink-0"></div>
+          <p class="font-['Roboto'] text-sm md:text-md">Central</p>
+        </div>
+        <div class="flex items-center w-full gap-2 whitespace-nowrap">
+          <div class="w-3 h-3 bg-[#3f0703] rounded-full flex-shrink-0"></div>
+          <p class="font-['Roboto'] text-sm md:text-md">South</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Map Container -->
+    <div
+      id="map"
+      class="h-full w-full mx-auto"
+      :class="isOpen ? 'ml-[400px]' : 'ml-0'">
+      <span id="loading-animation"></span>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+<!-- Extra Javascript you can add -->
+{% block extra_js %}
+<script src="{% static 'js/chart_3.7.1.js' %}"></script>
+<script src="{% static 'js/datatables_chartjs.js' %}"></script>
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/alpine.js' %}"></script>
+<script src="{% static 'maps/public_map.js' %}"></script>
+{% endblock extra_js %}

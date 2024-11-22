@@ -1,0 +1,54 @@
+{% load static %}
+<div id="reportdelete" class="modal-content p-6 bg-white rounded-lg shadow-lg">
+  <svg
+    class="text-gray-400 dark:text-gray-500 w-11 h-11 mb-3.5 mx-auto"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24">
+    <title>plus-box-outline</title>
+    <path
+      d="M19,19V5H5V19H19M19,3A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5C3,3.89 3.9,3 5,3H19M11,7H13V11H17V13H13V17H11V13H7V11H11V7Z" />
+  </svg>
+  <p class="mb-4 text-gray-500 dark:text-gray-300 text-center">
+    Are you sure you want to add this Incident Report?
+  </p>
+  
+  <!-- Incident Report Details -->
+  <div class="bg-gray-100 p-4 rounded-md mb-4 dark:bg-gray-800">
+    <p class="text-sm text-gray-600 dark:text-gray-300">
+      <strong>Municipality/City:</strong> {{ report.municity }}
+    </p>
+    <p class="text-sm text-gray-600 dark:text-gray-300">
+      <strong>Date Reported:</strong> {{ report.date_reported|date:"F d, Y" }}
+    </p>
+    <p class="text-sm text-gray-600 dark:text-gray-300">
+      <strong>Description:</strong> {{ report.description }}
+    </p>
+    {% if report.status %}
+    <p class="text-sm text-gray-600 dark:text-gray-300">
+      <strong>Status:</strong> {{ report.get_status_display }}
+    </p>
+    {% endif %}
+  </div>
+  
+  <form
+    hx-post="{% url 'accept-incident' report.id %}"
+    hx-target="#modal-content"
+    novalidate>
+    {% csrf_token %}
+    <div class="flex justify-center items-center space-x-4">
+      <!-- Cancel Button -->
+      <button
+        onclick="window.location.reload();"
+        type="button"
+        class="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600 transition duration-300">
+        No, cancel
+      </button>
+      <!-- Confirm Button -->
+      <button
+        type="submit"
+        class="py-2 px-3 text-sm font-medium text-center text-white bg-green-600 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-400 dark:bg-green-500 dark:hover:bg-green-700 dark:focus:ring-green-600 transition duration-300">
+        Yes, I'm sure
+      </button>
+    </div>
+  </form>
+</div>

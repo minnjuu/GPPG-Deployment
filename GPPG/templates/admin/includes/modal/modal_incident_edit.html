@@ -1,0 +1,140 @@
+{% load static %}
+
+
+<div id="editincident" class="modal-content"> 
+  <form
+    hx-post="{% url 'admin_incident_edit' incident.id %}"
+    hx-target="#modal-content"
+    novalidate>
+    {% csrf_token %} 
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+          <label class="block text-sm font-medium text-gray-700">
+              {{ form.municity.label_tag }}
+              {% if form.municity.errors %}
+                <div class="text-red-600">{{ form.municity.errors }}</div>
+              {% endif %}
+          </label>
+          {{ form.municity }}
+      </div>
+
+      <div>
+          <label class="block text-sm font-medium text-gray-700">
+              {{ form.status.label_tag }}
+              {% if form.status.errors %}
+                <div class="text-red-600">{{ form.status.errors }}</div>
+              {% endif %}
+          </label>
+          {{ form.status }}
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">
+            {{ form.date_reported.label_tag }}
+            {% if form.date_reported.errors %}
+              <div class="text-red-600">{{ form.date_reported.errors }}</div>
+            {% endif %}
+        </label>
+        {{ form.date_reported }}
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">
+          {{ form.life_history.label_tag }}
+          {% if form.life_history.errors %}
+            <div class="text-red-600">{{ form.life_history.errors }}</div>
+          {% endif %}
+      </label>
+      {{ form.life_history }}
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium text-gray-700">
+        {{ form.weight.label_tag }}
+        {% if form.weight.errors %}
+          <div class="text-red-600">{{ form.weight.errors }}</div>
+        {% endif %}
+    </label>
+    {{ form.weight }}
+</div>
+
+  <div>
+    <label class="block text-sm font-medium text-gray-700">
+        {{ form.sex.label_tag }}
+        {% if form.sex.errors %}
+          <div class="text-red-600">{{ form.sex.errors }}</div>
+        {% endif %}
+    </label>
+    {{ form.sex }}
+</div>
+
+<div>
+  <label class="block text-sm font-medium text-gray-700">
+      {{ form.obl_rolled.label_tag }}
+      {% if form.obl_rolled.errors %}
+        <div class="text-red-600">{{ form.obl_rolled.errors }}</div>
+      {% endif %}
+  </label>
+  {{ form.obl_rolled }}
+</div>
+
+<div>
+  <label class="block text-sm font-medium text-gray-700">
+      {{ form.obl_stretched.label_tag }}
+      {% if form.obl_stretched.errors %}
+        <div class="text-red-600">{{ form.obl_stretched.errors }}</div>
+      {% endif %}
+  </label>
+  {{ form.obl_stretched }}
+</div>
+
+<div>
+  <label class="block text-sm font-medium text-gray-700">
+      {{ form.ticks.label_tag }}
+      {% if form.ticks.errors %}
+        <div class="text-red-600">{{ form.ticks.errors }}</div>
+      {% endif %}
+  </label>
+  {{ form.ticks }}
+</div>
+
+<div>
+  <label class="block text-sm font-medium text-gray-700">
+      {{ form.feces.label_tag }}
+      {% if form.feces.errors %}
+        <div class="text-red-600">{{ form.feces.errors }}</div>
+      {% endif %}
+  </label>
+  {{ form.feces }}
+</div>
+
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium text-gray-700">
+        {{ form.description.label_tag }}
+        {% if form.description.errors %}
+                <div class="text-red-600">{{ form.description.errors }}</div>
+              {% endif %}
+    </label>
+    {{ form.description }}
+  </div>
+
+    <br>
+    <button
+          type="submit"
+          class="text-black mr-2 inline-flex items-center border font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+          Save Changes
+        </button
+        ><button
+          type="button"
+          onclick="window.location.reload();"
+          class="text-red-700 inline-flex items-center hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
+          Discard changes
+      </button>
+  
+  </form>
+</div>
+
+
+

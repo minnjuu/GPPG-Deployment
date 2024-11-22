@@ -1,0 +1,49 @@
+{% load static %}
+
+<div id="addgallery" class="modal-content"> 
+  <form
+    hx-post="{% url 'admin_gallery_add' %}"
+    hx-target="#modal-content"
+    enctype="multipart/form-data"
+    novalidate>
+    {% csrf_token %} 
+    <div class="grid grid-cols-2 gap-4">
+        <div>
+            <label class="block text-sm font-medium text-gray-700">
+                {{ form.uploader.label_tag }}
+                {% if form.uploader.errors %}
+                    <div class="text-red-600">{{ form.uploader.errors }}</div>
+                  {% endif %}
+            </label>
+            {{ form.uploader }}
+        </div>
+  
+        <div>
+          <label class="block text-sm font-medium text-gray-700">
+              {{ form.media.label_tag }}
+              {% if form.media.errors %}
+                    <div class="text-red-600">{{ form.media.errors }}</div>
+                  {% endif %}
+          </label>
+          {{ form.media }}
+      </div>
+     
+  </div>
+
+    <button
+        type="submit"
+        class="bg-white text-black inline-flex items-center border-2 font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-4">
+        <svg
+            class="mr-1 -ml-1 w-6 h-6"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+                fill-rule="evenodd"
+                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                clip-rule="evenodd"></path>
+        </svg>
+        Add new
+    </button>
+  </form>
+</div>

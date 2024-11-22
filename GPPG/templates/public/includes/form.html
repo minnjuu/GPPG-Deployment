@@ -1,0 +1,467 @@
+{% load static %} {% load socialaccount %} {% providers_media_js %}
+<div class="p-6 flex items-center justify-center overflow-y-auto h-full w-auto rounded-lg shadow-lg relative transition-all duration-300">
+  <div class="flip-card flex">
+    <!-- signin -->
+    <div class="flip-card-front animate-fade-slide-in flex items-center w-full h-auto justify-center top-40 animate-slideIn">
+      <div class="flex w-full md:w-1/2 bg-gradient-to-b from-[#3f0703] to-[#eaebe6] max-h-fit shadow-lg rounded-3xl">
+        <div class="hidden xl:flex w-1/2 items-center justify-center p-10">
+          <img
+            src="{% static 'img/logo.jpg' %}"
+            alt="Logo"
+            class="w-40 h-40 2xl:w-80 2xl:h-80 rounded-full"
+            oncontextmenu="return false;"
+            draggable="false" />
+        </div>
+        <div class="w-full overflow-y-auto mx-0 xl:w-1/2 p-10 bg-white rounded-3xl">
+          <div class="flex flex-col items-center">
+            <img
+              src="{% static 'img/pangolin_icon.png' %}"
+              alt="Logo"
+              class="w-16 h-16"
+              oncontextmenu="return false;"
+              draggable="false" />
+            <h2 class="text-xl md:text-3xl font-bold mb-4 text-gray-800">Sign in</h2>
+            <p class="text-gray-600 mb-4 text-sm">Welcome!</p>
+          </div>
+
+          <a
+            href="{% provider_login_url 'google' process='login' next='/auth/google/callback/' %}"
+            class="align-middle select-none font-sans font-bold text-center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-sm py-3.5 px-7 rounded-lg border border-gray-900 text-gray-500 hover:bg-gray-100 hover:text-black focus:ring focus:ring-gray-300 active:opacity-[0.85] w-full mb-2 flex h-10 items-center justify-center gap-2"
+            type="button"
+            data-ripple-dark="true">
+            <img
+              src="{% static 'img/google.png' %}"
+              alt="google"
+              class="h-6 w-6" />
+            Sign in with Google
+          </a>
+          <div class="flex items-center justify-center my-4">
+            <div class="border-t border-gray-400 w-full mr-4"></div>
+            <span class="text-gray-400 font-medium">or</span>
+            <div class="border-t border-gray-400 w-full ml-4"></div>
+          </div>
+          <div
+            id="loginError"
+            class="text-red-500 mt-4 mb-2 hidden text-center"></div>
+          <form
+            id="signInForm"
+            method="POST"
+            action="{% url 'home' %}">
+            {% csrf_token %}
+            <div class="mb-4">
+              <label
+                for="email"
+                class="block text-sm font-medium text-gray-700"
+                >Email</label
+              >
+              <input
+                type="email"
+                name="email"
+                id="email_login"
+                class="w-full px-4 border-b border-t-0 border-x-0 border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-b-primary-600"
+                placeholder="Email" />
+            </div>
+
+            <div class="mb-4">
+              <label
+                for="passwords"
+                class="block text-sm font-medium text-gray-700"
+                >Password</label
+              >
+              <div class="relative">
+                <input
+                  id="passwords"
+                  type="password"
+                  name="passwords"
+                  placeholder="Password"
+                  class="w-full px-4 border-b border-t-0 border-x-0 border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-b-primary-600" />
+                <button
+                  type="button"
+                  id="togglePasswords"
+                  class="absolute inset-y-0 h-fit right-0 mr-3 mt-3 flex items-center text-sm leading-5">
+                  <i
+                    class="mdi mdi-eye-off text-gray-500"
+                    id="passwordIcons"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center mb-4">
+              <a
+                id="forgotPasswordLink"
+                onclick="showForgotPasswordModal()"
+                class="text-sm text-red-500 hover:underline cursor-pointer">
+                Forgot your password?
+              </a>
+            </div>
+
+            <button
+              id="SignIn_Submit"
+              class="w-full h-10 bg-black text-white flex flex-col items-center justify-center py-2 px-4 rounded-lg transition duration-300">
+              <span id="loginButtonText">Submit</span>
+              <div
+                id="loginButtonSpinner"
+                class="justify-center hidden text-center items-center">
+                <svg
+                  class="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24">
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              </div>
+            </button>
+          </form>
+          {% include 'public/includes/forgot_pass.html' %}
+
+          <p class="mt-4 text-sm text-center text-gray-600">
+            Don't have an account?
+            <a
+              class="text-red-500 hover:underline cursor-pointer"
+              id="flipToSignup"
+              >Sign up</a
+            >
+          </p>
+        </div>
+        <button
+          id="SignIn_closeBtn"
+          class="absolute right-0 md:right-1/4 m-5 text-gray-500 hover:text-gray-800 text-2xl">
+          &times;
+          <span
+            id="loginButtonSpinner"
+            class="hidden">
+            <svg
+              class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24">
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Loading...
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- signup -->
+    <div class="flip-card-back flex items-center mx-auto h-auto justify-center snap-y absolute top-auto md:top-40 right-auto w-full">
+      <div class="w-full md:w-1/2 max-h-fit p-10 bg-white shadow-md rounded-3xl">
+        <button
+          id="SignUp_closeBtn"
+          class="absolute right-0 md:right-1/4 m-5 -mt-5 text-gray-500 hover:text-gray-800 text-2xl">
+          &times;
+        </button>
+        <div class="flex flex-col items-center">
+          <img
+            src="{% static 'img/pangolin_icon.png' %}"
+            alt="Logo"
+            class="w-16 h-16"
+            oncontextmenu="return false;"
+            draggable="false" />
+          <p class="text-3xl font-bold mb-4 text-gray-800">Sign Up</p>
+          <p class="text-gray-600 mb-6">Join us today!</p>
+        </div>
+
+        <div
+          id="signUpError"
+          class="text-red-500 mt-4 hidden text-center"></div>
+        <form
+          id="signUpForm"
+          method="POST">
+          {% csrf_token %}
+          <div class="xl:flex-row flex mx-3 gap-5 flex-col">
+            <div class="xl:w-1/2 w-full">
+              <label
+                for=""
+                class="block text-sm font-medium text-gray-700"
+                >First name</label
+              >
+              <div class="flex">
+                <input
+                  id="firstName"
+                  type="text"
+                  class="w-full px-4 border-b border-t-0 border-x-0 border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-b-primary-600"
+                  placeholder="Nick" />
+              </div>
+            </div>
+
+            <div class="xl:w-1/2 w-full mb-5">
+              <label
+                for=""
+                class="block text-sm font-medium text-gray-700"
+                >Last name</label
+              >
+              <div class="flex">
+                <input
+                  id="lastName"
+                  type="text"
+                  class="w-full px-4 border-b border-t-0 border-x-0 border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-b-primary-600"
+                  placeholder="Bundal" />
+              </div>
+            </div>
+          </div>
+          <div class="xl:flex-row flex mx-3 gap-5 flex-col">
+            <div class="xl:w-1/2 w-full mb-5">
+              <label
+                for=""
+                class="block text-sm font-medium text-gray-700"
+                >Email</label
+              >
+              <div class="flex">
+                <input
+                  id="email_signup"
+                  type="email"
+                  class="w-full px-4 border-b border-t-0 border-x-0 border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-b-primary-600"
+                  placeholder="nickbundal@gmal.com" />
+              </div>
+            </div>
+            <div class="xl:w-1/2 w-full mb-5">
+              <label
+                for="phone"
+                class="block text-sm font-medium text-gray-700"
+                >Phone number</label
+              >
+              <div class="flex">
+                <input
+                  id="SignUp_phoneNum"
+                  maxlength="11"
+                  type="tel"
+                  pattern="^\+?[0-9\s\-().]*$"
+                  inputmode="numeric"
+                  oninput="this.value = this.value.replace(/[^0-9\s\-().]/g, '')"
+                  class="w-full px-4 border-b border-t-0 border-x-0 border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-b-primary-600"
+                  placeholder="09223123423" />
+              </div>
+            </div>
+          </div>
+          <div class="xl:flex-row flex mx-3 gap-5 flex-col">
+            <!-- Password Field -->
+            <div class="xl:w-1/2 w-full mb-5">
+              <label
+                for="password"
+                class="block text-sm font-medium text-gray-700"
+                >Password</label
+              >
+              <div class="flex relative">
+                <input
+                  id="password"
+                  type="password"
+                  class="w-full px-4 border-b border-t-0 border-x-0 border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-b-primary-600"
+                  placeholder="************" />
+                <!-- Show/Hide Password Button -->
+                <button
+                  type="button"
+                  id="togglePassword"
+                  class="absolute inset-y-0 h-fit right-0 mr-3 mt-3 flex items-center text-sm leading-5">
+                  <i
+                    class="mdi mdi-eye-off text-gray-500"
+                    id="passwordIcon"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Confirm Password Field -->
+            <div class="xl:w-1/2 w-full mb-5">
+              <label
+                for=""
+                class="block text-sm font-medium text-gray-700"
+                >Confirm password</label
+              >
+              <div class="flex relative">
+                <input
+                  id="confirmPassword"
+                  type="password"
+                  class="w-full px-4 border-b border-t-0 border-x-0 border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-b-primary-600"
+                  placeholder="************" />
+                <button
+                  type="button"
+                  id="toggleConfirmPassword"
+                  class="absolute inset-y-0 h-fit right-0 mr-3 mt-3 flex items-center text-sm leading-5">
+                  <i
+                    class="mdi mdi-eye-off text-gray-500"
+                    id="confirmPasswordIcon"></i>
+                </button>
+              </div>
+              <p
+                id="passwordError"
+                class="text-sm text-red-500 hidden">
+                Passwords do not match.
+              </p>
+            </div>
+          </div>
+          <div class="flex justify-between items-center mb-4">
+            <div class="flex items-start">
+              <input
+                id="termsCheckbox"
+                type="checkbox"
+                class="bg-gray-50 border-gray-300 focus:ring-3 focus:ring-blue-300 h-4 w-4 rounded"
+                disabled />
+              <label
+                for="termsCheckbox"
+                class="text-sm ml-3 font-medium text-gray-900">
+                I agree to the
+                <a
+                  id="termsLink"
+                  type="button"
+                  class="text-blue-600 hover:underline cursor-pointer"
+                  >terms and conditions</a
+                >
+              </label>
+            </div>
+          </div>
+          <button
+            id="submitButton"
+            class="w-full h-10 bg-black text-white py-2 px-4 rounded-lg flex flex-col items-center hover:bg-gray-900 transition duration-300"
+            disabled>
+            <span id="signUpButtonText">Sign Up</span>
+            <div
+              id="signUpButtonSpinner"
+              class="justify-center hidden text-center items-center">
+              <svg
+                class="animate-spin h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24">
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </div>
+          </button>
+        </form>
+        {% include 'public/includes/terms.html' %}
+        <p class="mt-4 text-sm text-center text-gray-600">
+          Already have an account?
+          <a
+            href="#"
+            class="text-red-500 hover:underline"
+            id="flipToSignin"
+            >Log in</a
+          >
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  id="otpVerificationModal"
+  class="fixed inset-0 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+  <div class="relative top-20 mx-auto p-5 border w-96 h-fit shadow-lg rounded-2xl mt-64 bg-white animate-slideIn">
+    <div class="mt-5 text-center">
+      <div
+        id="otpLoadingOverlay"
+        class="hidden absolute inset-0 bg-white bg-opacity-80 items-center justify-center rounded-md">
+        <div class="text-center">
+          <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-red-700"></div>
+          <p class="mt-2 text-red-700">Verifying...</p>
+        </div>
+      </div>
+
+      <div class="mt-3 text-center">
+        <h3
+          class="text-lg leading-6 font-medium text-gray-900"
+          id="modal-title">
+          Email Verification
+        </h3>
+        <div class="mt-2 px-7 py-3">
+          <p class="text-sm text-gray-500 mb-4">We've sent a verification code to your email. Please enter it below.</p>
+          <div
+            id="otpError"
+            class="text-red-500 text-sm mt-2 mb-2 hidden"></div>
+          <form
+            id="otpVerificationForm"
+            class="mt-4">
+            <div class="relative">
+              <input
+                type="text"
+                id="otp_input"
+                class="w-full px-4 border-b border-t-0 border-x-0 border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-b-primary-600"
+                placeholder="Enter 6-digit verification code"
+                maxlength="6"
+                pattern="[0-9]{6}"
+                required />
+            </div>
+
+            <button
+              type="submit"
+              id="verifyOtpButton"
+              class="w-full mt-4 bg-black h-10 text-white py-2 px-4 rounded-md flex flex-col transition duration-300 items-center justify-center">
+              <span id="verifyButtonText">Verify Code</span>
+              <div
+                id="verifyButtonSpinner"
+                class="justify-center hidden text-center items-center">
+                <svg
+                  class="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24">
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              id="resendOtpButton"
+              class="w-full mt-2 text-red-600 hover:text-red-700 focus:outline-none text-sm">
+              Resend Code
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <button
+      id="otp_closeBtn"
+      class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+      <svg
+        class="h-5 w-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+</div>

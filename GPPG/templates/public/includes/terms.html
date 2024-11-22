@@ -1,0 +1,159 @@
+{% load static %}
+<div
+  id="termsModal"
+  class="fixed inset-0 bg-opacity-50 flex items-center justify-center">
+  <div class="bg-white rounded-lg shadow-lg p-6 max-w-lg w-fit max-h-screen relative">
+    <button
+      id="terms_exit_btn"
+      class="absolute top-2 right-2 text-gray-500 hover:text-black text-xl font-bold">
+      &times;
+    </button>
+    <h2 class="text-xl font-bold mb-4">Terms and Conditions</h2>
+    <div class="modal-body overflow-y-auto max-h-80 text-black gap-5 scroll-thin">
+      <p>
+        <strong>Welcome to the Guardians of the Palawan Pangolin Guild (GPPG) Web Platform.</strong> By accessing or using this platform, you agree to be bound by the following terms and conditions:
+      </p>
+
+      <h3 class="mt-5">1. Purpose:</h3>
+      <p>
+        This platform is designed to raise awareness, disseminate information, and facilitate conservation efforts related to the Palawan Pangolin (Manis culionensis). It is intended for educational,
+        research, and conservation purposes.
+      </p>
+
+      <h3 class="mt-5">2. User Responsibilities:</h3>
+      <p>
+        a. You agree to use this platform responsibly and in accordance with its intended purpose.<br />
+        b. You will not use the platform for any illegal activities or in any manner that could harm the Palawan Pangolin or its habitat.<br />
+        c. You will respect the intellectual property rights of the content provided on this platform.
+      </p>
+
+      <h3 class="mt-5">3. Data Usage:</h3>
+      <p>
+        a. Any data you input or generate on this platform may be used for research and conservation efforts related to the Palawan Pangolin.<br />
+        b. We will protect your personal information in accordance with our Privacy Policy.
+      </p>
+
+      <h3 class="mt-5">4. Content:</h3>
+      <p>
+        a. The content on this platform, including text, images, maps, and data, is for informational purposes only.<br />
+        b. While we strive for accuracy, we do not guarantee the completeness or reliability of the content.
+      </p>
+
+      <h3 class="mt-5">5. Interactive Features:</h3>
+      <p>
+        a. You agree to use any interactive features, such as mapping tools or forums, responsibly and constructively.<br />
+        b. Any content you contribute must be accurate to the best of your knowledge and must not infringe on any third-party rights.
+      </p>
+
+      <h3 class="mt-5">6. Prohibited Activities:</h3>
+      <p>
+        You agree not to:<br />
+        a. Share sensitive information about the exact locations of Palawan Pangolins that could put them at risk.<br />
+        b. Use the platform to promote or facilitate the illegal trade of pangolins or any other wildlife.<br />
+        c. Misuse or attempt to manipulate the data or analytical tools provided.
+      </p>
+
+      <h3 class="mt-5">7. Changes to Terms:</h3>
+      <p>We reserve the right to modify these terms at any time. Continued use of the platform after changes constitutes acceptance of the new terms.</p>
+
+      <h3 class="mt-5">8. Termination:</h3>
+      <p>
+        We reserve the right to terminate or suspend access to the platform for violations of these terms or for any other reason deemed necessary to protect the platform's integrity or the Palawan
+        Pangolin.
+      </p>
+
+      <p class="mt-5">
+        By using this platform, you acknowledge that you have read, understood, and agree to be bound by these terms. If you do not agree to these terms, please do not use the GPPG Web Platform.
+      </p>
+    </div>
+    <div class="mt-4">
+      <button
+        id="terms_closeModal"
+        class="text-center items-center cursor-pointer text-sm font-semibold bg-black rounded-lg p-2 px-5 border border-black text-white transition-all duration-300 hover:shadow-md">
+        Accept
+      </button>
+    </div>
+  </div>
+</div>
+<script>
+  const termsLink = document.getElementById("termsLink");
+  const termsModal = document.getElementById("termsModal");
+  const termsCloseModal = document.getElementById("terms_closeModal");
+  const closeModalButton = document.getElementById("terms_exit_btn");
+
+  // Show terms modal
+  termsLink.addEventListener("click", function (event) {
+    event.preventDefault();
+    termsModal.classList.remove("hidden");
+  });
+
+  // Hide terms modal when "Close" button is clicked
+  termsCloseModal.addEventListener("click", function () {
+    termsModal.classList.add("hidden");
+    const termsCheckbox = document.getElementById("termsCheckbox");
+    const submitButton = document.getElementById("submitButton");
+    termsCheckbox.disabled = false;
+    termsCheckbox.checked = true;
+    submitButton.disabled = false;
+    submitButton.classList.remove("bg-gray-400", "cursor-not-allowed");
+    submitButton.classList.add("bg-black", "cursor-pointer");
+  });
+
+  document.getElementById("termsCheckbox").addEventListener("change", function () {
+    const submitButton = document.getElementById("submitButton");
+    if (this.checked) {
+      // enable button
+      submitButton.removeAttribute("disabled");
+      submitButton.classList.remove("bg-gray-400", "cursor-not-allowed");
+      submitButton.classList.add("bg-black", "hover:bg-gray-900");
+    } else {
+      // disable button
+      submitButton.setAttribute("disabled", "true");
+      submitButton.classList.remove("bg-black", "hover:bg-gray-900");
+      submitButton.classList.add("bg-gray-400", "cursor-not-allowed");
+    }
+  });
+  closeModalButton.addEventListener("click", function () {
+    termsModal.classList.add("hidden");
+  });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("termsLink").click();
+    if (!document.getElementById("termsModal").classList.contains("hidden")) {
+      console.log("Modal opened correctly.");
+    } else {
+      console.error("Modal did not open.");
+    }
+
+    document.getElementById("terms_closeModal").click();
+    if (document.getElementById("termsModal").classList.contains("hidden")) {
+      console.log("Modal closed correctly.");
+    } else {
+      console.error("Modal did not close.");
+    }
+
+    const submitButton = document.getElementById("submitButton");
+    if (submitButton.hasAttribute("disabled")) {
+      console.log("Submit button is disabled by default.");
+    } else {
+      console.error("Submit button is not disabled by default.");
+    }
+
+    const termsCheckbox = document.getElementById("termsCheckbox");
+    termsCheckbox.checked = true;
+    termsCheckbox.dispatchEvent(new Event("change"));
+    if (!submitButton.hasAttribute("disabled")) {
+      console.log("Submit button enabled when checkbox is checked.");
+    } else {
+      console.error("Submit button did not enable.");
+    }
+
+    termsCheckbox.checked = false;
+    termsCheckbox.dispatchEvent(new Event("change"));
+    if (submitButton.hasAttribute("disabled")) {
+      console.log("Submit button disabled when checkbox is unchecked.");
+    } else {
+      console.error("Submit button did not disable.");
+    }
+  });
+</script>

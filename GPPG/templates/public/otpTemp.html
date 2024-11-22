@@ -1,0 +1,41 @@
+{% autoescape off %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <title>Email Verification</title>
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #f3f4f6; font-family: Arial, sans-serif">
+    <div style="max-width: 600px; margin: 20px auto; padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)">
+      <div style="text-align: center; padding: 20px 0; border-bottom: 2px solid #f0f0f0">
+        <h2 style="color: #3f0703; margin: 0">{{ site_name }}</h2>
+      </div>
+
+      <div style="padding: 20px 0">
+        <h3 style="color: #374151">Hello {{ user.get_full_name }},</h3>
+
+        <p style="color: #4b5563; line-height: 1.5">Thank you for registering with {{ site_name }}. To complete your registration, please use the following verification code:</p>
+
+        <div style="text-align: center; margin: 30px 0; padding: 20px; background-color: #f9fafb; border-radius: 6px">
+          <span style="font-size: 32px; font-weight: bold; letter-spacing: 4px; color: #3f0703"> {{ otp }} </span>
+        </div>
+
+        <p style="color: #4b5563; text-align: center">This code will expire in {{ expiration_time }} minutes.</p>
+
+        <div style="margin-top: 30px; padding: 15px; background-color: #f9fafb; border-radius: 6px">
+          <p style="color: #4b5563; font-size: 14px; margin: 0 0 10px 0"><strong>Note:</strong> If you didn't request this verification code, please ignore this email.</p>
+          <p style="color: #4b5563; font-size: 14px; margin: 0">For your security, never share this code with anyone.</p>
+        </div>
+      </div>
+
+      <div style="text-align: center; padding-top: 20px; border-top: 2px solid #f0f0f0">
+        <p style="color: #6b7280; font-size: 12px">This is an automated message, please do not reply.</p>
+        <p style="color: #6b7280; font-size: 12px">&copy; {% now "Y" %} {{ site_name }}. All rights reserved.</p>
+      </div>
+    </div>
+  </body>
+</html>
+{% endautoescape %}

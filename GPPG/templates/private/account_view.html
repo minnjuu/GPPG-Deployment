@@ -1,0 +1,97 @@
+{% extends "private/index.html" %} {% load static %} {% block title %}GPPG - User Account{% endblock title %}
+<header>{% block nav %} {% include 'private/includes/nav.html' %} {% endblock nav %}</header>
+
+{% block content %}
+
+<section class="w-full lg:w-8/12 px-4 mx-auto mt-6">
+  <div class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg overflow-hidden rounded-2xl bg-blueGray-100 border-0">
+    <div class="bg-white mb-0 px-6 py-6">
+      <div class="text-center w-full flex justify-between border-b-2 py-5">
+        <h6 class="text-blueGray-700 text-xl font-bold">Account Settings</h6>
+      </div>
+    </div>
+    <div class="flex-auto px-4 lg:px-10 py-10 pt-0 bg-white">
+      <form>
+        <div class="text-center w-full flex justify-between items-center">
+          <h6 class="text-blueGray-400 text-lg mt-3 mb-6 font-bold">Personal Information</h6>
+          <button
+            hx-get="{% url 'private_userAccounts_edit' user.id %}"
+            hx-target="#modal-content"
+            hx-trigger="click"
+            data-modal-toggle="modaldialog"
+            data-modal-target="modaldialog"
+            onclick="showTitle('Edit Account');"
+            class="px-4 py-2 border rounded-xl text-center items-center cursor-pointer text-sm font-semibold hover:bg-gray-50 p-2 border-gray-500 text-gray-500 hover:border-black hover:text-black transition-all duration-300 hover:shadow-md ease-linear"
+            type="button">
+            Edit
+          </button>
+        </div>
+
+        <div class="flex flex-wrap">
+          <div class="w-full lg:w-6/12 px-4">
+            <div class="relative w-full mb-3">
+              <label class="block text-black text-md font-bold mb-2"> First Name </label>
+              <input
+                disabled
+                type="text"
+                class="w-full px-4 border-b font-semibold border-t-0 border-x-0 bg-white border-gray-400 text-gray-500 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-b-primary-600"
+                value="{{ user.user_firstname }}" />
+            </div>
+          </div>
+          <div class="w-full lg:w-6/12 px-4">
+            <div class="relative w-full mb-3">
+              <label class="block text-black text-md font-bold mb-2"> Last Name </label>
+              <input
+                disabled
+                class="w-full px-4 border-b font-semibold border-t-0 border-x-0 bg-white border-gray-400 text-gray-500 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-b-primary-600"
+                value="{{ user.user_lastname }}" />
+            </div>
+          </div>
+          <div class="w-full lg:w-6/12 px-4">
+            <div class="relative w-full mb-3">
+              <label class="block text-black text-md font-bold mb-2"> Email </label>
+              <input
+                disabled
+                type="email"
+                type="text"
+                class="w-full px-4 border-b font-semibold border-t-0 border-x-0 bg-white border-gray-400 text-gray-500 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-b-primary-600"
+                value="{{ user.user_email }}" />
+            </div>
+          </div>
+
+          <div class="w-full lg:w-6/12 px-4">
+            <div class="relative w-full mb-3">
+              <label class="block text-black text-md font-bold mb-2"> Contact </label>
+              <input
+                disabled
+                type="text"
+                class="w-full px-4 border-b font-semibold text-gray-500 border-t-0 border-x-0 bg-white border-gray-400 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-b-primary-600"
+                value="{{ user.contact }}" />
+            </div>
+          </div>
+        </div>
+
+        <hr class="mt-6 border-b-1 border-blueGray-300" />
+      </form>
+    </div>
+    <div class="flex-auto px-4 lg:px-10 pt-0 bg-white">
+      <h6 class="text-black text-lg mb-2 font-bold">Security</h6>
+      <div class="w-full p-3 mb-5 flex justify-between">
+        <div class="">
+          <label class="block text-black text-md font-semibold mb-2"> Password </label>
+          <label class="block text-gray-500 text-sm font-semibold mb-2"> Set a unique password to protect your account. </label>
+        </div>
+        <div class="flex items-center">
+          <button
+            class="px-4 py-2 border rounded-2xl text-center items-center cursor-pointer text-sm font-semibold hover:bg-gray-50 p-2 border-gray-500 text-gray-500 hover:border-black hover:text-black transition-all duration-300 hover:shadow-md">
+            Change Password
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% include 'admin/includes//modal/modal_dialogs.html' %}
+<script src="{% static 'js/admin/modal.js' %}"></script>
+<script src="{% static 'js/htmx.min.js' %}"></script>
+{% endblock %}

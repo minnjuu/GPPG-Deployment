@@ -1,0 +1,102 @@
+{% extends "private/index.html" %} {% load static %} {% block title %}GPPG - Poaching Trends{% endblock title %}
+<header>
+  {% block nav %} {% include 'private/includes/nav.html' %}
+  <div class="flex flex-col m-5 mt-8 ml-16">
+    <h2 class="text-xl font-bold text-center md:text-left">Poaching Trends</h2>
+  </div>
+  {% endblock nav %}
+</header>
+{% block content %}
+
+<div
+  class="bg-white -mt-3.5 text-gray-500 h-auto rounded-2xl shadow-xl py-5 px-5 w-full lg:w-4/6 mx-auto"
+  x-data="{ chartData: chartData() }"
+  x-init="chartData.init()">
+  <div class="flex flex-wrap items-end">
+    <div class="flex-1">
+      <h3 class="text-lg font-semibold leading-tight text-black">Activity Summary</h3>
+    </div>
+    <div
+      class="relative"
+      @click.away="chartData.showDropdown=false">
+      <button
+        class="text-xs hover:text-gray-300 h-6 focus:outline-none"
+        @click="chartData.showDropdown=!chartData.showDropdown">
+        <span x-text="chartData.options.length > 0 ? chartData.options[chartData.selectedOption]?.label : 'Loading...'"></span>
+      </button>
+
+      <div
+        class="bg-gray-700 shadow-lg rounded text-sm absolute top-auto right-0 min-w-full w-32 z-30 mt-1 -mr-3"
+        x-show="chartData.showDropdown"
+        style="display: none"
+        x-transition:enter="transition ease duration-300 transform"
+        x-transition:enter-start="opacity-0 translate-y-2"
+        x-transition:enter-end="opacity-100 translate-y-0"
+        x-transition:leave="transition ease duration-300 transform"
+        x-transition:leave-start="opacity-100 translate-y-0"
+        x-transition:leave-end="opacity-0 translate-y-4">
+        <span class="absolute top-0 right-0 w-3 h-3 bg-gray-700 transform rotate-45 -mt-1 mr-3"></span>
+        <div class="bg-gray-700 rounded w-full relative z-10 py-1">
+          <ul class="list-reset text-xs">
+            <template
+              x-for="(item, index) in chartData.options"
+              :key="index">
+              <li
+                class="px-4 py-2 hover:bg-gray-600 hover:text-white transition-colors duration-100 cursor-pointer"
+                :class="{'text-white': index === chartData.selectedOption}"
+                @click="chartData.selectOption(index); chartData.showDropdown=false">
+                <span x-text="item.label"></span>
+              </li>
+            </template>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="flex flex-wrap items-start mb-5 mt-2">
+    <div class="mr-4">
+      <h4 class="text-lg font-semibold text-black">Alive</h4>
+      <p
+        class="text-2xl lg:text-3xl text-black font-semibold"
+        x-text="chartData.data ? chartData.total.alive : 0">
+        0
+      </p>
+    </div>
+    <div class="mr-4">
+      <h4 class="text-lg font-semibold text-black">Dead</h4>
+      <p
+        class="text-2xl lg:text-3xl text-black font-semibold"
+        x-text="chartData.data ? chartData.total.dead : 0">
+        0
+      </p>
+    </div>
+    <div class="mr-4">
+      <h4 class="text-lg font-semibold text-black">Scales</h4>
+      <p
+        class="text-2xl lg:text-3xl text-black font-semibold"
+        x-text="chartData.data ? chartData.total.scales : 0">
+        0
+      </p>
+    </div>
+    <div class="mr-4">
+      <h4 class="text-lg font-semibold text-black">Illegal Trades</h4>
+      <p
+        class="text-2xl lg:text-3xl text-black font-semibold"
+        x-text="chartData.data ? chartData.total.illegal_trade : 0">
+        0
+      </p>
+    </div>
+  </div>
+  <div>
+    <canvas
+      id="chart"
+      class="w-full">
+    </canvas>
+  </div>
+</div>
+
+{% endblock %} {% block extra_js %}
+<script src="{% static 'js/chart.js' %}"></script>
+<script src="{% static 'js/private/data_trend.js' %}"></script>
+
+{% endblock extra_js %}

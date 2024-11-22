@@ -1,0 +1,20 @@
+#templates/email/otp_email.txt
+{% autoescape off %}
+{{ site_name }} - Email Verification
+
+Hello {{ user.get_full_name|default:user.email }},
+
+Thank you for registering with {{ site_name }}. To complete your registration, please use the following verification code:
+
+{{ otp }}
+
+This code will expire in {{ expiration_time }} minutes.
+
+If you didn't request this verification code, please ignore this email.
+For your security, never share this code with anyone.
+
+This is an automated message, please do not reply.
+
+© {% now "Y" %} {{ site_name }}. All rights reserved.
+Palawan, Philippines
+{% endautoescape %}

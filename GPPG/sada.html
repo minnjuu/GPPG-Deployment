@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}My Django App{% endblock %}</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+      defer></script>
+  </head>
+  <body>
+    <nav
+      class="bg-gray-800 p-4"
+      x-data="{ open: false }">
+      <div class="container mx-auto flex justify-between items-center">
+        <div class="text-white font-bold text-xl">My Django App</div>
+        <div class="md:hidden">
+          <button
+            @click="open = !open"
+            class="text-white">
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div
+          class="md:flex"
+          :class="{'hidden': !open, 'block': open}">
+          <a
+            href="{% url 'home' %}"
+            class="text-white block mt-4 md:inline-block md:mt-0 mr-6"
+            >Home</a
+          >
+          <a
+            href="{% url 'about' %}"
+            class="text-white block mt-4 md:inline-block md:mt-0 mr-6"
+            >About</a
+          >
+
+          {% if user.is_authenticated %}
+          <a
+            href="{% url 'profile' %}"
+            class="text-white block mt-4 md:inline-block md:mt-0 mr-6"
+            >Profile</a
+          >
+          <a
+            href="{% url 'settings' %}"
+            class="text-white block mt-4 md:inline-block md:mt-0 mr-6"
+            >Settings</a
+          >
+          <a
+            href="{% url 'logout' %}"
+            class="text-white block mt-4 md:inline-block md:mt-0"
+            >Logout</a
+          >
+          {% else %}
+          <a
+            href="{% url 'login' %}"
+            class="text-white block mt-4 md:inline-block md:mt-0"
+            >Login</a
+          >
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+
+    <main class="container mx-auto mt-4">{% block content %} {% endblock %}</main>
+  </body>
+</html>

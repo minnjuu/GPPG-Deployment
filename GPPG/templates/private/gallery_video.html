@@ -1,0 +1,67 @@
+{% extends "private/gallery.html" %} {% load static %} {% block link %}
+<a
+  href="{% url 'gallery' %}"
+  class="text-md active:font-bold hover:font-bold">
+  <span>Photos</span>
+</a>
+<p>|</p>
+<a
+  href="{% url 'gallery_video' %}"
+  class="text-md font-bold">
+  <span>Videos</span>
+</a>
+{% endblock link %} {% block content %}
+<section class="mx-16 h-fit">
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4">
+    {% for video in latest_videos %}
+    <div class="relative overflow-hidden rounded-lg group">
+      <video
+        src="{{ video.media.url }}"
+        alt="Video "
+        class="w-full h-40 object-cover transition-transform duration-300 ease-in-out transform hover:scale-110 cursor-pointer"
+        onclick="openFullScreen(this)"
+        oncontextmenu="return false;"
+        draggable="false"></video>
+      <div class="absolute bottom-0 left-0 bg-black/70 text-white text-sm p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">Uploaded by: {{ video.uploader }}</div>
+    </div>
+    {% endfor %} {% for video in next_videos %}
+    <div class="relative overflow-hidden rounded-lg group">
+      <img
+        src="{{ video.media.url }}"
+        alt="Image 6"
+        class="w-full h-64 object-cover transition-transform duration-300 ease-in-out transform hover:scale-110 cursor-pointer"
+        onclick="openFullScreen(this)"
+        oncontextmenu="return false;"
+        draggable="false" />
+      <div class="absolute bottom-0 left-0 bg-black/70 text-white text-sm p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">Uploaded by: {{ video.uploader }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<div
+  id="videoModal"
+  class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center w-full h-full overflow-hidden"
+  onclick="closeModalsOnClickOutside(event)">
+  <div
+    class="relative w-auto h-1/2 bg-black rounded-xl overflow-hidden"
+    onclick="event.stopPropagation()">
+    <button
+      class="absolute top-4 right-4 text-white text-4xl z-10"
+      onclick="closeModals()">
+      ×
+    </button>
+
+    <video
+      id="modalVideo"
+      controls
+      class="w-full h-full object-contain"
+      oncontextmenu="return false;"
+      draggable="false"></video>
+  </div>
+</div>
+{% endblock content %}
+
+<script
+  src="{% static 'js/index.js' %}"
+  type="text/javascript"></script>

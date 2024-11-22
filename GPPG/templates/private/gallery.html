@@ -1,0 +1,75 @@
+{% extends "private/index.html" %} {% load static %} {% block title %}GPPG - Gallery{% endblock title %}
+<header>
+  {% block nav %} {% include 'private/includes/nav.html' %}
+  <div class="flex flex-col m-5 mt-8 ml-16">
+    <h2 class="text-2xl font-bold">Gallery</h2>
+    <div class="container flex gap-5 mt-5">
+      {% block link %}
+      <a
+        href="{% url 'gallery' %}"
+        class="text-md font-bold">
+        <span>Photos</span>
+      </a>
+      <p>|</p>
+
+      <a
+        href="{% url 'gallery_video' %}"
+        class="text-md active:font-bold hover:font-bold">
+        <span>Videos</span>
+      </a>
+      {% endblock link %}
+    </div>
+  </div>
+  {% endblock nav %}
+</header>
+
+{% block content %}
+<section class="mx-16 h-fit">
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4">
+    {% for image in latest_images %}
+    <div class="relative overflow-hidden rounded-lg group">
+      <img
+        src="{{ image.media.url }}"
+        alt="Image 1"
+        class="w-full h-40 object-cover transition-transform duration-300 ease-in-out transform hover:scale-110 cursor-pointer"
+        onclick="openModal(this)"
+        oncontextmenu="return false;"
+        draggable="false" />
+      <div class="absolute bottom-0 left-0 bg-black/70 text-white text-sm p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">Uploaded by: {{ image.uploader }}</div>
+    </div>
+
+    {% endfor %}
+
+    <!-- Second row -->
+    {% for image in next_images %}
+    <div class="relative overflow-hidden rounded-lg group">
+      <img
+        src="{{ image.media.url }}"
+        alt="Image 6"
+        class="w-full h-64 object-cover transition-transform duration-300 ease-in-out transform hover:scale-110 cursor-pointer"
+        onclick="openModal(this)"
+        oncontextmenu="return false;"
+        draggable="false" />
+      <div class="absolute bottom-0 left-0 bg-black/70 text-white text-sm p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">Uploaded by: {{ image.uploader }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<div
+  id="imageModal"
+  class="hidden fixed inset-0 w-screen h-screen overflow-hidden bg-black/80"
+  onclick="closeModal(event)">
+  <div
+    class="w-2/4 h-fit overflow-hidden rounded-lg bg-black/80 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+    onclick="event.stopPropagation()">
+    <img
+      oncontextmenu="return false;"
+      draggable="false"
+      id="modalImage"
+      class="w-full h-auto rounded-lg"
+      src=""
+      alt="Full Image" />
+  </div>
+</div>
+{% endblock %}
