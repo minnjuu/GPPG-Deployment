@@ -89,7 +89,7 @@ $(document).ready(function () {
 
     const vectorLayer = new ol.layer.Vector({
       source: new ol.source.Vector({
-        url: "/static/maps/ClusterOfPalawan_filtereds.geojson",
+        url: "https://gppg-bucket.s3.amazonaws.com/static/maps/ClusterOfPalawan_filtereds.geojson",
         format: new ol.format.GeoJSON(),
       }),
       style: function (feature) {

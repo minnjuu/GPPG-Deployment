@@ -83,7 +83,7 @@ async function fetchAdminMapData(municity) {
 
 var vectorLayerDash = new ol.layer.Vector({
   source: new ol.source.Vector({
-    url: "/static/maps/map.geojson", // Geojson file input kuno
+    url: "https://gppg-bucket.s3.amazonaws.com/static/maps/map.geojson",
     format: new ol.format.GeoJSON(),
   }),
   style: function (feature) {
