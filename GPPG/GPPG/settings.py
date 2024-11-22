@@ -211,7 +211,8 @@ STORAGES = {
         "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
     },
 }
-STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
+STATIC_URL = 'https://gppg-bucket.s3.amazonaws.com/static/'
+
 
 STATICFILES_DIRS = [
     BASE_DIR, 'static'

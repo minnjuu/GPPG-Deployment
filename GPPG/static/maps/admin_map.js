@@ -286,7 +286,7 @@ map.on("rendercomplete", function () {
 // Define a vector layer to load GeoJSON
 var vectorLayer = new ol.layer.Vector({
   source: new ol.source.Vector({
-    url: "https://gppg-bucket.s3.amazonaws.com/static/maps/Municipals.geojson",
+    url: "https://gppg-bucket.s3.ap-southeast-2.amazonaws.com/static/maps/Municipals.geojson",
     format: new ol.format.GeoJSON(),
   }),
   style: function (feature) {
