@@ -67,7 +67,7 @@ async function searchMunicipality(event) {
   let foundFeature = null;
   vectorLayer.getSource().forEachFeature(function (feature) {
     const properties = feature.getProperties();
-    const name = properties.name || properties.ADM3_EN || "";
+    const name = properties.name || properties.Municipalities || "";
     if (name.toLowerCase() === searchValue) {
       foundFeature = feature;
     }
@@ -82,7 +82,7 @@ async function searchMunicipality(event) {
     featureOverlay.getSource().addFeature(foundFeature);
 
     const properties = foundFeature.getProperties();
-    const regionName = properties.name || properties.ADM3_EN || "Unknown Region";
+    const regionName = properties.name || properties.Municipalities || "Unknown Region";
     
     const infoElement = createOverlayHTML(regionName);
     overlay.setElement(infoElement);
@@ -190,7 +190,7 @@ async function searchMunicipality(event) {
   let foundFeature = null;
   vectorLayer.getSource().forEachFeature(function (feature) {
     const properties = feature.getProperties();
-    const name = properties.name || properties.ADM3_EN || "";
+    const name = properties.name || properties.Municipalities || "";
     if (name.toLowerCase() === searchValue) {
       foundFeature = feature;
     }
@@ -205,7 +205,7 @@ async function searchMunicipality(event) {
     featureOverlay.getSource().addFeature(foundFeature);
 
     const properties = foundFeature.getProperties();
-    const regionName = properties.name || properties.ADM3_EN || "Unknown Region";
+    const regionName = properties.name || properties.Municipalities || "Unknown Region";
     
     const infoElement = createOverlayHTML(regionName);
     overlay.setElement(infoElement);
@@ -384,11 +384,11 @@ map.on("rendercomplete", function () {
 // Define a vector layer to load GeoJSON
 var vectorLayer = new ol.layer.Vector({
   source: new ol.source.Vector({
-    url: "https://gppg-bucket.s3.ap-southeast-2.amazonaws.com/static/maps/Municipals.geojson",
+    url: "https://gppg-bucket.s3.ap-southeast-2.amazonaws.com/static/maps/map.geojson",
     format: new ol.format.GeoJSON(),
   }),
   style: function (feature) {
-    const regionName = feature.get("ADM3_EN");
+    const regionName = feature.get("Municipalities");
     feature.set("data", municipalityData[regionName] || "No data available");
 
     return new ol.style.Style({
@@ -442,7 +442,7 @@ map.on("click", function (evt) {
     isClickActive = true;
 
     const properties = feature.getProperties();
-    const regionName = properties.name || properties.ADM3_EN || "Unknown Region";
+    const regionName = properties.name || properties.Municipalities || "Unknown Region";
     const geometry = feature.getGeometry();
     const centroid = ol.extent.getCenter(geometry.getExtent());
 
@@ -474,7 +474,7 @@ map.on("pointermove", function (evt) {
     if (feature) {
       featureOverlay.getSource().addFeature(feature);
       const properties = feature.getProperties();
-      const regionName = properties.name || properties.ADM3_EN || "Unknown Region";
+      const regionName = properties.name || properties.Municipalities || "Unknown Region";
 
       const infoElement = createOverlayHTML(regionName);
       overlay.setElement(infoElement);
