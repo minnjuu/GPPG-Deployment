@@ -5,12 +5,29 @@ body {
   scroll-behavior: smooth;
 }
 #header_img {
+  background-image: url(../img/pango4.jpg);
+  background-size: cover;
+  background-position: center;
+  width: 100%;
   height: 450px;
-  background-image: url(../img/headback.png);
+}
+
+@media screen and (max-width: 768px) {
+  #header_img {
+    height: 300px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #header_img {
+    height: 200px;
+  }
 }
 
 #headers_img {
-  background-image: url(../img/headback.png);
+  background-image: url(../img/pango4.jpg);
+  background-size: cover;
+  object-position: center top;
 }
 
 @keyframes slide-in {
@@ -315,6 +332,17 @@ body {
   }
 }
 
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+
 @keyframes cardEntry {
   from {
     transform: translateY(20px);
@@ -345,6 +373,9 @@ body {
 
 .animate-slideIn {
   animation: slideIn 0.5s ease-out forwards;
+}
+.animate-slideOut {
+  animation: slideOut 0.5s ease-in;
 }
 
 .animate-cardEntry {

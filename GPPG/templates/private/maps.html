@@ -1,53 +1,316 @@
 {% extends "private/index.html" %} {% load static %} {% block title %}GPPG - Maps{% endblock title %} {% block css %}
 <script src="{% static 'maps/ol.js' %}"></script>
-<link rel="stylesheet" href="{% static "maps/ol.css" %}"> {% endblock css%}
-
-<!-- Navigation menu -->
-{% block nav %} {% include 'private/includes/nav.html' %} {% endblock nav %}
-
-<!-- Content -->
-{% block content %}
+<link rel="stylesheet" href="{% static "maps/ol.css" %}"> {% endblock css%} {% block nav %} {% include 'private/includes/nav.html' %} {% endblock nav %} {% block content %}
 <div x-data="{ isOpen: true }">
   <div class="w-full h-screen bg-blue-200 p-5 relative">
-    <!-- Map Information Header -->
     <div
-      class="absolute top-0 left-0 h-full bg-white overflow-hidden w-[400px] transform transition-transform duration-500 ease-in-out shadow-lg z-50"
+      class="absolute top-0 left-0 h-full bg-white scroll-thin overflow-y-auto w-[400px] transform transition-transform duration-500 ease-in-out shadow-lg z-50"
       :class="isOpen ? 'translate-x-0' : '-translate-x-full'">
-      <!-- Previous side panel content -->
       <div class="p-4">
-        <!-- Header -->
         <div class="mb-8">
+          <div class="flex justify-center mb-4">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="text-gray-700">
+              <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" />
+              <line
+                x1="9"
+                y1="3"
+                x2="9"
+                y2="18" />
+              <line
+                x1="15"
+                y1="6"
+                x2="15"
+                y2="21" />
+            </svg>
+          </div>
           <h1 class="text-2xl text-center font-bold text-gray-900 mb-2">Palawan Pangolin Poaching Incidents Map</h1>
           <p class="text-gray-600 text-center">Geographic visualization of reported wildlife poaching cases across Palawan 3 clusters</p>
         </div>
 
         <hr class="my-6 border-gray-200" />
 
-        <!-- Purpose Section -->
         <div class="mb-8">
-          <h2 class="text-lg font-semibold mb-3">Map Purpose</h2>
+          <div class="flex items-center gap-2 mb-3">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="text-gray-700">
+              <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" />
+              <path d="M13 13l6 6" />
+            </svg>
+            <h2 class="text-lg font-semibold">How It Works</h2>
+          </div>
+
+          <div class="bg-gray-50 rounded-lg p-4 mb-4">
+            <h3 class="font-medium text-gray-800 mb-2 flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="text-gray-600">
+                <path d="M8 13V4.5a1.5 1.5 0 0 1 3 0V12" />
+                <path d="M11 11.5v-2a1.5 1.5 0 0 1 3 0V12" />
+                <path d="M14 10.5v-2a1.5 1.5 0 0 1 3 0V12" />
+              </svg>
+              Hover Interaction
+            </h3>
+            <ul class="space-y-2 text-gray-700 ml-6">
+              <li class="flex items-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="text-gray-400">
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10" />
+                  <line
+                    x1="12"
+                    y1="16"
+                    x2="12"
+                    y2="12" />
+                  <line
+                    x1="12"
+                    y1="8"
+                    x2="12.01"
+                    y2="8" />
+                </svg>
+                Hover over clusters to reveal data
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <hr class="my-6 border-gray-200" />
+
+        <div class="mb-8">
+          <div class="flex items-center gap-2 mb-3">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="text-gray-700">
+              <circle
+                cx="12"
+                cy="12"
+                r="10" />
+              <circle
+                cx="12"
+                cy="12"
+                r="6" />
+              <circle
+                cx="12"
+                cy="12"
+                r="2" />
+            </svg>
+            <h2 class="text-lg font-semibold">Map Purpose</h2>
+          </div>
           <ul class="space-y-2 text-gray-700 ml-6">
-            <li class="transition-transform duration-300 hover:translate-x-2 flex items-center gap-2"><span class="text-gray-400">•</span> Tracks and displays verified poaching incidents</li>
-            <li class="transition-transform duration-300 hover:translate-x-2 flex items-center gap-2"><span class="text-gray-400">•</span> Identifies high-risk areas for wildlife trafficking</li>
-            <li class="transition-transform duration-300 hover:translate-x-2 flex items-center gap-2"><span class="text-gray-400">•</span> Aids in resource allocation for anti-poaching efforts</li>
+            <li class="transition-transform duration-300 hover:translate-x-2 flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="text-gray-400">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle
+                  cx="12"
+                  cy="10"
+                  r="3" />
+              </svg>
+              Tracks and displays verified poaching incidents
+            </li>
+            <li class="transition-transform duration-300 hover:translate-x-2 flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="text-gray-400">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                <line
+                  x1="12"
+                  y1="9"
+                  x2="12"
+                  y2="13" />
+                <line
+                  x1="12"
+                  y1="17"
+                  x2="12.01"
+                  y2="17" />
+              </svg>
+              Identifies high-risk areas for wildlife trafficking
+            </li>
+            <li class="transition-transform duration-300 hover:translate-x-2 flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="text-gray-400">
+                <line
+                  x1="12"
+                  y1="20"
+                  x2="12"
+                  y2="10" />
+                <line
+                  x1="18"
+                  y1="20"
+                  x2="18"
+                  y2="4" />
+                <line
+                  x1="6"
+                  y1="20"
+                  x2="6"
+                  y2="16" />
+              </svg>
+              Aids in resource allocation for anti-poaching efforts
+            </li>
           </ul>
         </div>
 
         <hr class="my-6 border-gray-200" />
 
-        <!-- Important Notes Section -->
         <div class="mb-4">
-          <h2 class="text-lg font-semibold mb-3">Important Notes</h2>
+          <div class="flex items-center gap-2 mb-3">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="text-gray-700">
+              <circle
+                cx="12"
+                cy="12"
+                r="10" />
+              <line
+                x1="12"
+                y1="16"
+                x2="12"
+                y2="12" />
+              <line
+                x1="12"
+                y1="8"
+                x2="12.01"
+                y2="8" />
+            </svg>
+            <h2 class="text-lg font-semibold">Important Notes</h2>
+          </div>
           <ul class="space-y-2 text-gray-700 ml-6">
-            <li class="transition-transform duration-300 hover:translate-x-2 flex items-center gap-2"><span class="text-gray-400">•</span> Data represents confirmed incidents only</li>
-            <li class="transition-transform duration-300 hover:translate-x-2 flex items-center gap-2"><span class="text-gray-400">•</span> Updated regularly with new reports</li>
-            <li class="transition-transform duration-300 hover:translate-x-2 flex items-center gap-2"><span class="text-gray-400">•</span> Historical data from verified sources</li>
+            <li class="transition-transform duration-300 hover:translate-x-2 flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="text-gray-400">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              Data represents confirmed incidents only
+            </li>
+            <li class="transition-transform duration-300 hover:translate-x-2 flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="text-gray-400">
+                <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3" />
+              </svg>
+              Updated regularly with new reports
+            </li>
+            <li class="transition-transform duration-300 hover:translate-x-2 flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="text-gray-400">
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              Historical data from verified sources
+            </li>
           </ul>
         </div>
       </div>
     </div>
 
-    <!-- Toggle Button -->
     <button
       @click="isOpen = !isOpen"
       class="fixed top-1/2 -translate-y-1/2 z-50 bg-white p-2 rounded-r-lg shadow-lg transition-all duration-500 ease-in-out hover:bg-gray-50 focus:outline-none"
@@ -66,7 +329,6 @@
       </svg>
     </button>
 
-    <!-- Legend Section -->
     <section class="absolute bottom-4 left-4 md:right-12 md:bottom-auto md:left-auto bg-white rounded-2xl shadow-lg flex md:flex-col px-4 md:px-8 py-4 md:py-6 z-40 w-[calc(100%-2rem)] md:w-fit">
       <h3 class="text-base md:text-lg font-semibold mb-0 md:mb-4 mr-4 md:mr-0 whitespace-nowrap">Cluster Legend</h3>
       <div class="flex md:flex-col gap-4 w-fit overflow-x-auto md:overflow-x-visible">
@@ -85,7 +347,6 @@
       </div>
     </section>
 
-    <!-- Map Container -->
     <div
       id="map"
       class="h-full w-full mx-auto"

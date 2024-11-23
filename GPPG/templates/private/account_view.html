@@ -83,7 +83,13 @@
         </div>
         <div class="flex items-center">
           <button
-            class="px-4 py-2 border rounded-2xl text-center items-center cursor-pointer text-sm font-semibold hover:bg-gray-50 p-2 border-gray-500 text-gray-500 hover:border-black hover:text-black transition-all duration-300 hover:shadow-md">
+            hx-get="{% url 'change_password' %}"
+            hx-target="#modal-content"
+            hx-trigger="click"
+            data-modal-toggle="modaldialog"
+            data-modal-target="modaldialog"
+            onclick="showTitle('Change Password');"
+            class="px-4 py-2 rounded-lg text-center items-center cursor-pointer text-sm font-semibold p-2 bg-black hover:bg-white text-white hover:text-black ring-1 ring-black transition-all duration-300 hover:shadow-md">
             Change Password
           </button>
         </div>
@@ -92,6 +98,10 @@
   </div>
 </section>
 {% include 'admin/includes//modal/modal_dialogs.html' %}
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/private/ChangePass.js' %}"></script>
+
 <script src="{% static 'js/admin/modal.js' %}"></script>
 <script src="{% static 'js/htmx.min.js' %}"></script>
+
 {% endblock %}

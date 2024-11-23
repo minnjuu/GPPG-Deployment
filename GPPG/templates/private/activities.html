@@ -1,82 +1,249 @@
 {% extends "private/index.html" %} {% load static %} {% block title %}GPPG - Activities{% endblock title %}
+
 <header>
   {% block nav %} {% include 'private/includes/nav.html' %}
-  <div class="flex flex-col m-5 mt-8 ml-16">
-    <h2 class="text-2xl font-bold">Activities</h2>
+  <div class="flex justify-between m-5 mt-8 mx-16">
+    <div class="flex items-center gap-3">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-8 h-8"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round">
+        <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
+      </svg>
+      <h2 class="text-2xl font-bold">Activities</h2>
+    </div>
+    <div class="flex items-center gap-2 bg-white rounded-lg px-4 py-2 shadow-md">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-6 h-6 text-gray-600"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+        <circle
+          cx="9"
+          cy="7"
+          r="4" />
+        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+      </svg>
+      <p class="text-lg font-semibold"><span class="text-blue-600">69</span></p>
+    </div>
   </div>
   {% endblock nav %}
 </header>
+
 {% block content %}
 <section class="mx-16 h-fit">
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
-    {% for event in latest_events %} {% if forloop.last and forloop.counter == 6 %}
+    {% for event in latest_events %}
     <div
-      class="overflow-hidden hidden 2xl:flex 2xl:flex-col rounded-xl group bg-white shadow-lg stat-card animate-slideIn"
+      class="overflow-hidden flex flex-col rounded-xl bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 stat-card animate-slideIn"
       style="animation-delay: {% widthratio forloop.counter 10 0.5 %}s">
       {% if event.event_image %}
-      <img
-        src="{{ event.event_image.url }}"
-        alt="{{ event.name }}"
-        class="w-full h-60 object-cover"
-        onclick="openModal(this)"
-        oncontextmenu="return false;"
-        draggable="false" />
-      {% endif %}
-      <p class="text-left m-5 text-black text-base font-semibold font-['Bahnschrift']">{{ event.name }}</p>
-    </div>
-    {% else %}
-    <div
-      class="overflow-hidden hidden 2xl:flex 2xl:flex-col rounded-xl group bg-white shadow-lg stat-card animate-slideIn"
-      style="animation-delay: {% widthratio forloop.counter 10 0.5 %}s">
-      {% if event.event_image %}
-      <img
-        src="{{ event.event_image.url }}"
-        alt="{{ event.name }}"
-        class="w-full h-60 object-cover"
-        onclick="openModal(this)"
-        oncontextmenu="return false;"
-        draggable="false" />
-      {% endif %}
-      <p class="text-left m-5 text-black text-base font-semibold font-['Bahnschrift']">{{ event.name }}</p>
-    </div>
-    {% endif %} {% endfor %}
-  </div>
-</section>
-<section class="mt-8 mb-5 mx-16 h-screen scroll-thin overflow-y-auto">
-  <div class="mx-auto flex flex-wrap justify-center gap-10">
-    {% for event in all_events %} {% if forloop.counter|divisibleby:2 %}
-    <div class="mx-auto flex flex-wrap md:flex-nowrap justify-center gap-10 w-full p-6 bg-[#3f0703] py-16 shadow-xl rounded-3xl">
-      <div class="text-content w-full md:w-1/2 p-6 text-white">
-        <h2 class="text-left text-3xl md:text-4xl capitalize font-extrabold leading-tight text-dark-grey-900 font-['Bahnschrift'] mb-5">{{ event.name }}</h2>
-        <p class="text-left text-lg md:text-lg font-normal leading-7 font-['Roboto']">{{ event.description }}</p>
-        <div class="mt-4">
-          <p class="text-left text-lg font-normal leading-7">{{ event.date }}</p>
-        </div>
-      </div>
-      <div class="image-content w-full md:w-1/4 flex justify-center items-center md:order-last order-first">
-        {% if event.event_image %}
+      <div class="relative group">
         <img
           src="{{ event.event_image.url }}"
           alt="{{ event.name }}"
-          class="w-auto h-72 rounded-lg shadow-lg" />
-        {% endif %}
+          class="w-full h-60 object-cover transform group-hover:scale-105 transition-transform duration-300"
+          onclick="openModal(this)"
+          oncontextmenu="return false;"
+          draggable="false"
+          loading="lazy" />
+        <div class="absolute inset-0 bg-black bg-opacity-0 transition-opacity duration-300"></div>
+      </div>
+      {% endif %}
+      <div class="p-5">
+        <div class="flex items-center gap-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5 text-black"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M15.5 2H8.6c-.4 0-.8.2-1.1.5-.3.3-.5.7-.5 1.1v16.8c0 .4.2.8.5 1.1.3.3.7.5 1.1.5h12.8c.4 0 .8-.2 1.1-.5.3-.3.5-.7.5-1.1V6.5L15.5 2z" />
+            <polyline points="15 2 15 7 20 7" />
+            <line
+              x1="10"
+              y1="12"
+              x2="16"
+              y2="12" />
+            <line
+              x1="10"
+              y1="16"
+              x2="16"
+              y2="16" />
+          </svg>
+          <p class="text-black text-base font-semibold font-['Bahnschrift']">{{ event.name }}</p>
+        </div>
       </div>
     </div>
-    {% else %}
-    <div class="mx-auto flex flex-wrap justify-center gap-10 p-6 w-full bg-[#3f0703] py-16 shadow-xl rounded-3xl">
+    {% endfor %}
+  </div>
+</section>
+
+<section class="mt-8 mb-5 mx-16 h-screen scroll-thin overflow-y-auto">
+  <div class="mx-auto flex flex-wrap justify-center gap-10">
+    {% for event in all_events %} {% if forloop.counter|divisibleby:2 %}
+    <div
+      class="mx-auto flex flex-wrap md:flex-nowrap justify-center gap-10 w-full p-6 bg-gradient-to-r from-[#3f0703] to-[#631108] py-16 shadow-xl rounded-3xl hover:shadow-2xl transition-shadow duration-300">
+      <div class="text-content w-full md:w-1/2 p-6 text-white">
+        <div class="flex items-center gap-3 mb-5">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-8 h-8"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M15.5 2H8.6c-.4 0-.8.2-1.1.5-.3.3-.5.7-.5 1.1v16.8c0 .4.2.8.5 1.1.3.3.7.5 1.1.5h12.8c.4 0 .8-.2 1.1-.5.3-.3.5-.7.5-1.1V6.5L15.5 2z" />
+            <polyline points="15 2 15 7 20 7" />
+            <line
+              x1="10"
+              y1="12"
+              x2="16"
+              y2="12" />
+            <line
+              x1="10"
+              y1="16"
+              x2="16"
+              y2="16" />
+          </svg>
+          <h2 class="text-3xl md:text-4xl capitalize font-extrabold leading-tight font-['Bahnschrift']">{{ event.name }}</h2>
+        </div>
+        <p class="text-left text-lg md:text-lg font-normal leading-7 font-['Roboto']">{{ event.description }}</p>
+        <div class="mt-4 flex items-center gap-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect
+              width="18"
+              height="18"
+              x="3"
+              y="4"
+              rx="2"
+              ry="2" />
+            <line
+              x1="16"
+              x2="16"
+              y1="2"
+              y2="6" />
+            <line
+              x1="8"
+              x2="8"
+              y1="2"
+              y2="6" />
+            <line
+              x1="3"
+              x2="21"
+              y1="10"
+              y2="10" />
+          </svg>
+          <p class="text-lg font-normal">{{ event.date }}</p>
+        </div>
+      </div>
       <div class="image-content w-full md:w-1/4 flex justify-center items-center">
         {% if event.event_image %}
         <img
           src="{{ event.event_image.url }}"
           alt="{{ event.name }}"
-          class="w-auto h-72 rounded-lg shadow-lg" />
+          class="w-auto h-72 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
+          loading="lazy" />
+        {% endif %}
+      </div>
+    </div>
+    {% else %}
+    <div
+      class="mx-auto flex flex-wrap md:flex-nowrap justify-center gap-10 w-full p-6 bg-gradient-to-l from-[#3f0703] to-[#631108] py-16 shadow-xl rounded-3xl hover:shadow-2xl transition-shadow duration-300">
+      <div class="image-content w-full md:w-1/4 flex justify-center items-center">
+        {% if event.event_image %}
+        <img
+          src="{{ event.event_image.url }}"
+          alt="{{ event.name }}"
+          class="w-auto h-72 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
+          loading="lazy" />
         {% endif %}
       </div>
       <div class="text-content w-full md:w-1/2 p-6 text-white">
-        <h2 class="text-left text-3xl md:text-4xl capitalize font-extrabold leading-tight text-dark-grey-900 font-['Bahnschrift'] mb-5">{{ event.name }}</h2>
+        <div class="flex items-center gap-3 mb-5">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-8 h-8"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M15.5 2H8.6c-.4 0-.8.2-1.1.5-.3.3-.5.7-.5 1.1v16.8c0 .4.2.8.5 1.1.3.3.7.5 1.1.5h12.8c.4 0 .8-.2 1.1-.5.3-.3.5-.7.5-1.1V6.5L15.5 2z" />
+            <polyline points="15 2 15 7 20 7" />
+            <line
+              x1="10"
+              y1="12"
+              x2="16"
+              y2="12" />
+            <line
+              x1="10"
+              y1="16"
+              x2="16"
+              y2="16" />
+          </svg>
+          <h2 class="text-3xl md:text-4xl capitalize font-extrabold leading-tight font-['Bahnschrift']">{{ event.name }}</h2>
+        </div>
         <p class="text-left text-lg md:text-lg font-normal leading-7 font-['Roboto']">{{ event.description }}</p>
-        <div class="mt-4">
-          <p class="text-left text-lg font-normal leading-7">{{ event.date }}</p>
+        <div class="mt-4 flex items-center gap-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect
+              width="18"
+              height="18"
+              x="3"
+              y="4"
+              rx="2"
+              ry="2" />
+            <line
+              x1="16"
+              x2="16"
+              y1="2"
+              y2="6" />
+            <line
+              x1="8"
+              x2="8"
+              y1="2"
+              y2="6" />
+            <line
+              x1="3"
+              x2="21"
+              y1="10"
+              y2="10" />
+          </svg>
+          <p class="text-lg font-normal">{{ event.date }}</p>
         </div>
       </div>
     </div>

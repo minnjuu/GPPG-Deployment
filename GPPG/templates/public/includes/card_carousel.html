@@ -1,89 +1,57 @@
 {% load static %}
-<h2
-  class="text-center sm:text-left text-2xl md:text-3xl capitalize font-extrabold leading-tight font-['Bahnschrift'] my-8"
->
-  Other pangolins
-</h2>
+<h2 class="text-center sm:text-left text-2xl md:text-3xl capitalize font-extrabold leading-tight font-['Bahnschrift'] my-8">Other pangolins</h2>
 <div></div>
 <div class="relative flex items-center justify-center w-full h-full">
   <!-- Prev Button -->
   <button
     id="prevBtn"
-    class="flex top-0 left-0 z-30 justify-center items-center px-4 h-full cursor-pointer group focus:outline-none transition-opacity duration-300 ease-in-out"
-  >
+    class="flex top-0 left-0 z-30 justify-center items-center px-4 h-full cursor-pointer group focus:outline-none transition-opacity duration-300 ease-in-out">
     <svg
       class="dark:text-neutral-900"
       width="25"
       height="35"
       viewBox="0 0 8 14"
-      fill="none"
-    >
+      fill="none">
       <path
         d="M7 1L1 7L7 13"
         stroke="currentColor"
         stroke-width="0.5"
         stroke-linecap="round"
-        stroke-linejoin="round"
-      />
+        stroke-linejoin="round" />
     </svg>
   </button>
 
   <!-- Carousel wrapper -->
-  <div id="carouselWrapper" class="relative w-full overflow-hidden">
+  <div
+    id="carouselWrapper"
+    class="relative w-full overflow-hidden">
     <!-- Carousel inner container to control animation transitions -->
     <div
       id="carouselInner"
-      class="flex transition-transform duration-700 ease-in-out"
-    >
+      class="flex transition-transform duration-700 ease-in-out">
       <!-- Ground Pangolin -->
       <div class="carousel-item w-full flex-shrink-0 flex justify-center">
-        <div
-          class="h-full flex rounded-xl image-content w-full md:w-2/3 justify-center items-center mx-auto overflow-hidden"
-        >
-          <section
-            class="w-full border border-gray-300 shadow-lg rounded-xl md:w-[700px] lg:h-[350px]"
-          >
+        <div class="h-full flex rounded-xl image-content w-full md:w-2/3 justify-center items-center mx-auto overflow-hidden">
+          <section class="w-full border border-gray-300 shadow-lg rounded-xl md:w-[700px] lg:h-[350px]">
             <div class="container mx-auto flex flex-wrap">
-              <div
-                class="w-full h-[250px] lg:w-2/5 mb-5 lg:mb-0 overflow-hidden rounded-xl object-cover lg:h-[350px]"
-              >
+              <div class="w-full h-[250px] lg:w-2/5 mb-5 lg:mb-0 overflow-hidden rounded-xl object-cover lg:h-[350px]">
                 <img
                   alt="feature"
-                  class="object-cover object-center object-right image-content h-full w-full"
-                  src="{% static 'img/Carousel_Image/Groundpangolin.png' %}"
-                />
+                  class="object-cover object-center image-content h-full w-full"
+                  src="{% static 'img/Carousel_Image/Groundpangolin.png' %}" />
               </div>
-              <div
-                class="flex flex-col flex-wrap lg:py-6 mb-5 lg:w-3/5 lg:pl-6 lg:text-left text-center"
-              >
-                <h2 class="text-gray-900 text-xl title-font font-bold mb-3">
-                  Ground Pangolin
-                </h2>
-                <div
-                  class="mt-4 text-[#68717a] text-sm space-y-2 text-left mx-3"
-                >
-                  <p>
-                    <span class="font-bold">Known as:</span> Temminck's
-                    Pangolin, Cape Pangolin
-                  </p>
+              <div class="flex flex-col flex-wrap lg:py-6 mb-5 lg:w-3/5 lg:pl-6 lg:text-left text-center">
+                <h2 class="text-gray-900 text-xl title-font font-bold mb-3">Ground Pangolin</h2>
+                <div class="mt-4 text-[#68717a] text-sm space-y-2 text-left mx-3">
+                  <p><span class="font-bold">Known as:</span> Temminck's Pangolin, Cape Pangolin</p>
                   <p>
                     <span class="font-bold">Scientific Name:</span>
                     <i>Smutsia temminckii</i>
                   </p>
-                  <p>
-                    <span class="font-bold">Location:</span> Southern and
-                    Eastern Africa
-                  </p>
-                  <p>
-                    <span class="font-bold">Unique Feature:</span> Tough,
-                    overlapping scales provide armor-like protection
-                  </p>
+                  <p><span class="font-bold">Location:</span> Southern and Eastern Africa</p>
+                  <p><span class="font-bold">Unique Feature:</span> Tough, overlapping scales provide armor-like protection</p>
                   <p><span class="font-bold">Diet:</span> Ants and termites</p>
-                  <p>
-                    <span class="font-bold">Behavior:</span> Solitary and
-                    nocturnal (active at night), Excellent burrowers often use
-                    abandoned aardvark or warthog burrows
-                  </p>
+                  <p><span class="font-bold">Behavior:</span> Solitary and nocturnal (active at night), Excellent burrowers often use abandoned aardvark or warthog burrows</p>
                   <p><span class="font-bold">Status:</span> Vulnerable</p>
                 </div>
               </div>
@@ -93,57 +61,28 @@
       </div>
       <!-- Chinese Pangolin -->
       <div class="carousel-item w-full flex-shrink-0 flex justify-center">
-        <div
-          class="h-full flex rounded-xl image-content w-full md:w-2/3 justify-center items-center mx-auto overflow-hidden"
-        >
-          <section
-            class="w-full border border-gray-300 shadow-lg rounded-xl md:w-[700px] lg:h-[350px]"
-          >
+        <div class="h-full flex rounded-xl image-content w-full md:w-2/3 justify-center items-center mx-auto overflow-hidden">
+          <section class="w-full border border-gray-300 shadow-lg rounded-xl md:w-[700px] lg:h-[350px]">
             <div class="container mx-auto flex flex-wrap">
-              <div
-                class="w-full h-[250px] lg:w-2/5 mb-5 lg:mb-0 overflow-hidden rounded-xl object-cover lg:h-[350px]"
-              >
+              <div class="w-full h-[250px] lg:w-2/5 mb-5 lg:mb-0 overflow-hidden rounded-xl object-cover lg:h-[350px]">
                 <img
                   alt="feature"
                   class="object-cover object-center h-full w-full"
-                  src="{% static 'img/Carousel_Image/Chinesepangolin.png' %}"
-                />
+                  src="{% static 'img/Carousel_Image/Chinesepangolin.png' %}" />
               </div>
-              <div
-                class="flex flex-col flex-wrap lg:py-6 mb-5 lg:w-3/5 lg:pl-6 lg:text-left text-center"
-              >
-                <h2 class="text-gray-900 text-xl title-font font-bold mb-3">
-                  Chinese Pangolin
-                </h2>
-                <div
-                  class="mt-4 text-[#68717a] text-sm space-y-2 text-left mx-3"
-                >
-                  <p>
-                    <span class="font-bold">Known as: </span>Chinese Scaly
-                    Anteater
-                  </p>
+              <div class="flex flex-col flex-wrap lg:py-6 mb-5 lg:w-3/5 lg:pl-6 lg:text-left text-center">
+                <h2 class="text-gray-900 text-xl title-font font-bold mb-3">Chinese Pangolin</h2>
+                <div class="mt-4 text-[#68717a] text-sm space-y-2 text-left mx-3">
+                  <p><span class="font-bold">Known as: </span>Chinese Scaly Anteater</p>
                   <p>
                     <span class="font-bold">Scientific Name: </span>
                     <i>Manis pentadactylai</i>
                   </p>
-                  <p>
-                    <span class="font-bold">Location: </span>Northern Indian
-                    subcontinent, northern parts of Southeast Asia and southern
-                    China.
-                  </p>
-                  <p>
-                    <span class="font-bold">Unique Feature: </span>Covered in
-                    protective keratin scales.
-                  </p>
+                  <p><span class="font-bold">Location: </span>Northern Indian subcontinent, northern parts of Southeast Asia and southern China.</p>
+                  <p><span class="font-bold">Unique Feature: </span>Covered in protective keratin scales.</p>
                   <p><span class="font-bold">Diet: </span> Ants and termites</p>
-                  <p>
-                    <span class="font-bold">Behavior: </span>Solitary and
-                    nocturnal (active at night), Spends most of its time on the
-                    ground.
-                  </p>
-                  <p>
-                    <span class="font-bold">Status: </span>Critically Endangered
-                  </p>
+                  <p><span class="font-bold">Behavior: </span>Solitary and nocturnal (active at night), Spends most of its time on the ground.</p>
+                  <p><span class="font-bold">Status: </span>Critically Endangered</p>
                 </div>
               </div>
             </div>
@@ -152,61 +91,27 @@
       </div>
       <!-- Black-Bellied Pangolin -->
       <div class="carousel-item w-full flex-shrink-0 flex justify-center">
-        <div
-          class="h-full flex rounded-xl image-content w-full md:w-2/3 justify-center items-center mx-auto overflow-hidden"
-        >
-          <section
-            class="w-full border border-gray-300 shadow-lg rounded-xl md:w-[700px] lg:h-[350px]"
-          >
+        <div class="h-full flex rounded-xl image-content w-full md:w-2/3 justify-center items-center mx-auto overflow-hidden">
+          <section class="w-full border border-gray-300 shadow-lg rounded-xl md:w-[700px] lg:h-[350px]">
             <div class="container mx-auto flex flex-wrap">
-              <div
-                class="w-full h-[250px] lg:w-2/5 mb-5 lg:mb-0 overflow-hidden rounded-xl object-cover lg:h-[350px]"
-              >
+              <div class="w-full h-[250px] lg:w-2/5 mb-5 lg:mb-0 overflow-hidden rounded-xl object-cover lg:h-[350px]">
                 <img
                   alt="feature"
                   class="object-cover object-center h-full w-full"
-                  src="{% static 'img/Carousel_Image/blackbelliedpangolin.png' %}"
-                />
+                  src="{% static 'img/Carousel_Image/blackbelliedpangolin.png' %}" />
               </div>
-              <div
-                class="flex flex-col flex-wrap lg:py-6 mb-5 lg:w-3/5 lg:pl-6 lg:text-left text-center"
-              >
-                <h2 class="text-gray-900 text-xl title-font font-bold mb-3">
-                  Black-Bellied Pangolin
-                </h2>
-                <div
-                  class="mt-4 text-[#68717a] text-sm space-y-2 text-left mx-3"
-                >
+              <div class="flex flex-col flex-wrap lg:py-6 mb-5 lg:w-3/5 lg:pl-6 lg:text-left text-center">
+                <h2 class="text-gray-900 text-xl title-font font-bold mb-3">Black-Bellied Pangolin</h2>
+                <div class="mt-4 text-[#68717a] text-sm space-y-2 text-left mx-3">
+                  <p><span class="font-bold">Known as: </span>African black-bellied pangolin or ipi</p>
+                  <p><span class="font-bold">Scientific Name: </span><i>Phataginus tetradactyla</i></p>
+                  <p><span class="font-bold">Location:</span> Southern and Eastern Africa</p>
                   <p>
-                    <span class="font-bold">Known as: </span>African
-                    black-bellied pangolin or ipi
+                    <span class="font-bold">Size: </span>Smallest of the eight extant pangolin species, with a body length of 30–40 cm (12–16 in) and a tail even longer, reaching 60–70 cm (24–28 in).
                   </p>
-                  <p>
-                    <span class="font-bold">Scientific Name: </span
-                    ><i>Phataginus tetradactyla</i>
-                  </p>
-                  <p>
-                    <span class="font-bold">Location:</span> Southern and
-                    Eastern Africa
-                  </p>
-                  <p>
-                    <span class="font-bold">Size: </span>Smallest of the eight
-                    extant pangolin species, with a body length of 30–40 cm
-                    (12–16 in) and a tail even longer, reaching 60–70 cm (24–28
-                    in).
-                  </p>
-                  <p>
-                    <span class="font-bold">Unique Feature: </span>Has the
-                    record for the most vertebrae (46-47) in a mammal's tail!
-                  </p>
-                  <p>
-                    <span class="font-bold">Diet: </span>Unlike other pangolins,
-                    they primarily feed on ants instead of termites.
-                  </p>
-                  <p>
-                    <span class="font-bold">Behavior: </span>Diurnal (active
-                    during the day) and spends most of its time in trees.
-                  </p>
+                  <p><span class="font-bold">Unique Feature: </span>Has the record for the most vertebrae (46-47) in a mammal's tail!</p>
+                  <p><span class="font-bold">Diet: </span>Unlike other pangolins, they primarily feed on ants instead of termites.</p>
+                  <p><span class="font-bold">Behavior: </span>Diurnal (active during the day) and spends most of its time in trees.</p>
                   <p><span class="font-bold">Status: </span>Vulnerable</p>
                 </div>
               </div>
@@ -216,57 +121,24 @@
       </div>
       <!-- White-Bellied Pangolin -->
       <div class="carousel-item w-full flex-shrink-0 flex justify-center">
-        <div
-          class="h-full flex rounded-xl image-content w-full md:w-2/3 justify-center items-center mx-auto overflow-hidden"
-        >
-          <section
-            class="w-full border border-gray-300 shadow-lg rounded-xl md:w-[700px] lg:h-[350px]"
-          >
+        <div class="h-full flex rounded-xl image-content w-full md:w-2/3 justify-center items-center mx-auto overflow-hidden">
+          <section class="w-full border border-gray-300 shadow-lg rounded-xl md:w-[700px] lg:h-[350px]">
             <div class="container mx-auto flex flex-wrap">
-              <div
-                class="w-full h-[250px] lg:w-2/5 mb-5 lg:mb-0 overflow-hidden rounded-xl object-cover lg:h-[350px]"
-              >
+              <div class="w-full h-[250px] lg:w-2/5 mb-5 lg:mb-0 overflow-hidden rounded-xl object-cover lg:h-[350px]">
                 <img
                   alt="feature"
                   class="object-cover object-center h-full w-full"
-                  src="{% static 'img/Carousel_Image/WhiteBelliedpangolin.png' %}"
-                />
+                  src="{% static 'img/Carousel_Image/WhiteBelliedpangolin.png' %}" />
               </div>
-              <div
-                class="flex flex-col flex-wrap lg:py-6 mb-5 lg:w-3/5 lg:pl-6 lg:text-left text-center"
-              >
-                <h2 class="text-gray-900 text-xl title-font font-bold mb-3">
-                  White Bellied Pangolin
-                </h2>
-                <div
-                  class="mt-4 text-[#68717a] text-sm space-y-2 text-left mx-3"
-                >
-                  <p>
-                    <span class="font-bold">Known as: </span>The tree pangolin
-                  </p>
-                  <p>
-                    <span class="font-bold">Scientific Name: </span
-                    ><i>Phataginus tricuspis</i>
-                  </p>
-                  <p>
-                    <span class="font-bold">Location: </span>Equatorial Africa,
-                    ranging from Guinea through Sierra Leone and West Africa to
-                    Central Africa.
-                  </p>
-                  <p>
-                    <span class="font-bold">Unique Feature: </span>Strong,
-                    prehensile tail that helps them climb trees.
-                  </p>
-                  <p>
-                    <span class="font-bold">Diet: </span>Primarily insectivores,
-                    feeding on ants and termites using their long, sticky
-                    tongues.s
-                  </p>
-                  <p>
-                    <span class="font-bold">Behavior: </span>Solitary and
-                    nocturnal. Can walk on all fours or bipedally using their
-                    tail for balance.
-                  </p>
+              <div class="flex flex-col flex-wrap lg:py-6 mb-5 lg:w-3/5 lg:pl-6 lg:text-left text-center">
+                <h2 class="text-gray-900 text-xl title-font font-bold mb-3">White Bellied Pangolin</h2>
+                <div class="mt-4 text-[#68717a] text-sm space-y-2 text-left mx-3">
+                  <p><span class="font-bold">Known as: </span>The tree pangolin</p>
+                  <p><span class="font-bold">Scientific Name: </span><i>Phataginus tricuspis</i></p>
+                  <p><span class="font-bold">Location: </span>Equatorial Africa, ranging from Guinea through Sierra Leone and West Africa to Central Africa.</p>
+                  <p><span class="font-bold">Unique Feature: </span>Strong, prehensile tail that helps them climb trees.</p>
+                  <p><span class="font-bold">Diet: </span>Primarily insectivores, feeding on ants and termites using their long, sticky tongues.s</p>
+                  <p><span class="font-bold">Behavior: </span>Solitary and nocturnal. Can walk on all fours or bipedally using their tail for balance.</p>
                   <p><span class="font-bold">Status: </span>Endangered</p>
                 </div>
               </div>
@@ -276,56 +148,25 @@
       </div>
       <!-- Sunda Pangolin -->
       <div class="carousel-item w-full flex-shrink-0 flex justify-center">
-        <div
-          class="h-full flex rounded-xl image-content w-full md:w-2/3 justify-center items-center mx-auto overflow-hidden"
-        >
-          <section
-            class="w-full border border-gray-300 shadow-lg rounded-xl md:w-[700px] lg:h-[350px]"
-          >
+        <div class="h-full flex rounded-xl image-content w-full md:w-2/3 justify-center items-center mx-auto overflow-hidden">
+          <section class="w-full border border-gray-300 shadow-lg rounded-xl md:w-[700px] lg:h-[350px]">
             <div class="container mx-auto flex flex-wrap">
-              <div
-                class="w-full h-[250px] lg:w-2/5 mb-5 lg:mb-0 overflow-hidden rounded-xl object-cover lg:h-[350px]"
-              >
+              <div class="w-full h-[250px] lg:w-2/5 mb-5 lg:mb-0 overflow-hidden rounded-xl object-cover lg:h-[350px]">
                 <img
                   alt="feature"
                   class="object-cover object-center h-full w-full"
-                  src="{% static 'img/Carousel_Image/Sundapangolin.png' %}"
-                />
+                  src="{% static 'img/Carousel_Image/Sundapangolin.png' %}" />
               </div>
-              <div
-                class="flex flex-col flex-wrap lg:py-6 mb-5 lg:w-3/5 lg:pl-6 lg:text-left text-center"
-              >
-                <h2 class="text-gray-900 text-xl title-font font-bold mb-3">
-                  Sunda Pangolin
-                </h2>
-                <div
-                  class="mt-4 text-[#68717a] text-sm space-y-2 text-left mx-3"
-                >
-                  <p>
-                    <span class="font-bold">Known as: </span>Malayan or Javan
-                    Pangolin
-                  </p>
-                  <p>
-                    <span class="font-bold">Scientific Name: </span>Manis
-                    javanicai
-                  </p>
-                  <p>
-                    <span class="font-bold">Location: </span>Throughout
-                    Southeast Asia (Thailand, Myanmar, Malaysia, Singapore,
-                    Vietnam, Indonesia, and various islands)
-                  </p>
-                  <p>
-                    <span class="font-bold">Unique Feature: </span>Can be more
-                    arboreal than other pangolins, spending time in trees
-                  </p>
+              <div class="flex flex-col flex-wrap lg:py-6 mb-5 lg:w-3/5 lg:pl-6 lg:text-left text-center">
+                <h2 class="text-gray-900 text-xl title-font font-bold mb-3">Sunda Pangolin</h2>
+                <div class="mt-4 text-[#68717a] text-sm space-y-2 text-left mx-3">
+                  <p><span class="font-bold">Known as: </span>Malayan or Javan Pangolin</p>
+                  <p><span class="font-bold">Scientific Name: </span>Manis javanicai</p>
+                  <p><span class="font-bold">Location: </span>Throughout Southeast Asia (Thailand, Myanmar, Malaysia, Singapore, Vietnam, Indonesia, and various islands)</p>
+                  <p><span class="font-bold">Unique Feature: </span>Can be more arboreal than other pangolins, spending time in trees</p>
                   <p><span class="font-bold">Diet: </span>Ants and termites</p>
-                  <p>
-                    <span class="font-bold">Behavior: </span>Can walk on all
-                    fours or bipedally, using their tail for balance
-                  </p>
-                  <p>
-                    <span class="font-bold">Status: </span>Critically Endangered
-                  </p>
+                  <p><span class="font-bold">Behavior: </span>Can walk on all fours or bipedally, using their tail for balance</p>
+                  <p><span class="font-bold">Status: </span>Critically Endangered</p>
                 </div>
               </div>
             </div>
@@ -334,51 +175,24 @@
       </div>
       <!-- Giant Pangolin -->
       <div class="carousel-item w-full flex-shrink-0 flex justify-center">
-        <div
-          class="h-full flex rounded-xl image-content w-full md:w-2/3 justify-center items-center mx-auto overflow-hidden"
-        >
-          <section
-            class="w-full border border-gray-300 shadow-lg rounded-xl md:w-[700px] lg:h-[350px]"
-          >
+        <div class="h-full flex rounded-xl image-content w-full md:w-2/3 justify-center items-center mx-auto overflow-hidden">
+          <section class="w-full border border-gray-300 shadow-lg rounded-xl md:w-[700px] lg:h-[350px]">
             <div class="container mx-auto flex flex-wrap">
-              <div
-                class="w-full h-[250px] lg:w-2/5 mb-5 lg:mb-0 overflow-hidden rounded-xl object-cover lg:h-[350px]"
-              >
+              <div class="w-full h-[250px] lg:w-2/5 mb-5 lg:mb-0 overflow-hidden rounded-xl object-cover lg:h-[350px]">
                 <img
                   alt="feature"
                   class="object-cover object-center h-full w-full"
-                  src="{% static 'img/Carousel_Image/Giantpangolin.png' %}"
-                />
+                  src="{% static 'img/Carousel_Image/Giantpangolin.png' %}" />
               </div>
-              <div
-                class="flex flex-col flex-wrap lg:py-6 mb-5 lg:w-3/5 lg:pl-6 lg:text-left text-center"
-              >
-                <h2 class="text-gray-900 text-xl title-font font-bold mb-3">
-                  Giant Pangolin
-                </h2>
-                <div
-                  class="mt-4 text-[#68717a] text-sm space-y-2 text-left mx-3"
-                >
+              <div class="flex flex-col flex-wrap lg:py-6 mb-5 lg:w-3/5 lg:pl-6 lg:text-left text-center">
+                <h2 class="text-gray-900 text-xl title-font font-bold mb-3">Giant Pangolin</h2>
+                <div class="mt-4 text-[#68717a] text-sm space-y-2 text-left mx-3">
                   <p><span class="font-bold">Known as: </span>Giant Pangolin</p>
-                  <p>
-                    <span class="font-bold">Scientific Name: </span
-                    ><i>Smutsia gigantea</i>
-                  </p>
-                  <p>
-                    <span class="font-bold">Location: </span>Central and West
-                    Africa
-                  </p>
-                  <p>
-                    <span class="font-bold">Unique Feature: </span>Largest of
-                    all pangolin species, can reach up to 1.8 meters (5 ft 11
-                    in) in length, Primarily terrestrial (ground dwelling)
-                  </p>
+                  <p><span class="font-bold">Scientific Name: </span><i>Smutsia gigantea</i></p>
+                  <p><span class="font-bold">Location: </span>Central and West Africa</p>
+                  <p><span class="font-bold">Unique Feature: </span>Largest of all pangolin species, can reach up to 1.8 meters (5 ft 11 in) in length, Primarily terrestrial (ground dwelling)</p>
                   <p><span class="font-bold">Diet:</span> Ants and termites</p>
-                  <p>
-                    <span class="font-bold">Behavior: </span>Solitary and
-                    nocturnal (active at night) Strong diggers, build their own
-                    burrows
-                  </p>
+                  <p><span class="font-bold">Behavior: </span>Solitary and nocturnal (active at night) Strong diggers, build their own burrows</p>
                   <p><span class="font-bold">Status: </span>Endangered</p>
                 </div>
               </div>
@@ -388,59 +202,24 @@
       </div>
       <!-- Indian Pangolin -->
       <div class="carousel-item w-full flex-shrink-0 flex justify-center">
-        <div
-          class="h-full flex rounded-xl image-content w-full md:w-2/3 justify-center items-center mx-auto overflow-hidden"
-        >
-          <section
-            class="w-full border border-gray-300 shadow-lg rounded-xl md:w-[700px] lg:h-[350px]"
-          >
+        <div class="h-full flex rounded-xl image-content w-full md:w-2/3 justify-center items-center mx-auto overflow-hidden">
+          <section class="w-full border border-gray-300 shadow-lg rounded-xl md:w-[700px] lg:h-[350px]">
             <div class="container mx-auto flex flex-wrap">
-              <div
-                class="w-full h-[250px] lg:w-2/5 mb-5 lg:mb-0 overflow-hidden rounded-xl object-cover lg:h-[350px]"
-              >
+              <div class="w-full h-[250px] lg:w-2/5 mb-5 lg:mb-0 overflow-hidden rounded-xl object-cover lg:h-[350px]">
                 <img
                   alt="feature"
                   class="object-cover object-center h-full w-full"
-                  src="{% static 'img/Carousel_Image/Indianpangolin.png' %}"
-                />
+                  src="{% static 'img/Carousel_Image/Indianpangolin.png' %}" />
               </div>
-              <div
-                class="flex flex-col flex-wrap lg:py-6 mb-5 lg:w-3/5 lg:pl-6 lg:text-left text-center"
-              >
-                <h2 class="text-gray-900 text-xl title-font font-bold mb-3">
-                  Indian Pangolin
-                </h2>
-                <div
-                  class="mt-4 text-[#68717a] text-sm space-y-2 text-left mx-3"
-                >
-                  <p>
-                    <span class="font-bold">Known as: </span>Thick-tailed
-                    Pangolin
-                  </p>
-                  <p>
-                    <span class="font-bold">Scientific Name: </span
-                    ><i>Manis crassicaudata</i>
-                  </p>
-                  <p>
-                    <span class="font-bold">Location: </span>Found throughout
-                    India (except the arid regions and high Himalayas) and some
-                    parts of Bangladesh, Nepal, Pakistan, and Sri Lanka.
-                  </p>
-                  <p>
-                    <span class="font-bold">Unique Feature: </span>Has the
-                    largest scales compared to other Asian pangolins and a thick
-                    tail.
-                  </p>
-                  <p>
-                    <span class="font-bold">Diet: </span>Primarily
-                    insectivorous, feeding heavily on ants and termites with
-                    their long, sticky tongues.
-                  </p>
-                  <p>
-                    <span class="font-bold">Behavior: </span>Primarily
-                    terrestrial (ground dwelling) but can climb short distances.
-                    Also solitary and shy.
-                  </p>
+              <div class="flex flex-col flex-wrap lg:py-6 mb-5 lg:w-3/5 lg:pl-6 lg:text-left text-center">
+                <h2 class="text-gray-900 text-xl title-font font-bold mb-3">Indian Pangolin</h2>
+                <div class="mt-4 text-[#68717a] text-sm space-y-2 text-left mx-3">
+                  <p><span class="font-bold">Known as: </span>Thick-tailed Pangolin</p>
+                  <p><span class="font-bold">Scientific Name: </span><i>Manis crassicaudata</i></p>
+                  <p><span class="font-bold">Location: </span>Found throughout India (except the arid regions and high Himalayas) and some parts of Bangladesh, Nepal, Pakistan, and Sri Lanka.</p>
+                  <p><span class="font-bold">Unique Feature: </span>Has the largest scales compared to other Asian pangolins and a thick tail.</p>
+                  <p><span class="font-bold">Diet: </span>Primarily insectivorous, feeding heavily on ants and termites with their long, sticky tongues.</p>
+                  <p><span class="font-bold">Behavior: </span>Primarily terrestrial (ground dwelling) but can climb short distances. Also solitary and shy.</p>
                   <p><span class="font-bold">Status: </span>Endangered</p>
                 </div>
               </div>
@@ -454,22 +233,19 @@
   <!-- Next Button -->
   <button
     id="nextBtn"
-    class="flex top-0 right-0 z-30 justify-center items-center px-4 h-full cursor-pointer group focus:outline-none transition-opacity duration-300 ease-in-out"
-  >
+    class="flex top-0 right-0 z-30 justify-center items-center px-4 h-full cursor-pointer group focus:outline-none transition-opacity duration-300 ease-in-out">
     <svg
       class="dark:text-neutral-900"
       width="25"
       height="35"
       viewBox="0 0 8 14"
-      fill="none"
-    >
+      fill="none">
       <path
         d="M1 1L7 7L1 13"
         stroke="currentColor"
         stroke-width="0.5"
         stroke-linecap="round"
-        stroke-linejoin="round"
-      />
+        stroke-linejoin="round" />
     </svg>
   </button>
 </div>

@@ -1,0 +1,70 @@
+<div
+  id="adduser"
+  class="modal-content">
+  <form
+    class="space-y-4"
+    hx-post="{% url 'change_password' %}"
+    hx-target="#modal-content"
+    enctype="multipart/form-data"
+    novalidate>
+    {% csrf_token %} {% for form in form %}
+    <div class="space-y-2">
+      <label
+        for="{{ form.id_for_label }}"
+        class="block text-sm font-medium text-gray-700">
+        {{ form.label }}
+      </label>
+      <div class="relative">
+        {{ form }}
+        <button
+          type="button"
+          class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600 cursor-pointer"
+          onclick="togglePassword('{{ form.html_name }}')">
+          <i
+            class="mdi mdi-eye-off"
+            id="{{ form.html_name }}_icon"></i>
+        </button>
+      </div>
+      {% if form.errors %}
+      <span class="text-red-500 text-sm block mt-1">{{ form.errors|first }}</span>
+      {% endif %}
+    </div>
+    {% endfor %} {% if form.non_field_errors %}
+    <div class="text-red-500 text-sm">{{ form.non_field_errors|first }}</div>
+    {% endif %}
+
+    <div class="flex items-center justify-end space-x-2">
+      <button
+        type="submit"
+        class="text-center bg-black items-center cursor-pointer h-10 w-32 text-sm font-semibold rounded-lg p-2 border border-black text-white transition-all duration-300 hover:shadow-md">
+        <span class="items-center">
+          <span class="normal-state">Save Changes</span>
+          <span class="loading-state w-full flex items-center justify-center">
+            <svg
+              class="animate-spin h-4 w-4 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24">
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          </span>
+        </span></button
+      ><button
+        type="button"
+        onclick="closeChangePasswordModal()"
+        class="text-center items-center border cursor-pointer text-sm font-semibold p-2 px-5 rounded-lg border-red-600 text-red-600 hover:bg-red-50 transition-all duration-300 hover:shadow-md">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

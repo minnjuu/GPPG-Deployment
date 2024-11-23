@@ -39,6 +39,7 @@ urlpatterns = [
     path('officers/', views.officers, name='officers'),
     path('maps/', views.maps, name='maps'),
     path('account_view/', views.account_view, name='account_view'),
+    path('change_password/', views.change_password, name='change_password'),
     path('account_view/<int:id>/edit', views.user_update_private,
          name='private_userAccounts_edit'),
     # ADMIN
