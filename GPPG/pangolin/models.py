@@ -82,7 +82,7 @@ class Incident(BaseModel):
         max_length=150, choices=mun_choices)
     status = models.CharField(max_length=150, choices=st_choices)
     date_reported = models.DateField()
-    description = models.CharField(max_length=250)
+    description = models.CharField(max_length=500)
     life_history = models.CharField(max_length=250, blank=True, null=True)
     sex = models.CharField(
         max_length=150, choices=sex_choices, blank=True, null=True)
@@ -167,7 +167,7 @@ class IncidentReport(BaseModel):
         max_length=150, choices=mun_choices)
     status = models.CharField(max_length=150, choices=st_choices)
     date_reported = models.DateField()
-    description = models.CharField(max_length=250)
+    description = models.CharField(max_length=500)
 
     def __str__(self):
 
@@ -212,7 +212,7 @@ class Officer(BaseModel):
 
 class Event(BaseModel):
     name = models.CharField(max_length=150)
-    description = models.CharField(max_length=150)
+    description = models.CharField(max_length=500)
     date = models.DateField()
     location = models.CharField(max_length=150)
     event_image = models.ImageField(
