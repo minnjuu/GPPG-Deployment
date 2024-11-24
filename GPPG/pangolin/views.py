@@ -453,9 +453,9 @@ def google_login_callback(request):
                 user = User.objects.get(user_email=email)
             except User.DoesNotExist:
                 user = User.objects.create(
-                    email=email,
-                    first_name=google_data.get('given_name', ''),
-                    last_name=google_data.get('family_name', ''),
+                    user_email=email,
+                    user_firstname=google_data.get('given_name', ''),
+                    user_lastname=google_data.get('family_name', ''),
                     password=make_password(None)  # Unusable password
                 )
 
