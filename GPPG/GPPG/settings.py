@@ -59,7 +59,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'django_admin_logs',
 ]
-SITE_ID = 1
+SITE_ID = 2
 
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.google.GoogleOAuth2',

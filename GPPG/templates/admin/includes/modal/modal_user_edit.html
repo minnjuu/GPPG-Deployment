@@ -1,76 +1,71 @@
 {% load static %}
 
-<div id="adduser" class="modal-content"> 
+<div
+  id="adduser"
+  class="modal-content">
   <form
     hx-post="{% url 'admin_userAccounts_edit' user.id %}"
     hx-target="#modal-content"
     enctype="multipart/form-data"
     novalidate>
-    {% csrf_token %} 
+    {% csrf_token %}
     <div class="grid grid-cols-2 gap-4">
       <div>
-          <label class="block text-sm font-medium text-gray-700">
-              {{ form.user_firstname.label_tag }}
-              {% if form.user_firstname.errors %}
-                <div class="text-red-600">{{ form.user_firstname.errors }}</div>
-              {% endif %}
-          </label>
-          {{ form.user_firstname }}
-          
+        <label class="block text-sm font-medium text-gray-700">
+          {{ form.user_firstname.label_tag }} {% if form.user_firstname.errors %}
+          <div class="text-red-600">{{ form.user_firstname.errors }}</div>
+          {% endif %}
+        </label>
+        {{ form.user_firstname }}
       </div>
       <div>
-          <label class="block text-sm font-medium text-gray-700">
-              {{ form.user_lastname.label_tag }}
-              {% if form.user_lastname.errors %}
-                <div class="text-red-600">{{ form.user_lastname.errors }}</div>
-              {% endif %}
-          </label>
-          {{ form.user_lastname }}
-          
+        <label class="block text-sm font-medium text-gray-700">
+          {{ form.user_lastname.label_tag }} {% if form.user_lastname.errors %}
+          <div class="text-red-600">{{ form.user_lastname.errors }}</div>
+          {% endif %}
+        </label>
+        {{ form.user_lastname }}
       </div>
 
       <div>
-          <label class="block text-sm font-medium text-gray-700">
-              {{ form.user_email.label_tag }}
-              {% if form.user_email.errors %}
-                <div class="text-red-600">{{ form.user_email.errors }}</div>
-              {% endif %}
-          </label>
-          {{ form.user_email }}
-          
+        <label class="block text-sm font-medium text-gray-700">
+          {{ form.user_email.label_tag }} {% if form.user_email.errors %}
+          <div class="text-red-600">{{ form.user_email.errors }}</div>
+          {% endif %}
+        </label>
+        {{ form.user_email }}
       </div>
       <div>
-          <label class="block text-sm font-medium text-gray-700">
-              {{ form.contact.label_tag }}
-              {% if form.contact.errors %}
-                <div class="text-red-600">{{ form.contact.errors }}</div>
-              {% endif %}
-          </label>
-          {{ form.contact }}
+        <label class="block text-sm font-medium text-gray-700">
+          {{ form.contact.label_tag }} {% if form.contact.errors %}
+          <div class="text-red-600">{{ form.contact.errors }}</div>
+          {% endif %}
+        </label>
+        {{ form.contact }}
       </div>
-  </div>
-  <br>
-  <div>
-    <label class="block text-sm font-medium text-gray-700">
-        {{ form.password.label_tag }}
-        {% if form.password.errors %}
-          <div class="text-red-600">{{ form.password.errors }}</div>
+    </div>
+    <br />
+    <div>
+      <label class="block text-sm font-medium text-gray-700">
+        {{ form.password.label_tag }} {% if form.password.errors %}
+        <div class="text-red-600">{{ form.password.errors }}</div>
         {% endif %}
-    </label>
-    {{ form.password }}
-</div>
-  
-<br>
-<button
-      type="submit"
-      class="text-black mr-2 inline-flex items-center border font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-      Save Changes
-    </button
-    ><button
-      type="button"
-      onclick="window.location.reload();"
-      class="text-red-700 inline-flex items-center hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
-      Discard changes
-  </button>
+      </label>
+      {{ form.password }}
+    </div>
+
+    <br />
+    <div class="flex justify-end">
+      <button
+        type="submit"
+        class="py-2 px-5 mr-2 inline-flex items-center gap-x-2 text-sm rounded-lg border bg-black text-white shadow-sm transition-all duration-300 hover:shadow-md">
+        Save Changes</button
+      ><button
+        type="button"
+        onclick="window.location.reload();"
+        class="text-center items-center border cursor-pointer text-sm font-semibold p-2 px-5 rounded-lg border-red-600 text-red-600 hover:bg-red-50 transition-all duration-300 hover:shadow-md">
+        Discard changes
+      </button>
+    </div>
   </form>
 </div>

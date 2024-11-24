@@ -84,12 +84,15 @@ class Incident(BaseModel):
     date_reported = models.DateField()
     description = models.CharField(max_length=250)
     life_history = models.CharField(max_length=250, blank=True, null=True)
-    sex = models.CharField(max_length=150, choices=sex_choices, blank=True, null=True)
+    sex = models.CharField(
+        max_length=150, choices=sex_choices, blank=True, null=True)
     weight = models.CharField(max_length=250, blank=True, null=True)
     obl_rolled = models.CharField(max_length=250, blank=True, null=True)
     obl_stretched = models.CharField(max_length=250, blank=True, null=True)
-    ticks = models.CharField(max_length=150, choices=y_n, blank=True, null=True)
-    feces = models.CharField(max_length=150, choices=y_n, blank=True, null=True)
+    ticks = models.CharField(
+        max_length=150, choices=y_n, blank=True, null=True)
+    feces = models.CharField(
+        max_length=150, choices=y_n, blank=True, null=True)
 
     def __str__(self):
 
@@ -160,18 +163,16 @@ class IncidentReport(BaseModel):
 
     )
 
-
-
     municity = models.CharField(
         max_length=150, choices=mun_choices)
     status = models.CharField(max_length=150, choices=st_choices)
     date_reported = models.DateField()
     description = models.CharField(max_length=250)
-    
 
     def __str__(self):
 
         return f"{self.municity} - {self.id} ({self.status})"
+
 
 class Officer(BaseModel):
     pos_choices = [

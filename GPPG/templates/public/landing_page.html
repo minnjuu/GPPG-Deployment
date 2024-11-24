@@ -1,24 +1,23 @@
 {% load static %} {% load compress %} {% load widget_tweaks %}
-<html lang="en" class="scroll-smooth md:scroll-auto">
+<html
+  lang="en"
+  class="scroll-smooth md:scroll-auto">
   <head>
     <meta charset="UTF-8" />
     <meta
       name="csrf-token"
       content="{{ csrf_token }}" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}GPPG{% endblock title %}</title>
-    <link rel="icon" href="{% static 'img/logo.jpg' %}" type="image/x-icon" />
-
-    <!-- For Form abang kono -->
-    <link rel="stylesheet" href="{% static "css/main.css" %}"> <link
-    rel="stylesheet" href="{% static "css/style.css" %}">
+    <link
+      rel="icon"
+      href="{% static 'img/logo.jpg' %}"
+      type="image/x-icon" />
+    <link rel="stylesheet" href="{% static "css/main.css" %}"> <link rel="stylesheet" href="{% static "css/style.css" %}">
     <!--  -->
-    <link rel="stylesheet" href="{% static "css/min.css" %}">
-    <!-- For Form abang kono -->
-    <link rel="stylesheet" href="{% static "css/materialdesignicons.min.css"
-    %}">
-    <!-- For Form abang kono -->
-
+    <link rel="stylesheet" href="{% static "css/min.css" %}"> <link rel="stylesheet" href="{% static "css/materialdesignicons.min.css" %}">
     <script src="{% static 'js/popper.js' %}"></script>
   </head>
   <body class="bg-slate-50">
@@ -102,64 +101,49 @@
     {% block nav %}
     <div
       id="header_img"
-      class="h-screen bg-cover bg-no-repeat bg-center items-center"
-    >
-      <div
-        class="w-full text-gray-700 bg-transparent dark-mode:text-gray-200 dark-mode:bg-gray-800 h-screen bg-cover bg-no-repeat bg-center items-center"
-      >
+      class="h-screen bg-cover bg-no-repeat bg-center items-center">
+      <div class="w-full text-gray-700 bg-transparent dark-mode:text-gray-200 dark-mode:bg-gray-800 h-screen bg-cover bg-no-repeat bg-center items-center">
         <div
           x-data="{ open: false }"
-          class="flex flex-col px-7 mx-auto md:items-center md:justify-between md:flex-row lg:px-5 lg:pr-8 w-full"
-        >
-          <div
-            class="flex-row justify-between flex items-center bg-yellow-2 p-3 flex-wrap w-1/2"
-          >
+          class="flex flex-col px-7 mx-auto md:items-center md:justify-between md:flex-row lg:px-5 lg:pr-8 w-full">
+          <div class="flex-row justify-between flex items-center bg-yellow-2 p-3 flex-wrap w-1/2">
             <a
               href="{% url 'landing_page' %}"
-              class="p-2 -ml-5 md:-ml-0 md:mr-4 inline-flex items-center"
-            >
+              class="p-2 -ml-5 md:-ml-0 md:mr-4 inline-flex items-center">
               <img
                 class="w-[55px] h-[54px] rounded-[172px]"
-                src="{% static 'img/logo.jpg' %}"
-              />
+                src="{% static 'img/logo.jpg' %}" />
               <span
                 id="typing"
-                class="2xl:block hidden typing mx-2 text-center text-white text-xl font-normal font-['Bahnschrift']"
-              ></span>
+                class="2xl:block hidden typing mx-2 text-center text-white text-xl font-normal font-['Bahnschrift']"></span>
             </a>
             <button
               data-collapse-toggle="NavBar_menu_landing"
               aria-controls="NavBar_menu_landing"
               aria-expanded="false"
               type="button"
-              class="absolute md:hidden right-32 size-7 flex justify-center items-center gap-x-2 rounded-lg"
-            >
+              class="absolute md:hidden right-32 size-7 flex justify-center items-center gap-x-2 rounded-lg">
               <span class="sr-only">Open main menu</span>
               <svg
                 class="w-3.5 h-3.5"
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
-                viewBox="0 0 17 14"
-              >
+                viewBox="0 0 17 14">
                 <path
                   fill="white"
                   stroke="white"
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="3"
-                  d="M1 1h15M1 7h15M1 13h15"
-                />
+                  d="M1 1h15M1 7h15M1 13h15" />
               </svg>
             </button>
           </div>
-          <div
-            class="overflow-hidden transition-all md:bg-opacity-0 justify-end duration-300 basis-full sm:block flex-col flex-grow md:w-1/2"
-          >
+          <div class="overflow-hidden transition-all md:bg-opacity-0 justify-end duration-300 basis-full sm:block flex-col flex-grow md:w-1/2">
             <div
               id="NavBar_menu_landing"
-              class="flex-col flex-grow md:pb-0 hidden rounded-lg md:bg-transparent md:flex text-center w-full md:justify-end md:flex-row xl:gap-5"
-            >
+              class="flex-col flex-grow md:pb-0 hidden rounded-lg md:bg-transparent md:flex text-center w-full md:justify-end md:flex-row xl:gap-5">
               <div class="w-full md:w-auto px-3 py-2 mx-2 animate-border">
                 <a
                   class="font-medium w-full focus:outline-none font-['Roboto'] text-white"
@@ -169,17 +153,14 @@
                 >
               </div>
 
-              <div
-                class="hs-dropdown [--strategy:static] sm:[--strategy:fixed] [--adaptive:none]"
-              >
+              <div class="hs-dropdown [--strategy:static] sm:[--strategy:fixed] [--adaptive:none]">
                 <button
                   id="hs-navbar-example-dropdown"
                   type="button"
                   class="hs-dropdown-toggle flex md:w-max items-center w-full font-medium justify-center focus:outline-none px-3 py-2 mx-3 font-['Roboto'] text-white animate-border"
                   aria-haspopup="menu"
                   aria-expanded="false"
-                  aria-label="Mega Menu"
-                >
+                  aria-label="Mega Menu">
                   About
                   <svg
                     class="hs-dropdown-open:-rotate-180 sm:hs-dropdown-open:rotate-0 duration-300 ms-1 shrink-0 size-4"
@@ -191,8 +172,7 @@
                     stroke="currentColor"
                     stroke-width="2"
                     stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
+                    stroke-linejoin="round">
                     <path d="m6 9 6 6 6-6" />
                   </svg>
                 </button>
@@ -201,19 +181,18 @@
                   class="hs-dropdown-menu transition-[opacity,margin] ease-in-out duration-300 hs-dropdown-open:opacity-100 opacity-0 sm:w-48 z-10 bg-white sm:shadow-md rounded-lg p-1 space-y-1 sm:dark:border before:absolute top-full sm:border before:-top-5 before:start-0 before:w-full before:h-5 hidden"
                   role="menu"
                   aria-orientation="vertical"
-                  aria-labelledby="hs-navbar-example-dropdown"
-                >
+                  aria-labelledby="hs-navbar-example-dropdown">
                   <a
                     class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-black hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-black dark:hover:bg-neutral-200 dark:hover:text-black"
                     href="{% url 'public_officers' %}"
-                  >
+                    onmouseover="prefetchPage('{% url 'public_officers' %}')">
                     Officers
                   </a>
 
                   <a
                     class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-black hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-black dark:hover:bg-neutral-200 dark:hover:text-black"
                     href="{% url 'public_about' %}"
-                  >
+                    onmouseover="prefetchPage('{% url 'public_about' %}')">
                     About Us
                   </a>
                 </div>
@@ -221,37 +200,29 @@
             </div>
           </div>
 
-          <div
-            class="overflow-hidden absolute w-fit md:w-40 right-5 top-7 md:top-0 md:right-0 md:relative bg-[#3f0703] rounded-xl"
-          >
-            <div
-              class="hs-dropdown-toggle justify-center flex items-center w-full font-medium text-white"
-            >
+          <div class="overflow-hidden absolute w-fit md:w-40 right-5 top-7 md:top-0 md:right-0 md:relative bg-[#3f0703] rounded-xl ring-1 hover:bg-white text-white hover:text-black ring-white">
+            <div class="hs-dropdown-toggle justify-center flex items-center w-full font-medium">
               <button
                 id="loginBtn"
-                class="flex items-center py-2 px-3 gap-2 rounded-xl text-sm hover:bg-white hover:text-black"
-              >
+                class="flex items-center py-2 px-3 gap-2 rounded-xl text-sm">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-5 w-5"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
+                  stroke="currentColor">
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
-                    d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
+                    d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 Sign in
               </button>
 
               <div
                 id="authModal"
-                class="fixed inset-0 bg-opacity-50 h-auto backdrop-blur-sm hidden justify-center items-center w-full z-50"
-              >
+                class="fixed inset-0 bg-opacity-50 h-auto backdrop-blur-sm hidden justify-center items-center w-full z-50">
                 <!--  -->
                 {% include 'public/includes/form.html' %}
               </div>
@@ -265,85 +236,37 @@
 
     <section
       id="content"
-      class="container mx-auto rounded-3xl my-10 shadow-lg delay-[200ms] duration-[1000ms] [animation-iteration-count:infinite] taos:translate-y-[200px] taos:opacity-0"
-    >
+      class="container mx-auto rounded-3xl my-10 shadow-lg delay-[200ms] duration-[1000ms] [animation-iteration-count:infinite] taos:translate-y-[200px] taos:opacity-0 animate-slideIn">
       <div class="container flex flex-col mx-auto rounded-lg pt-12 pb-12 my-5">
         <div class="container flex flex-col items-center gap-16 mx-auto">
           <div class="flex flex-col gap-7">
-            <div
-              class="flex flex-col gap-5 px-6 text-center w-10/12 mx-auto justify-start"
-            >
-              <h2
-                class="text-4xl md:text-5xl font-extrabold leading-tight font-['Bahnschrift']"
-              >
-                What is a Palawan Pangolin?
-              </h2>
-              <p
-                class="text-left text-lg md:text-lg font-normal leading-7 font-['Roboto']"
-              >
-                The Philippine pangolin or Palawan pangolin
-                <i>(Manis culionensis)</i>, also locally known as balintong, is
-                one of eight species of pangolin and is endemic to the Palawan
-                province and faunal region of the Philippines, where it inhabits
-                primary and secondary forests and surrounding grasslands; this
-                ant specialist is distinguished from the closely related Sunda
-                pangolin by its smaller body-to-tail ratio, smaller scales, and
-                a shorter head, and while it remains moderately common within
-                its limited range, it is under intense threat from illegal
-                wildlife trade and heavy hunting due to its valued scales and
-                meat, leading to its classification as Critically Endangered by
-                both the IUCN and the Palawan Council for Sustainable
-                Development (PCSD).
+            <div class="flex flex-col gap-5 px-6 text-center w-10/12 mx-auto justify-start">
+              <h2 class="text-4xl md:text-5xl font-extrabold leading-tight font-['Bahnschrift']">What is a Palawan Pangolin?</h2>
+              <p class="text-left text-lg md:text-lg font-normal leading-7 font-['Roboto']">
+                The Philippine pangolin or Palawan pangolin (
+                <i>Manis culionensis</i>
+                 ), also locally known as balintong, is a pangolin species endemic to the Palawan province of the Philippines. Its habitat includes primary and secondary forests, as well as
+                surrounding grasslands. This species is moderately common within its limited range, but is at risk due to heavy hunting because of its valued scales and meat. This species is
+                distinguished from the closely related Sunda pangolin by its smaller body-to-tail ratio, smaller scales, and a shorter head. It is listed as Critically Endangered by the IUCN,
+                and Critically Endangered by the Palawan Council for Sustainable Development (PCSD).
               </p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mt-10 w-full">
-              <div
-                class="stat-box relative w-full h-[155.65px] flex flex-col items-center"
-              >
-                <span
-                  class="text-[40px] md:text-[60px] font-bold font-['Bahnschrift']"
-                  >34-kg</span
-                >
-                <span
-                  class="text-[20px] md:text-[25px] font-normal font-['Bahnschrift']"
-                  >pangolins weight</span
-                >
+              <div class="stat-box relative w-full h-[155.65px] flex flex-col items-center">
+                <span class="text-[40px] md:text-[60px] font-bold font-['Bahnschrift']">34-kg</span>
+                <span class="text-[20px] md:text-[25px] font-normal font-['Bahnschrift']">pangolins weight</span>
               </div>
-              <div
-                class="stat-box relative w-full h-[174px] flex flex-col items-center"
-              >
-                <span
-                  class="text-[40px] md:text-[60px] font-bold font-['Bahnschrift']"
-                  >10-35 in</span
-                >
-                <span
-                  class="text-[20px] md:text-[25px] font-normal font-['Bahnschrift']"
-                  >pangolins length head to tail</span
-                >
+              <div class="stat-box relative w-full h-[174px] flex flex-col items-center">
+                <span class="text-[40px] md:text-[60px] font-bold font-['Bahnschrift']">10-35 in</span>
+                <span class="text-[20px] md:text-[25px] font-normal font-['Bahnschrift']">pangolins length head to tail</span>
               </div>
-              <div
-                class="stat-box relative w-full h-[222px] flex flex-col items-center"
-              >
-                <span
-                  class="text-[40px] md:text-[60px] font-bold font-['Bahnschrift']"
-                  >70-million</span
-                >
-                <span
-                  class="text-[20px] md:text-[25px] font-normal font-['Bahnschrift']"
-                  >insects each year eat by pangolin</span
-                >
+              <div class="stat-box relative w-full h-[222px] flex flex-col items-center">
+                <span class="text-[40px] md:text-[60px] font-bold font-['Bahnschrift']">70-million</span>
+                <span class="text-[20px] md:text-[25px] font-normal font-['Bahnschrift']">insects each year eat by pangolin</span>
               </div>
-              <div
-                class="stat-box relative w-full h-[143px] flex flex-col items-center"
-              >
-                <span
-                  class="text-[40px] md:text-[60px] font-bold font-['Bahnschrift']"
-                  >20-years</span
-                >
-                <span
-                  class="text-[20px] md:text-[25px] font-normal font-['Bahnschrift']"
-                  >life span of pangolin</span
-                >
+              <div class="stat-box relative w-full h-[143px] flex flex-col items-center">
+                <span class="text-[40px] md:text-[60px] font-bold font-['Bahnschrift']">20-years</span>
+                <span class="text-[20px] md:text-[25px] font-normal font-['Bahnschrift']">life span of pangolin</span>
               </div>
             </div>
           </div>
@@ -353,210 +276,116 @@
 
     <section
       id="content"
-      class="container mx-auto rounded-3xl my-10 shadow-lg delay-[100ms] duration-[1000ms] [animation-iteration-count:infinite] taos:translate-y-[200px] taos:opacity-0"
-    >
+      class="container mx-auto rounded-3xl my-10 shadow-lg delay-[100ms] duration-[1000ms] [animation-iteration-count:infinite] taos:translate-y-[200px] taos:opacity-0">
       <div class="container mx-auto flex flex-wrap justify-center gap-10 p-6">
         <div class="container mx-auto flex flex-wrap justify-center gap-10 p-6">
           <div class="text-content w-full md:w-1/2 p-6">
-            <h2
-              class="text-left text-4xl md:text-5xl font-extrabold leading-tight text-dark-grey-900 font-['Bahnschrift'] mb-5"
-            >
-              Appearance
-            </h2>
-            <p
-              class="text-left text-lg md:text-lg font-normal leading-7 font-['Roboto']"
-            >
-              The Philippine pangolin is a medium-sized mammal covered in small
-              triangular scales made of keratin everywhere except the underbelly
-              and face. It regrows new scales when they are lost and always has
-              the same number of scales throughout its lifespan. The scales come
-              in shades of brown, yellow, and olive, making for adequate
-              camouflage at night. Areas of the body without scales are covered
-              in a layer of hair.
+            <h2 class="text-left text-4xl md:text-5xl font-extrabold leading-tight text-dark-grey-900 font-['Bahnschrift'] mb-5">Appearance</h2>
+            <p class="text-left text-lg md:text-lg font-normal leading-7 font-['Roboto']">
+              The Philippine pangolin is a medium-sized mammal covered in small triangular scales made of keratin everywhere except the underbelly and face. It regrows new scales when they are lost
+              and always has the same number of scales throughout its lifespan. The scales come in shades of brown, yellow, and olive, making for adequate camouflage at night. Areas of the body
+              without scales are covered in a layer of hair.
             </p>
           </div>
 
-          <div
-            class="image-content w-full md:w-1/4 flex justify-center items-center"
-          >
-            <img src="{% static "img/pango3.jpg" %}" alt="Sample Image"
-            class="max-w-full h-auto border border-gray-300 rounded-lg
-            shadow-lg" />
+          <div class="image-content w-full md:w-1/4 flex justify-center items-center">
+            <img src="{% static "img/pango3.jpg" %}" alt="Sample Image" class="max-w-full h-auto border border-gray-300 rounded-lg shadow-lg" />
           </div>
         </div>
-        <hr
-          class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-1 dark:bg-gray-700"
-        />
+        <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-1 dark:bg-gray-700" />
         <div class="container mx-auto flex flex-wrap justify-center gap-10 p-6">
           <div class="image-content md:w-1/4 flex justify-center items-center">
-            <img src="{% static "img/pango4.jpg" %}" alt="Sample Image"
-            class="max-w-full h-auto border border-gray-300 rounded-lg
-            shadow-lg" />
+            <img src="{% static "img/pango4.jpg" %}" alt="Sample Image" class="max-w-full h-auto border border-gray-300 rounded-lg shadow-lg" />
           </div>
           <div class="text-content w-full md:w-1/2 p-6">
-            <h2
-              class="text-left text-4xl md:text-5xl font-extrabold leading-tight font-['Bahnschrift'] mb-5"
-            >
-              Habits and Lifestyle
-            </h2>
-            <p
-              class="text-left text-lg md:text-lg font-normal leading-7 font-['Roboto']"
-            >
-              Philippine pangolins are nocturnal and reclusive creatures,
-              usually seen singly or in pairs, inhabiting primary and secondary
-              lowland forests, as well as lowland grassland/forest mosaics,
-              logged-over forests, agricultural ecosystems, and areas near human
-              habitations where sufficient trees and logs are present; while
-              they have also been detected in areas adjacent to mangroves and
-              riverine forest, these animals rely on their extraordinary sense
-              of smell to compensate for their below-average eyesight and
-              average hearing, moving slowly through their habitat but capable
-              of quick bursts when startled, even demonstrating limited swimming
-              ability, and occasionally standing on their hind legs while
-              balancing on their tail to detect nearby predators.
+            <h2 class="text-left text-4xl md:text-5xl font-extrabold leading-tight font-['Bahnschrift'] mb-5">Habits and Lifestyle</h2>
+            <p class="text-left text-lg md:text-lg font-normal leading-7 font-['Roboto']">
+              Philippine pangolins are nocturnal and reclusive and are usually seen singly or in pairs. Because they are mainly active at night, their eyesight is below average. While their hearing is
+              still only about average, they make up for their lack of vision with their extraordinary sense of smell. Pangolins generally travel slowly but can move in a short burst towards safety
+              when they become startled, and even have a limited ability to swim. Occasionally, these animals can be seen standing on their hind legs, balancing on their tail, to help detect nearby
+              predators.
             </p>
           </div>
         </div>
-        <hr
-          class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-1 dark:bg-gray-700"
-        />
+        <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-1 dark:bg-gray-700" />
         <div class="container mx-auto flex flex-wrap justify-center gap-10 p-6">
           <div class="text-content w-full md:w-1/2 p-6">
-            <h2
-              class="text-left text-4xl md:text-5xl font-extrabold leading-tight text-dark-grey-900 font-['Bahnschrift'] mb-5"
-            >
-              Diet and Nutrition
-            </h2>
-            <p
-              class="text-left text-lg md:text-lg font-normal leading-7 font-['Roboto']"
-            >
-              Philippine pangolins are carnivores (insectivores), more
-              specifically myrmecophages. They feed mainly on termites and ants
-              and will also consume other insects.
+            <h2 class="text-left text-4xl md:text-5xl font-extrabold leading-tight text-dark-grey-900 font-['Bahnschrift'] mb-5">Diet and Nutrition</h2>
+            <p class="text-left text-lg md:text-lg font-normal leading-7 font-['Roboto']">
+              Philippine pangolins are carnivores (insectivores), more specifically myrmecophages. They feed mainly on termites and ants and will also consume other insects.
             </p>
           </div>
 
-          <div
-            class="image-content w-full md:w-1/4 flex justify-center items-center"
-          >
-            <img src="{% static "img/pango6.jpg" %}" alt="Sample Image"
-            class="max-w-full h-auto border border-gray-300 rounded-lg
-            shadow-lg" />
+          <div class="image-content w-full md:w-1/4 flex justify-center items-center">
+            <img src="{% static "img/pango6.jpg" %}" alt="Sample Image" class="max-w-full h-auto border border-gray-300 rounded-lg shadow-lg" />
           </div>
         </div>
       </div>
     </section>
     <section
       id="content"
-      class="container mx-auto rounded-3xl my-10 0 shadow-lg delay-[200ms] duration-[1000ms] [animation-iteration-count:infinite] taos:translate-y-[200px] taos:opacity-0"
-    >
+      class="container mx-auto rounded-3xl my-10 0 shadow-lg delay-[200ms] duration-[1000ms] [animation-iteration-count:infinite] taos:translate-y-[200px] taos:opacity-0">
       <div class="container mx-auto flex flex-wrap justify-center gap-10 p-6">
         <div class="text-content w-full md:w-10/12 p-6">
-          <h2
-            class="text-center text-4xl md:text-5xl capitalize font-extrabold leading-tight font-['Bahnschrift'] mb-8"
-          >
-            Mating Habits
-          </h2>
+          <h2 class="text-center text-4xl md:text-5xl capitalize font-extrabold leading-tight font-['Bahnschrift'] mb-8">Mating Habits</h2>
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mb-8">
             <div>
-              <span
-                class="text-black text-xl font-bold font-['Bahnschrift'] leading-[30px]"
-              >
+              <span class="text-black text-xl font-bold font-['Bahnschrift'] leading-[30px]">
                 REPRODUCTION SEASON
                 <br />
               </span>
-              <span
-                class="text-black text-xl font-normal font-['Roboto'] leading-[30px]"
-                >spring</span
-              >
+              <span class="text-black text-xl font-normal font-['Roboto'] leading-[30px]">spring</span>
             </div>
 
             <div>
-              <span
-                class="text-black text-xl font-bold font-['Bahnschrift'] leading-[30px]"
-              >
+              <span class="text-black text-xl font-bold font-['Bahnschrift'] leading-[30px]">
                 BABY NAME
                 <br />
               </span>
-              <span
-                class="text-black text-xl font-normal font-['Roboto'] leading-[30px]"
-                >pangopup</span
-              >
+              <span class="text-black text-xl font-normal font-['Roboto'] leading-[30px]">pangopup</span>
             </div>
 
             <div>
-              <span
-                class="text-black text-xl font-bold font-['Bahnschrift'] leading-[30px]"
-              >
+              <span class="text-black text-xl font-bold font-['Bahnschrift'] leading-[30px]">
                 PREGNANCY DURATION
                 <br />
               </span>
-              <span
-                class="text-black text-xl font-normal font-['Roboto'] leading-[30px]"
-                >18 weeks</span
-              >
+              <span class="text-black text-xl font-normal font-['Roboto'] leading-[30px]">18 weeks</span>
             </div>
 
             <div>
-              <span
-                class="text-black text-xl font-bold font-['Bahnschrift'] leading-[30px]"
-              >
+              <span class="text-black text-xl font-bold font-['Bahnschrift'] leading-[30px]">
                 BABY CARRYING
                 <br />
               </span>
-              <span
-                class="text-black text-xl font-normal font-['Roboto'] leading-[30px]"
-                >1 pangopup</span
-              >
+              <span class="text-black text-xl font-normal font-['Roboto'] leading-[30px]">1 pangopup</span>
             </div>
             <div>
-              <span
-                class="text-black text-xl font-bold font-['Bahnschrift'] leading-[30px]"
-              >
+              <span class="text-black text-xl font-bold font-['Bahnschrift'] leading-[30px]">
                 INDEPENDENT AGE
                 <br />
               </span>
-              <span
-                class="text-black text-xl font-normal font-['Roboto'] leading-[30px]"
-                >5 months</span
-              >
+              <span class="text-black text-xl font-normal font-['Roboto'] leading-[30px]">5 months</span>
             </div>
           </div>
-          <p
-            class="text-left text-lg md:text-lg font-normal leading-7 text-black font-['Roboto']"
-          >
-            While little is known about the reproduction of Philippine
-            pangolins, their mating habits are thought to be similar to those of
-            the Sunda pangolin. Like most pangolins, Philippine pangolins breed
-            in the spring. The same odorous secretion used as a self-defense
-            mechanism is also used by males to assert against other males,
-            attract a mate, and is used by the mother while raising their young.
-            Baby pangolins, called pangopups, are born after a gestation period
-            of around 18 weeks and are suckled by their mothers for about 4
-            months. Usually, only one offspring is born at once, and they are
-            carried around on the mother's back for a time. When sleeping or
-            threatened, the mother tends to roll in a ball for defense like
-            usual, but with the young cradled in a ball of their own,
-            encompassed in the mother's ball. At the age of about 5 months,
-            pangopups will separate from their mother. Female pangolins may even
-            adopt lone young that have lost their own mother.
+          <p class="text-left text-lg md:text-lg font-normal leading-7 text-black font-['Roboto']">
+            While little is known about the reproduction of Philippine pangolins, their mating habits are thought to be similar to those of the Sunda pangolin. Like most pangolins, Philippine
+            pangolins breed in the spring. The same odorous secretion used as a self-defense mechanism is also used by males to assert against other males, attract a mate, and is used by the mother
+            while raising their young. Baby pangolins, called pangopups, are born after a gestation period of around 18 weeks and are suckled by their mothers for about 4 months. Usually, only one
+            offspring is born at once, and they are carried around on the mother's back for a time. When sleeping or threatened, the mother tends to roll in a ball for defense like usual, but with the
+            young cradled in a ball of their own, encompassed in the mother's ball. At the age of about 5 months, pangopups will separate from their mother. Female pangolins may even adopt lone young
+            that have lost their own mother.
           </p>
         </div>
       </div>
     </section>
 
-    <section
-      class="w-full my-10 border h-max delay-[200ms] duration-[1000ms] [animation-iteration-count:infinite] taos:translate-y-[200px] taos:opacity-0"
-    >
-      <div class="md:mx-16 p-6 h-full">
-        {% include 'public/includes/card_carousel.html' %}
-      </div>
+    <section class="w-full my-10 border h-max delay-[200ms] duration-[1000ms] [animation-iteration-count:infinite] taos:translate-y-[200px] taos:opacity-0">
+      <div class="md:mx-16 p-6 h-full">{% include 'public/includes/card_carousel.html' %}</div>
     </section>
 
-    {% include 'public/includes/footer.html' %} {% endblock %}
-    <!-- For Form abang kono -->
-    {% block extra_js %} {% endblock extra_js %}
+    {% include 'global/warning.html' %} {% include 'public/includes/footer.html' %} {% endblock %} {% block extra_js %} {% endblock extra_js %}
     <script src="{% static 'js/admin/flowbite.min.js' %}"></script>
     <script src="{% static 'js/preline.js' %}"></script>
     <script src="{% static 'js/jquery.js' %}"></script>

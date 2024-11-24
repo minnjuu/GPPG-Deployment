@@ -169,24 +169,9 @@
 <!-- Database Content -->
 {% block title_content %} Activities List {% endblock title_content %} {% block content %}
 
-<div class="flex flex-col w-full h-auto mx-auto gap-2">
-  <div
-    class="p-4 rounded-xl overflow-hidden bg-white h-[865px] shadow-sm"
-    data-hs-datatable='{
-    "pageLength": 12,
-    "pagingOptions": {
-      "pageBtnClasses": "min-w-[40px] flex justify-center items-center text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 py-2.5 text-sm rounded-full disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:focus:bg-neutral-700 dark:hover:bg-neutral-700"
-    },
-    "selecting": true,
-    "rowSelectingOptions": {
-      "selectAllSelector": "#hs-table-search-checkbox-all"
-    },
-    "language": {
-      "zeroRecords": "<div class=\"py-10 px-5 flex flex-col justify-center items-center text-center\"><svg class=\"shrink-0 size-6 text-gray-500 dark:text-neutral-500\" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.3-4.3\"/></svg><div class=\"max-w-sm mx-auto\"><p class=\"mt-2 text-sm text-gray-600 dark:text-neutral-400\">No search results</p></div></div>"
-    }
-  }'>
-    <!-- Search and Add Button Section -->
-    <div class="flex items-center space-x-2 mb-4">
+<div class="p-6 rounded-xl overflow-hidden bg-white shadow-lg transition-all duration-300 hover:shadow-xl">
+  <div class="flex flex-row justify-between gap-4 mb-6">
+    <div class="flex">
       <div class="flex-0">
         <div class="relative max-w-xs">
           <label
@@ -198,12 +183,12 @@
             type="text"
             name="hs-table-export-search"
             id="hs-table-export-search"
-            class="py-2 px-8 ps-9 block w-full border-gray-200 transition-all duration-200 ease-in-out shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-            placeholder="Search for items"
+            class="py-2 px-8 ps-9 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+            placeholder="Search for activities"
             data-hs-datatable-search="" />
           <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3">
             <svg
-              class="size-4 text-gray-400 dark:text-neutral-500"
+              class="size-4 text-gray-400"
               xmlns="http://www.w3.org/2000/svg"
               width="24"
               height="24"
@@ -222,299 +207,272 @@
           </div>
         </div>
       </div>
-
-      <div class="flex-1 flex items-center justify-end space-x-2">
-        <div class="relative inline-flex">
-          <button
-            hx-get="{% url 'admin_activities_add' %}"
-            hx-target="#modal-content"
-            hx-trigger="click"
-            data-modal-toggle="modaldialog"
-            data-modal-target="modaldialog"
-            onclick="showTitle('Add Organization Activity');"
-            type="button"
-            class="py-2 px-5 inline-flex items-center gap-x-2 text-sm rounded-lg border bg-green-800 hover:bg-green-900 text-white shadow-sm transition-all duration-300 hover:shadow-md">
-            Add
-          </button>
-        </div>
-      </div>
     </div>
 
-    <!-- Table Section -->
-    <div class="min-h-[695px] overflow-x-auto">
-      <div class="min-w-full inline-block align-middle">
-        <div class="overflow-hidden rounded-lg">
-          <table class="min-w-full divide-y divide-gray-200">
-            <!-- Table Header -->
-            <thead class="border-b bg-gray-50 border-gray-200 dark:border-neutral-700">
-              <tr>
-                <th
-                  scope="col"
-                  class="py-1 group text-start font-semibold focus:outline-none">
-                  <div
-                    class="py-1 px-2.5 inline-flex font-bold items-center border border-transparent text-sm text-black rounded-md hover:border-gray-200 dark:text-neutral-500 dark:hover:border-neutral-700">
-                    Name of Activity
-                    <svg
-                      class="size-3.5 ms-1 -me-0.5 text-gray-400 dark:text-neutral-500"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round">
-                      <path
-                        class="hs-datatable-ordering-asc:text-blue-600 dark:hs-datatable-ordering-asc:text-blue-500"
-                        d="m7 15 5 5 5-5"></path>
-                      <path
-                        class="hs-datatable-ordering-desc:text-blue-600 dark:hs-datatable-ordering-desc:text-blue-500"
-                        d="m7 9 5-5 5 5"></path>
-                    </svg>
-                  </div>
-                </th>
-                <th
-                  scope="col"
-                  class="py-1 group text-start font-semibold focus:outline-none">
-                  <div
-                    class="py-1 px-2.5 inline-flex items-center border border-transparent text-sm text-black font-bold rounded-md hover:border-gray-200 dark:text-neutral-500 dark:hover:border-neutral-700">
-                    Photo
-                    <svg
-                      class="size-3.5 ms-1 -me-0.5 text-gray-400 dark:text-neutral-500"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round">
-                      <path
-                        class="hs-datatable-ordering-asc:text-blue-600 dark:hs-datatable-ordering-asc:text-blue-500"
-                        d="m7 15 5 5 5-5"></path>
-                      <path
-                        class="hs-datatable-ordering-desc:text-blue-600 dark:hs-datatable-ordering-desc:text-blue-500"
-                        d="m7 9 5-5 5 5"></path>
-                    </svg>
-                  </div>
-                </th>
+    <button
+      hx-get="{% url 'admin_activities_add' %}"
+      hx-target="#modal-content"
+      hx-trigger="click"
+      data-modal-toggle="modaldialog"
+      data-modal-target="modaldialog"
+      onclick="showTitle('Add Organization Activity');"
+      class="py-2 px-5 inline-flex items-center gap-x-2 text-sm rounded-lg border bg-green-800 hover:bg-green-900 text-white shadow-sm transition-all duration-300 hover:shadow-md">
+      <svg
+        class="w-5 h-5 mr-2"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+      </svg>
+      Add Activity
+    </button>
+  </div>
 
-                <th
-                  scope="col"
-                  class="py-1 group text-start font-semibold focus:outline-none">
-                  <div
-                    class="py-1 px-2.5 inline-flex items-center border border-transparent text-sm text-black font-bold rounded-md hover:border-gray-200 dark:text-neutral-500 dark:hover:border-neutral-700">
-                    Date
-                    <svg
-                      class="size-3.5 ms-1 -me-0.5 text-gray-400 dark:text-neutral-500"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round">
-                      <path
-                        class="hs-datatable-ordering-asc:text-blue-600 dark:hs-datatable-ordering-asc:text-blue-500"
-                        d="m7 15 5 5 5-5"></path>
-                      <path
-                        class="hs-datatable-ordering-desc:text-blue-600 dark:hs-datatable-ordering-desc:text-blue-500"
-                        d="m7 9 5-5 5 5"></path>
-                    </svg>
-                  </div>
-                </th>
-                <th
-                  scope="col"
-                  class="py-1 group text-start font-semibold focus:outline-none">
-                  <div
-                    class="py-1 px-2.5 inline-flex items-center border border-transparent text-sm text-black font-bold rounded-md hover:border-gray-200 dark:text-neutral-500 dark:hover:border-neutral-700">
-                    Location
-                    <svg
-                      class="size-3.5 ms-1 -me-0.5 text-gray-400 dark:text-neutral-500"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round">
-                      <path
-                        class="hs-datatable-ordering-asc:text-blue-600 dark:hs-datatable-ordering-asc:text-blue-500"
-                        d="m7 15 5 5 5-5"></path>
-                      <path
-                        class="hs-datatable-ordering-desc:text-blue-600 dark:hs-datatable-ordering-desc:text-blue-500"
-                        d="m7 9 5-5 5 5"></path>
-                    </svg>
-                  </div>
-                </th>
+  <div class="min-h-[695px]">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for event in events %}
+      <div class="group bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden transform transition-all duration-300 hover:shadow-xl">
+        <div class="p-5">
+          <div class="flex justify-between items-start mb-4">
+            <h3 class="text-lg font-semibold text-black transition-colors duration-300">{{ event.name }}</h3>
+            <div class="relative">
+              <button
+                id="dropdownButtonActivity{{ forloop.counter }}"
+                data-dropdown-toggle="dropdownDotsActivity{{ forloop.counter }}"
+                class="p-2 text-gray-500 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                <svg
+                  class="w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 24 24">
+                  <path d="M12 3c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0 14c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0-7c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z" />
+                </svg>
+              </button>
 
-                <th
-                  scope="col"
-                  class="py-1 group text-start font-semibold focus:outline-none">
-                  <div
-                    class="py-1 px-2.5 inline-flex items-center border border-transparent text-sm text-black font-bold rounded-md hover:border-gray-200 dark:text-neutral-500 dark:hover:border-neutral-700">
-                    Description
-                    <svg
-                      class="size-3.5 ms-1 -me-0.5 text-gray-400 dark:text-neutral-500"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round">
-                      <path
-                        class="hs-datatable-ordering-asc:text-blue-600 dark:hs-datatable-ordering-asc:text-blue-500"
-                        d="m7 15 5 5 5-5"></path>
-                      <path
-                        class="hs-datatable-ordering-desc:text-blue-600 dark:hs-datatable-ordering-desc:text-blue-500"
-                        d="m7 9 5-5 5 5"></path>
-                    </svg>
-                  </div>
-                </th>
-
-                <th
-                  scope="col"
-                  class="py-2 px-3 text-end text-sm text-black font-bold --exclude-from-ordering dark:text-neutral-500">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <!-- Table Body -->
-            <tbody class="divide-y divide-gray-200">
-              {% for event in events %}
-              <tr class="{% cycle 'bg-white' 'bg-gray-50' %}">
-                <td class="px-4 py-3 text-sm text-gray-800">{{ event.name }}</td>
-                <td class="px-4 py-3 text-sm text-gray-800">
-                  {% if event.event_image %}
-                  <a
-                    href="#"
-                    data-modal-target="imageModal{{ event.id }}"
-                    data-modal-toggle="imageModal{{ event.id }}"
-                    class="text-blue-600 hover:text-blue-700 hover:underline">
-                    View
-                  </a>
-                  {% else %}
-                  <span class="text-gray-400">No Image Uploaded</span>
-                  {% endif %}
-                </td>
-                <td class="px-4 py-3 text-sm text-gray-800">{{ event.date }}</td>
-                <td class="px-4 py-3 text-sm text-gray-800">{{ event.location }}</td>
-                <td class="px-4 py-3 text-sm text-gray-800">
-                  <div class="max-w-xs">
-                    <div
-                      class="truncate"
-                      id="shortDesc{{ event.id }}">
-                      {{ event.description }}
+              <div
+                id="dropdownDotsActivity{{ forloop.counter }}"
+                class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-xl w-auto">
+                <ul class="p-3 space-y-2">
+                  <li>
+                    <div class="flex gap-2">
+                      <button
+                        hx-get="{% url 'admin_activities_edit' event.id %}"
+                        hx-target="#modal-content"
+                        hx-trigger="click"
+                        data-modal-toggle="modaldialog"
+                        data-modal-target="modaldialog"
+                        onclick="showTitle('Edit Activity');"
+                        class="text-center flex items-center cursor-pointer text-sm font-semibold bg-green-800 hover:bg-green-900 rounded-lg py-2 px-5 border border-black text-white transition-all duration-300 hover:shadow-md">
+                        <svg
+                          class="w-4 h-4 mr-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24">
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Edit
+                      </button>
+                      <button
+                        hx-get="{% url 'admin_activities_delete' event.id %}"
+                        hx-target="#modal-content"
+                        hx-trigger="click"
+                        data-modal-toggle="modaldialog"
+                        data-modal-target="modaldialog"
+                        onclick="showTitle('Delete Activity');"
+                        class="text-center flex items-center border cursor-pointer text-sm font-semibold p-2 px-5 rounded-lg border-red-600 text-red-600 hover:bg-red-50 transition-all duration-300 hover:shadow-md">
+                        <svg
+                          class="w-4 h-4 mr-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24">
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        Delete
+                      </button>
                     </div>
-                  </div>
-                </td>
-                <td class="px-4 py-3 text-end">
-                  <div class="relative inline-flex">
-                    <button
-                      id="dropdownButtonActivity{{ forloop.counter }}"
-                      data-dropdown-toggle="dropdownDotsActivity{{ forloop.counter }}"
-                      data-dropdown-placement="left-start"
-                      class="inline-flex items-center p-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 focus:ring-2 focus:ring-gray-100"
-                      type="button">
-                      <svg
-                        class="w-4 h-4"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="currentColor"
-                        viewBox="0 0 4 15">
-                        <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
-                      </svg>
-                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
 
-                    <!-- Dropdown menu -->
-                    <div
-                      id="dropdownDotsActivity{{ forloop.counter }}"
-                      class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-lg w-auto">
-                      <ul
-                        class="p-3 space-y-2"
-                        aria-labelledby="dropdownButtonActivity{{ forloop.counter }}">
-                        <li>
-                          <div class="flex gap-2">
-                            <button
-                              hx-get="{% url 'admin_activities_edit' event.id %}"
-                              hx-target="#modal-content"
-                              hx-trigger="click"
-                              data-modal-toggle="modaldialog"
-                              data-modal-target="modaldialog"
-                              onclick="showTitle('Edit Activity &quot;{{ event }}&quot;');"
-                              type="button"
-                              class="text-center items-center cursor-pointer text-sm font-semibold hover:bg-gray-50 rounded-lg p-2 px-5 border border-black text-black transition-all duration-300 hover:shadow-md">
-                              Edit
-                            </button>
-                            <button
-                              hx-get="{% url 'admin_activities_delete' event.id %}"
-                              hx-target="#modal-content"
-                              hx-trigger="click"
-                              data-modal-toggle="modaldialog"
-                              data-modal-target="modaldialog"
-                              onclick="showTitle('Delete Activity');"
-                              type="button"
-                              class="text-center items-center border cursor-pointer text-sm font-semibold p-2 px-5 rounded-lg border-red-600 text-red-600 hover:bg-red-50 transition-all duration-300 hover:shadow-md">
-                              Delete
-                            </button>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              {% empty %}
-              <tr>
-                <td
-                  colspan="6"
-                  class="px-4 py-8 text-center text-gray-500">
-                  No Activities Found.
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+          {% if event.event_image %}
+          <div class="mb-4 overflow-hidden rounded-lg transition-all duration-300">
+            <a
+              href="#"
+              data-modal-target="imageModal{{ event.id }}"
+              data-modal-toggle="imageModal{{ event.id }}"
+              class="block relative aspect-video overflow-hidden">
+              <img
+                src="{{ event.event_image.url }}"
+                alt="{{ event.name }}"
+                class="w-full h-full object-cover transform transition-transform duration-300" />
+            </a>
+          </div>
+          {% endif %}
+
+          <div class="space-y-3">
+            <div class="flex items-center text-sm text-gray-600">
+              <svg
+                class="w-5 h-5 mr-2 text-black"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              {{ event.date }}
+            </div>
+            <div class="flex items-center text-sm text-gray-600">
+              <svg
+                class="w-5 h-5 mr-2 text-black"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              {{ event.location }}
+            </div>
+            <p class="text-sm text-gray-700 line-clamp-3 group-hover:line-clamp-none transition-all duration-300">{{ event.description }}</p>
+          </div>
         </div>
       </div>
+      {% empty %}
+      <div class="col-span-3 py-16 flex flex-col items-center justify-center bg-gray-50 rounded-xl border-2 border-dashed border-gray-300">
+        <svg
+          class="w-16 h-16 text-gray-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+        </svg>
+        <p class="mt-4 text-lg font-medium text-gray-600">No Activities Found</p>
+        <p class="mt-2 text-sm text-gray-500">Get started by creating a new activity</p>
+      </div>
+      {% endfor %}
     </div>
+  </div>
 
-    <!-- Pagination -->
-    <di
-      v
-      class="py-4 px-4 flex justify-center"
-      data-hs-datatable-paging="">
-      <nav class="flex items-center space-x-1">
+  {% if page_obj.paginator.num_pages > 1 %}
+  <div class="mt-8 flex justify-center">
+    <nav
+      class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+      aria-label="Pagination">
+      {% if page_obj.has_previous %}
+      <a
+        href="?page={{ page_obj.previous_page_number }}"
+        class="relative inline-flex items-center px-3 py-2 rounded-l-lg border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-300">
+        <span class="sr-only">Previous</span>
+        <svg
+          class="h-5 w-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7" />
+        </svg>
+      </a>
+      {% endif %} {% for num in page_obj.paginator.page_range %} {% if num == page_obj.number %}
+      <span class="relative inline-flex items-center px-4 py-2 border border-blue-500 bg-blue-50 text-sm font-medium text-blue-600"> {{ num }} </span>
+      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+      <a
+        href="?page={{ num }}"
+        class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-300">
+        {{ num }}
+      </a>
+      {% endif %} {% endfor %} {% if page_obj.has_next %}
+      <a
+        href="?page={{ page_obj.next_page_number }}"
+        class="relative inline-flex items-center px-3 py-2 rounded-r-lg border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-300">
+        <span class="sr-only">Next</span>
+        <svg
+          class="h-5 w-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+      {% endif %}
+    </nav>
+  </div>
+  {% endif %}
+</div>
+
+{% for event in events %} {% if event.event_image %}
+<div
+  id="imageModal{{ event.id }}"
+  tabindex="-1"
+  aria-hidden="true"
+  class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full bg-black bg-opacity-50 items-center justify-center">
+  <div class="relative w-full max-w-4xl max-h-full">
+    <div class="relative bg-white rounded-lg shadow">
+      <div class="flex items-start justify-between p-4 border-b rounded-t">
+        <h3 class="text-xl font-semibold text-gray-900">{{ event.name }} - Image</h3>
         <button
           type="button"
-          class="p-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
-          data-hs-datatable-paging-prev="">
-          <span aria-hidden="true">«</span>
-          <span class="sr-only">Previous</span>
+          data-modal-hide="imageModal{{ event.id }}"
+          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center">
+          <svg
+            class="w-3 h-3"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 14 14">
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+          </svg>
+          <span class="sr-only">Close modal</span>
         </button>
-        <div
-          class="flex items-center space-x-1"
-          data-hs-datatable-paging-pages=""></div>
-        <button
-          type="button"
-          class="p-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
-          data-hs-datatable-paging-next="">
-          <span class="sr-only">Next</span>
-          <span aria-hidden="true">»</span>
-        </button>
-      </nav>
-    </di>
+      </div>
+      <div class="p-6">
+        <img
+          src="{{ event.event_image.url }}"
+          alt="{{ event.name }}"
+          class="w-full h-auto rounded-lg" />
+      </div>
+    </div>
   </div>
 </div>
-{% include 'admin/includes/modal/modal_dialogs.html' %} {% include "admin/includes/modal/modal_activities_image.html" %}
+{% endif %} {% endfor %} {% include 'admin/includes/modal/modal_dialogs.html' %} {% include "admin/includes/modal/modal_activities_image.html" %}
 <!--  -->
 {% endblock %} {% block extra_js %}
 <script src="{% static 'js/admin/data.js' %}"></script>

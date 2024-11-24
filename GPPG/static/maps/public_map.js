@@ -81,6 +81,16 @@ $(document).ready(function () {
     }
   }
 
+  function getClusterColor(clusterName) {
+    const clusterColors = {
+      "North Palawan": "#f4ad5e",
+      "Central Palawan": "#9c5f32",
+      "South Palawan": "#3f0703",
+    };
+
+    return clusterColors[clusterName];
+  }
+
   function initializeMapFeatures() {
     if (Object.keys(Datamap).length === 0) {
       console.warn("No data available in Datamap. Map initialization halted.");
@@ -94,23 +104,16 @@ $(document).ready(function () {
       }),
       style: function (feature) {
         const clusterName = feature.get("Cluster");
-        const regionData = Datamap[clusterName];
-
-        if (!regionData) {
-          return new ol.style.Style({
-            stroke: new ol.style.Stroke({ color: "#4b3621", width: 0.5 }),
-            fill: new ol.style.Fill({ color: "rgba(200, 200, 200, 0.3)" }),
-          });
-        }
-
-        const totalIncidents = regionData.dead + regionData.alive + regionData.scales + regionData.illegalTrades;
-        const normalizedIntensity = Math.min(totalIncidents / maxIncidents, 1);
-        const greenShade = 255 - Math.round(144 * normalizedIntensity);
-        const fillColor = `rgba(0, ${greenShade}, 0, 0.3)`;
+        const color = getClusterColor(clusterName);
 
         return new ol.style.Style({
-          stroke: new ol.style.Stroke({ color: "#4b3621", width: 0.5 }),
-          fill: new ol.style.Fill({ color: fillColor }),
+          stroke: new ol.style.Stroke({
+            color: color,
+            width: 0.5,
+          }),
+          fill: new ol.style.Fill({
+            color: color,
+          }),
         });
       },
     });

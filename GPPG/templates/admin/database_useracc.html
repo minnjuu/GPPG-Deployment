@@ -220,19 +220,6 @@
             </svg>
           </div>
         </div>
-        <div class="relative inline-flex">
-          <button
-            hx-get="{% url 'admin_userAccounts_add' %}"
-            hx-target="#modal-content"
-            hx-trigger="click"
-            data-modal-toggle="modaldialog"
-            data-modal-target="modaldialog"
-            onclick="showTitle('Add User');"
-            type="button"
-            class="py-2 px-5 inline-flex items-center gap-x-2 text-sm rounded-lg border bg-green-800 hover:bg-green-900 text-white shadow-sm transition-all duration-300 hover:shadow-md">
-            Add
-          </button>
-        </div>
       </div>
     </div>
 
@@ -391,16 +378,6 @@
                         aria-labelledby="dropdownButtonUser{{ forloop.counter }}">
                         <li>
                           <div class="flex gap-2">
-                            <button
-                              hx-get="{% url 'admin_userAccounts_edit' user.id %}"
-                              hx-target="#modal-content"
-                              hx-trigger="click"
-                              data-modal-toggle="modaldialog"
-                              data-modal-target="modaldialog"
-                              onclick="showTitle('Edit User');"
-                              class="text-center items-center cursor-pointer text-sm font-semibold hover:bg-gray-50 rounded-lg p-2 px-5 border border-black text-black transition-all duration-300 hover:shadow-md">
-                              Edit
-                            </button>
                             <button
                               hx-get="{% url 'admin_userAccounts_delete' user.id %}"
                               hx-target="#modal-content"

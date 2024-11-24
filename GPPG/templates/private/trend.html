@@ -1,102 +1,154 @@
 {% extends "private/index.html" %} {% load static %} {% block title %}GPPG - Poaching Trends{% endblock title %}
+
 <header>
   {% block nav %} {% include 'private/includes/nav.html' %}
-  <div class="flex flex-col m-5 mt-8 ml-16">
-    <h2 class="text-xl font-bold text-center md:text-left">Poaching Trends</h2>
+  <div class="flex items-center m-3 sm:m-5 mt-6 sm:mt-8 ml-4 sm:ml-16">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="mr-2 sm:w-6 sm:h-6">
+      <path d="M16,6L18.29,8.29L13.41,13.17L9.41,9.17L2,16.59L3.41,18L9.41,12L13.41,16L19.71,9.71L22,12V6H16Z" />
+    </svg>
+
+    <h2 class="text-xl sm:text-2xl font-bold">Poaching Trends</h2>
   </div>
   {% endblock nav %}
 </header>
-{% block content %}
 
+{% block content %}
 <div
-  class="bg-white -mt-3.5 text-gray-500 h-auto rounded-2xl shadow-xl py-5 px-5 w-full lg:w-4/6 mx-auto"
+  class="bg-white mt-3.5 text-gray-500 h-auto rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-4 sm:py-8 sm:px-8 w-full max-w-[95%] lg:w-4/6 mx-auto transition-all duration-300 hover:shadow-2xl"
   x-data="{ chartData: chartData() }"
   x-init="chartData.init()">
-  <div class="flex flex-wrap items-end">
+  <!-- Header Section -->
+  <div class="flex flex-col sm:flex-row items-start sm:items-end gap-4 sm:gap-0 mb-6">
     <div class="flex-1">
-      <h3 class="text-lg font-semibold leading-tight text-black">Activity Summary</h3>
+      <div class="flex items-center">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          class="text-gray-700 mr-2 hidden sm:block">
+          <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path>
+          <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path>
+          <path d="M18 12h-2"></path>
+          <path d="M8 12h8"></path>
+        </svg>
+        <h3 class="text-lg sm:text-xl font-bold text-gray-800">Activity Summary</h3>
+      </div>
     </div>
+
+    <!-- Dropdown -->
     <div
-      class="relative"
+      class="relative w-full sm:w-auto"
       @click.away="chartData.showDropdown=false">
       <button
-        class="text-xs hover:text-gray-300 h-6 focus:outline-none"
+        class="w-full sm:w-auto flex items-center justify-between px-3 sm:px-4 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors duration-200"
         @click="chartData.showDropdown=!chartData.showDropdown">
         <span x-text="chartData.options.length > 0 ? chartData.options[chartData.selectedOption]?.label : 'Loading...'"></span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          class="ml-2">
+          <path d="m6 9 6 6 6-6" />
+        </svg>
       </button>
 
       <div
-        class="bg-gray-700 shadow-lg rounded text-sm absolute top-auto right-0 min-w-full w-32 z-30 mt-1 -mr-3"
+        class="bg-white shadow-lg rounded-lg text-sm absolute top-auto right-0 min-w-full w-32 z-30 mt-1 border"
         x-show="chartData.showDropdown"
-        style="display: none"
-        x-transition:enter="transition ease duration-300 transform"
-        x-transition:enter-start="opacity-0 translate-y-2"
-        x-transition:enter-end="opacity-100 translate-y-0"
-        x-transition:leave="transition ease duration-300 transform"
-        x-transition:leave-start="opacity-100 translate-y-0"
-        x-transition:leave-end="opacity-0 translate-y-4">
-        <span class="absolute top-0 right-0 w-3 h-3 bg-gray-700 transform rotate-45 -mt-1 mr-3"></span>
-        <div class="bg-gray-700 rounded w-full relative z-10 py-1">
-          <ul class="list-reset text-xs">
-            <template
-              x-for="(item, index) in chartData.options"
-              :key="index">
-              <li
-                class="px-4 py-2 hover:bg-gray-600 hover:text-white transition-colors duration-100 cursor-pointer"
-                :class="{'text-white': index === chartData.selectedOption}"
-                @click="chartData.selectOption(index); chartData.showDropdown=false">
-                <span x-text="item.label"></span>
-              </li>
-            </template>
-          </ul>
+        style="display: none">
+        <div class="py-1">
+          <template
+            x-for="(item, index) in chartData.options"
+            :key="index">
+            <button
+              class="w-full px-4 py-2 text-left hover:bg-gray-100 transition-colors duration-200"
+              :class="{'bg-gray-50': index === chartData.selectedOption}"
+              @click="chartData.selectOption(index); chartData.showDropdown=false">
+              <span x-text="item.label"></span>
+            </button>
+          </template>
         </div>
       </div>
     </div>
   </div>
-  <div class="flex flex-wrap items-start mb-5 mt-2">
-    <div class="mr-4">
-      <h4 class="text-lg font-semibold text-black">Alive</h4>
+
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
+    <!-- Alive -->
+    <div class="bg-gray-50 rounded-lg p-3 items-center justify-center flex flex-col sm:p-4 transition-transform duration-300 hover:scale-105">
+      <div class="flex items-center mb-2">
+        <h4 class="text-base sm:text-lg font-semibold text-gray-800">Alive</h4>
+      </div>
       <p
-        class="text-2xl lg:text-3xl text-black font-semibold"
+        class="text-2xl sm:text-3xl font-bold text-green-600"
         x-text="chartData.data ? chartData.total.alive : 0">
         0
       </p>
     </div>
-    <div class="mr-4">
-      <h4 class="text-lg font-semibold text-black">Dead</h4>
+
+    <!-- Dead -->
+    <div class="bg-gray-50 rounded-lg p-3 items-center justify-center flex flex-col sm:p-4 transition-transform duration-300 hover:scale-105">
+      <div class="flex items-center mb-2">
+        <h4 class="text-base sm:text-lg font-semibold text-gray-800">Dead</h4>
+      </div>
       <p
-        class="text-2xl lg:text-3xl text-black font-semibold"
+        class="text-2xl sm:text-3xl font-bold text-red-600"
         x-text="chartData.data ? chartData.total.dead : 0">
         0
       </p>
     </div>
-    <div class="mr-4">
-      <h4 class="text-lg font-semibold text-black">Scales</h4>
+
+    <!-- Scales -->
+    <div class="bg-gray-50 rounded-lg p-3 items-center justify-center flex flex-col sm:p-4 transition-transform duration-300 hover:scale-105">
+      <div class="flex items-center mb-2">
+        <h4 class="text-base sm:text-lg font-semibold text-gray-800">Scales</h4>
+      </div>
       <p
-        class="text-2xl lg:text-3xl text-black font-semibold"
+        class="text-2xl sm:text-3xl font-bold text-blue-600"
         x-text="chartData.data ? chartData.total.scales : 0">
         0
       </p>
     </div>
-    <div class="mr-4">
-      <h4 class="text-lg font-semibold text-black">Illegal Trades</h4>
+
+    <!-- Illegal Trades -->
+    <div class="bg-gray-50 rounded-lg p-3 items-center justify-center flex flex-col sm:p-4 transition-transform duration-300 hover:scale-105">
+      <div class="flex items-center mb-2">
+        <h4 class="text-base sm:text-lg font-semibold text-gray-800">Illegal Trades</h4>
+      </div>
       <p
-        class="text-2xl lg:text-3xl text-black font-semibold"
+        class="text-2xl sm:text-3xl font-bold text-purple-600"
         x-text="chartData.data ? chartData.total.illegal_trade : 0">
         0
       </p>
     </div>
   </div>
-  <div>
+
+  <!-- Chart -->
+  <div class="bg-gray-50 rounded-lg p-2 sm:p-4">
     <canvas
       id="chart"
-      class="w-full">
-    </canvas>
+      class="w-full h-48 sm:h-64 lg:h-96"></canvas>
   </div>
 </div>
-
 {% endblock %} {% block extra_js %}
 <script src="{% static 'js/chart.js' %}"></script>
 <script src="{% static 'js/private/data_trend.js' %}"></script>
-
 {% endblock extra_js %}

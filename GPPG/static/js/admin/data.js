@@ -1,94 +1,118 @@
-// Wait for the DOM to be fully loaded
+// Initialize on document load
 document.addEventListener("DOMContentLoaded", function () {
-  // Get references to important elements
-  const exportButton = document.getElementById("exportButton");
-  const table = document.getElementById("pangolinsTable");
-  const statusCheckboxes = document.querySelectorAll('#dropdownDefaultCheckbox input[type="checkbox"]');
+  // Initialize all dropdowns
+  initializeDropdowns();
 
-  // Add click event listener to the export button
-  exportButton.addEventListener("click", exportData);
+  // Initialize search functionality
+  initializeSearch();
 
-  function exportData() {
-    // Get all rows from the table body
-    const rows = Array.from(table.querySelectorAll("tbody tr"));
-
-    // Get selected statuses
-    const selectedStatuses = Array.from(statusCheckboxes)
-      .filter((checkbox) => checkbox.checked)
-      .map((checkbox) => checkbox.value);
-
-    // Filter rows based on selected statuses
-    const filteredRows = rows.filter((row) => {
-      const status = row.querySelector("td:nth-child(3)").textContent;
-      return selectedStatuses.length === 0 || selectedStatuses.includes(status);
-    });
-
-    // Convert filtered rows to CSV format
-    const csvContent = convertToCSV(filteredRows);
-
-    // Create a Blob with the CSV content
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-
-    // Create a download link and trigger the download
-    const link = document.createElement("a");
-    if (link.download !== undefined) {
-      const url = URL.createObjectURL(blob);
-      link.setAttribute("href", url);
-      link.setAttribute("download", "pangolins_export.csv");
-      link.style.visibility = "hidden";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-  }
-
-  function convertToCSV(rows) {
-    const headers = Array.from(table.querySelectorAll("thead th"))
-      .map((th) => th.textContent.trim())
-      .slice(0, -1); // Exclude the "Action" column
-
-    const csvRows = rows.map((row) => {
-      return Array.from(row.querySelectorAll("td"))
-        .map((td) => td.textContent.trim())
-        .slice(0, -1) // Exclude the "Action" column
-        .map((text) => `"${text.replace(/"/g, '""')}"`) // Escape double quotes
-        .join(",");
-    });
-
-    return [headers.join(","), ...csvRows].join("\n");
-  }
-
-  // Initialize the status filter dropdown
-  const dropdownButton = document.getElementById("dropdownCheckboxButton");
-  const dropdownMenu = document.getElementById("dropdownDefaultCheckbox");
-
-  dropdownButton.addEventListener("click", () => {
-    dropdownMenu.classList.toggle("hidden");
-  });
-
-  // Close the dropdown when clicking outside
-  document.addEventListener("click", (event) => {
-    if (!dropdownButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
-      dropdownMenu.classList.add("hidden");
-    }
-  });
-
-  // Update the dropdown button text based on selected checkboxes
-  statusCheckboxes.forEach((checkbox) => {
-    checkbox.addEventListener("change", updateDropdownText);
-  });
-
-  function updateDropdownText() {
-    const selectedStatuses = Array.from(statusCheckboxes)
-      .filter((checkbox) => checkbox.checked)
-      .map((checkbox) => checkbox.value);
-
-    if (selectedStatuses.length === 0) {
-      dropdownButton.textContent = "All";
-    } else if (selectedStatuses.length === statusCheckboxes.length) {
-      dropdownButton.textContent = "All";
-    } else {
-      dropdownButton.textContent = `${selectedStatuses.length} selected`;
-    }
-  }
+  // Initialize modals
+  initializeModals();
 });
+
+// Dropdown functionality
+function initializeDropdowns() {
+  const dropdownButtons = document.querySelectorAll("[data-dropdown-toggle]");
+
+  dropdownButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const targetId = button.getAttribute("data-dropdown-toggle");
+      const dropdown = document.getElementById(targetId);
+
+      // Close all other dropdowns first
+      document.querySelectorAll('[id^="dropdownDotsActivity"]').forEach((d) => {
+        if (d.id !== targetId) {
+          d.classList.add("hidden");
+        }
+      });
+
+      // Toggle current dropdown
+      dropdown.classList.toggle("hidden");
+    });
+  });
+
+  // Close dropdowns when clicking outside
+  document.addEventListener("click", () => {
+    document.querySelectorAll('[id^="dropdownDotsActivity"]').forEach((dropdown) => {
+      if (!dropdown.classList.contains("hidden")) {
+        dropdown.classList.add("hidden");
+      }
+    });
+  });
+}
+
+// Search functionality
+function initializeSearch() {
+  const searchInput = document.getElementById("hs-table-export-search");
+  const cards = document.querySelectorAll('.grid > div[class*="bg-white"]'); // Select all cards except empty state
+
+  searchInput.addEventListener("input", (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+
+    cards.forEach((card) => {
+      const name = card.querySelector("h3").textContent.toLowerCase();
+      const description = card.querySelector("p").textContent.toLowerCase();
+      const location = card.querySelector(".text-gray-600:nth-of-type(2)").textContent.toLowerCase();
+      const date = card.querySelector(".text-gray-600:nth-of-type(1)").textContent.toLowerCase();
+
+      const matches = name.includes(searchTerm) || description.includes(searchTerm) || location.includes(searchTerm) || date.includes(searchTerm);
+
+      card.style.display = matches ? "" : "none";
+    });
+
+    // Show/hide empty state message
+    const visibleCards = [...cards].filter((card) => card.style.display !== "none");
+    const emptyState = document.querySelector(".col-span-3");
+    if (emptyState) {
+      emptyState.style.display = visibleCards.length === 0 ? "" : "none";
+    }
+  });
+}
+
+// Modal functionality
+function initializeModals() {
+  const modalButtons = document.querySelectorAll("[data-modal-toggle]");
+  const closeButtons = document.querySelectorAll("[data-modal-hide]");
+
+  modalButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const modalId = button.getAttribute("data-modal-target");
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.classList.remove("hidden");
+        document.body.classList.add("overflow-hidden");
+      }
+    });
+  });
+
+  closeButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const modalId = button.getAttribute("data-modal-hide");
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.classList.add("hidden");
+        document.body.classList.remove("overflow-hidden");
+      }
+    });
+  });
+
+  // Close modal when clicking outside
+  window.addEventListener("click", (e) => {
+    const modals = document.querySelectorAll('[role="dialog"]');
+    modals.forEach((modal) => {
+      if (e.target === modal) {
+        modal.classList.add("hidden");
+        document.body.classList.remove("overflow-hidden");
+      }
+    });
+  });
+}
+
+// Helper function to show modal title
+function showTitle(title) {
+  const modalTitle = document.querySelector("#modal-title");
+  if (modalTitle) {
+    modalTitle.textContent = title;
+  }
+}
