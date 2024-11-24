@@ -31,7 +31,7 @@ environ.Env.read_env()
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SEC_KEY')
-GEMINI_API_KEY = 'AIzaSyAmEY3lb3x-6CihX2J1_2kSZEsyRRNaV8M'
+GEMINI_API_KEY = env('GOOGLE_API')
 SITE_NAME = 'Guardians of the Palawan Pangolin Guild'
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -86,7 +86,7 @@ SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
             'client_id': '639361156779-5lcskb1re44gjhk39agaccrg59pebp1f.apps.googleusercontent.com',
-            'secret': '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',
+            'secret': env('SOCIAL_ACC_KEY'),
             'key': ''
         },
         'SCOPE': [
@@ -199,7 +199,7 @@ USE_I18N = True
 AWS_ACCESS_KEY_ID = env('ACCESS_KEY')
 AWS_SECRET_ACCESS_KEY = env('SECRET_ACCESS_KEY')
 
-AWS_STORAGE_BUCKET_NAME = 'gppg-bucket'
+AWS_STORAGE_BUCKET_NAME = env('BUCKET_NAME')
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 AWS_S3_FILE_OVERWRITE = False
 
@@ -217,21 +217,30 @@ STORAGES = {
         },
     },
 }
-STATIC_URL = "/static/"
+
+STATIC_URL = '/static/'
 
 
 STATICFILES_DIRS = [
-    BASE_DIR, 'static'
+    BASE_DIR / 'static', 
+    
 ]
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-COMPRESS_ROOT = BASE_DIR / 'static'
 
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+
+COMPRESS_ROOT = BASE_DIR / 'static'
 COMPRESS_ENABLED = True
 COMPRESS_OFFLINE = True
 COMPRESS_URL = STATIC_URL
-STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',
-                       "django.contrib.staticfiles.finders.FileSystemFinder",
-                       "django.contrib.staticfiles.finders.AppDirectoriesFinder",)
+
+
+STATICFILES_FINDERS = (
+    'compressor.finders.CompressorFinder',
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
 
 
 # Default primary key field type
