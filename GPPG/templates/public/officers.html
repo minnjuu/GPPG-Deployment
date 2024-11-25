@@ -1,30 +1,51 @@
-{% extends "public/landing_page.html" %} {% load static %} {% block title %}GPPG - Officers{% endblock title %}
+{% extends "private/index.html" %} {% load static %} {% block title %}GPPG - Officers{% endblock title %}
 <header>
-  {% block nav %} {% include 'public/includes/nav.html' %}
-  <div class="flex items-center m-5 mt-8 ml-16">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      class="mr-3">
-      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-      <circle
-        cx="9"
-        cy="7"
-        r="4"></circle>
-      <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-    </svg>
-    <h2 class="text-2xl font-bold text-gray-800">GPPG Officers</h2>
+  {% block nav %} {% include 'private/includes/nav.html' %}
+  <div class="p-4 md:p-6 lg:p-8 mx-8">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-6 h-6 mr-3 text-black"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle
+            cx="9"
+            cy="7"
+            r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+
+        <h2 class="text-xl md:text-2xl font-bold text-gray-800">GGPG Officers</h2>
+      </div>
+
+      <!-- -->
+      <div class="w-full sm:w-auto">
+        <form
+          method="get"
+          class="relative">
+          <select
+            name="year"
+            onchange="this.form.submit()"
+            class="w-full sm:w-auto px-4 py-2 bg-white border border-gray-300 rounded-xl text-gray-700 cursor-pointer hover:border-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors duration-200">
+            {% for year in available_years %}
+            <!-- -->
+            <option value="{{ year|date:'Y' }}" {% if year|date:'Y' == selected_year %}selected{% endif %}> {% if year|date:'Y' == current_year %} This Year {% else %} {{ year|date:'Y' }} {% endif %}
+            {% endfor %}
+          </select>
+        </form>
+      </div>
+    </div>
   </div>
   {% endblock nav %}
 </header>
 {% block content %}
-<section class="my-5 mx-16 h-full overflow-hidden py-2">
+
+<section class="my-5 mx-16 h-auto py-2">
   <div>
     <!-- First row 2 -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-10 text-center justify-center">
@@ -374,7 +395,7 @@
           src="{{ business_manager.officer_image.url }}"
           alt="Officer Image" />
         <h2 class="mt-4 text-xl font-semibold">{{ business_manager.first_name }} {{ business_manager.last_name }}</h2>
-        <p class="text-gray-500">Pio External</p>
+        <p class="text-gray-500">Business Manager</p>
         <div class="mt-4 flex justify-center space-x-2">
           {% if business_manager.fb_url %}
           <a
@@ -415,4 +436,5 @@
     </div>
   </div>
 </section>
+
 {% endblock %}

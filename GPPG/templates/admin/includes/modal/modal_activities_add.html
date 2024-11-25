@@ -51,73 +51,76 @@
         <div class="text-red-600">{{ form.event_image.errors }}</div>
         {% endif %}
       </label>
-      <div class="relative">
-        <div
-          id="dropZone"
-          class="min-h-[200px] bg-gray-50 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 cursor-pointer hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600">
-          <div class="flex flex-col items-center justify-center space-y-3">
-            <div class="w-12 h-12 text-gray-400">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-12 h-12"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-            </div>
 
-            <!-- Upload Text -->
-            <div class="text-center">
-              <p class="text-gray-500 dark:text-gray-400">
-                Drop your image here, or
-                <span
-                  class="text-primary-600 hover:text-primary-500 cursor-pointer"
-                  id="browseLink"
-                  >browse</span
-                >
-              </p>
-              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">PNG and JPG (MAX. 800x400px)</p>
-            </div>
+      <div id="eventForm">
+        <div class="relative">
+          <div
+            id="dropZoneEvent"
+            class="min-h-[200px] bg-gray-50 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 cursor-pointer hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600">
+            <div class="flex flex-col items-center justify-center space-y-3">
+              <div class="w-12 h-12 text-gray-400">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-12 h-12"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
 
-            <!-- Error Message -->
-            {% if form.event_image.errors %}
-            <div class="text-red-600 text-sm">{{ form.event_image.errors }}</div>
-            {% endif %}
+              <!-- Upload Text -->
+              <div class="text-center">
+                <p class="text-gray-500 dark:text-gray-400">
+                  Drop your image here, or
+                  <span
+                    class="text-primary-600 hover:text-primary-500 cursor-pointer"
+                    id="browseLinkEvent"
+                    >browse</span
+                  >
+                </p>
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">PNG and JPG (MAX. 800x400px)</p>
+              </div>
+
+              <!-- Error Message -->
+              {% if form.event_image.errors %}
+              <div class="text-red-600 text-sm">{{ form.event_image.errors }}</div>
+              {% endif %}
+            </div>
           </div>
-        </div>
 
-        {{ form.event_image }}
+          {{ form.event_image }}
 
-        <div
-          id="previewContainer"
-          class="hidden mt-4">
-          <div class="relative">
-            <img
-              id="imagePreview"
-              src="#"
-              alt="Preview"
-              class="max-w-full h-60 rounded-lg shadow-md" />
-            <button
-              type="button"
-              id="clearImage"
-              class="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md hover:bg-gray-100">
-              <svg
-                class="w-5 h-5 text-gray-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+          <div
+            id="previewContainerEvent"
+            class="hidden mt-4">
+            <div class="relative">
+              <img
+                id="imagePreviewEvent"
+                src="#"
+                alt="Preview"
+                class="max-w-full h-60 rounded-lg shadow-md" />
+              <button
+                type="button"
+                id="clearImageEvent"
+                class="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md hover:bg-gray-100">
+                <svg
+                  class="w-5 h-5 text-gray-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -141,4 +144,4 @@
   </form>
 </div>
 <script src="{% static 'js/jquery.js' %}"></script>
-<script src="{% static 'js/admin/dropzone.js' %}"></script>
+<script src="{% static 'js/admin/dropzone_event.js' %}"></script>

@@ -4,6 +4,7 @@ from django.forms import ModelForm, DateTimeInput
 from django import forms
 from .models import *
 from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.forms import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
@@ -119,13 +120,20 @@ class OfficerForm(forms.ModelForm):
 
     date_joined = forms.DateField(
         widget=forms.DateInput(attrs={
-            'type': 'date',  # 'date' input type triggers browser date picker
+            'type': 'date',  
             'class': 'bg-gray-50 border-b-2 border-t-0 border-x-0 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-b-primary-600',
             'placeholder': 'Select Date',
         })
     )
 
     class Meta:
+
+        officer_image = forms.ImageField(
+            widget=forms.FileInput(attrs={
+                'class': 'hidden',
+                'accept': 'image/*'
+            }),
+        )
         model = Officer
         fields = "__all__"
 
@@ -161,8 +169,9 @@ class OfficerForm(forms.ModelForm):
                 'class': 'bg-gray-50 border-b-2 border-t-0 border-x-0 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-b-primary-600',
                 'placeholder': 'Enter your full Instagram profile link (e.g., https://www.instagram.com/your.custom.url)'
             }),
-            'officer_image': forms.ClearableFileInput(attrs={
-                'class': 'block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer',
+            'officer_image': forms.FileInput(attrs={
+                'class': 'hidden',
+                'accept': 'image/*'
             }),
         }
 
@@ -180,6 +189,13 @@ class OfficerForm(forms.ModelForm):
 
 
 class GalleryForm(forms.ModelForm):
+
+    media = forms.FileField(
+        widget=forms.FileInput(attrs={
+            'class': 'hidden',
+            'accept': 'image/*,video/*'
+        }),
+    )
     class Meta:
         model = Gallery
         fields = ['uploader', 'media']
@@ -193,8 +209,9 @@ class GalleryForm(forms.ModelForm):
                 'class': 'bg-gray-50 border-b-2 border-t-0 border-x-0 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-b-primary-600',
                 'placeholder': 'Enter your name',
             }),
-            'media': forms.ClearableFileInput(attrs={
-                'class': 'block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer',
+            'media': forms.FileInput(attrs={
+                'class': 'hidden',
+                'accept': 'image/*,video/*'
             }),
         }
 
@@ -208,7 +225,7 @@ class EventForm(forms.ModelForm):
         })
     )
     event_image = forms.ImageField(
-        widget=forms.ClearableFileInput(attrs={
+        widget=forms.FileInput(attrs={
             'class': 'hidden',
         }),
     )
@@ -238,7 +255,7 @@ class EventForm(forms.ModelForm):
                 'class': 'bg-gray-50 border-b-2 border-t-0 border-x-0 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-b-primary-600',
                 'placeholder': 'Enter Activity Location'
             }),
-            'event_image': forms.ClearableFileInput(attrs={
+            'event_image': forms.FileInput(attrs={
                 'class': 'hidden',
                 'accept': 'image/*'
             }),
@@ -325,52 +342,49 @@ class UserFormPrivate(forms.ModelForm):
 
 class ChangePasswordForm(forms.Form):
     current_password = forms.CharField(
-        label='Current Password',
         widget=forms.PasswordInput(attrs={
             'class': 'w-full px-4 border-b border-t-0 border-x-0 border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-b-primary-600',
-            'placeholder': 'Enter your current password'
-        })
+            'placeholder': 'Enter Current Password'
+        }),
+        required=True
     )
     new_password = forms.CharField(
-        label='New Password',
         widget=forms.PasswordInput(attrs={
             'class': 'w-full px-4 border-b border-t-0 border-x-0 border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-b-primary-600',
-            'placeholder': 'Enter your new password'
-        })
+            'placeholder': 'Enter New Password'
+        }),
+        required=True,
+        validators=[validate_password]
     )
     confirm_password = forms.CharField(
-        label='Confirm Password',
         widget=forms.PasswordInput(attrs={
             'class': 'w-full px-4 border-b border-t-0 border-x-0 border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-b-primary-600',
-            'placeholder': 'Confirm your new password'
-        })
+            'placeholder': 'Confirm New Password'
+        }),
+        required=True
     )
 
-    def __init__(self, user=None, *args, **kwargs):
+    def __init__(self, user, *args, **kwargs):
         self.user = user
         super().__init__(*args, **kwargs)
 
+    def clean_current_password(self):
+        current_password = self.cleaned_data['current_password']
+        if not self.user.check_password(current_password):
+            raise forms.ValidationError("Current password is incorrect.")
+        return current_password
+
     def clean(self):
         cleaned_data = super().clean()
-        current_password = cleaned_data.get('current_password')
-        new_password = cleaned_data.get('new_password')
-        confirm_password = cleaned_data.get('confirm_password')
+        new_password = cleaned_data.get("new_password")
+        confirm_password = cleaned_data.get("confirm_password")
 
-        
-        if self.user and current_password:
-            if not check_password(current_password, self.user.password):
-                raise forms.ValidationError({
-                    'current_password': ["Current password is incorrect"]
-                })
-
-        
         if new_password and confirm_password:
             if new_password != confirm_password:
-                raise forms.ValidationError({
-                    'confirm_password': ["Passwords don't match!"]
-                })
-
+                self.add_error("confirm_password", "Passwords do not match.")
+            
         return cleaned_data
+
     
 
 class UserFormAdmin(forms.ModelForm):

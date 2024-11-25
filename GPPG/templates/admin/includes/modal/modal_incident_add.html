@@ -1,138 +1,128 @@
 {% load static %}
 
-<div id="addincident" class="modal-content"> 
+<div
+  id="addincident"
+  class="modal-content">
   <form
     hx-post="{% url 'admin_incident_add' %}"
     hx-target="#modal-content"
     novalidate>
-    {% csrf_token %} 
+    {% csrf_token %}
     <div class="grid grid-cols-2 gap-4">
       <div>
-          <label class="block text-sm font-medium text-gray-700">
-              {{ form.municity.label_tag }}
-              {% if form.municity.errors %}
-                <div class="text-red-600">{{ form.municity.errors }}</div>
-              {% endif %}
-          </label>
-          {{ form.municity }}
-      </div>
-
-      <div>
-          <label class="block text-sm font-medium text-gray-700">
-              {{ form.status.label_tag }}
-              {% if form.status.errors %}
-                <div class="text-red-600">{{ form.status.errors }}</div>
-              {% endif %}
-          </label>
-          {{ form.status }}
+        <label class="block text-sm font-medium text-gray-700">
+          {{ form.municity.label_tag }} {% if form.municity.errors %}
+          <div class="text-red-600">{{ form.municity.errors }}</div>
+          {% endif %}
+        </label>
+        {{ form.municity }}
       </div>
 
       <div>
         <label class="block text-sm font-medium text-gray-700">
-            {{ form.date_reported.label_tag }}
-            {% if form.date_reported.errors %}
-              <div class="text-red-600">{{ form.date_reported.errors }}</div>
-            {% endif %}
+          {{ form.status.label_tag }} {% if form.status.errors %}
+          <div class="text-red-600">{{ form.status.errors }}</div>
+          {% endif %}
+        </label>
+        {{ form.status }}
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">
+          {{ form.date_reported.label_tag }} {% if form.date_reported.errors %}
+          <div class="text-red-600">{{ form.date_reported.errors }}</div>
+          {% endif %}
         </label>
         {{ form.date_reported }}
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">
+          {{ form.life_history.label_tag }} {% if form.life_history.errors %}
+          <div class="text-red-600">{{ form.life_history.errors }}</div>
+          {% endif %}
+        </label>
+        {{ form.life_history }}
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">
+          {{ form.weight.label_tag }} {% if form.weight.errors %}
+          <div class="text-red-600">{{ form.weight.errors }}</div>
+          {% endif %}
+        </label>
+        {{ form.weight }}
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">
+          {{ form.sex.label_tag }} {% if form.sex.errors %}
+          <div class="text-red-600">{{ form.sex.errors }}</div>
+          {% endif %}
+        </label>
+        {{ form.sex }}
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">
+          {{ form.obl_rolled.label_tag }} {% if form.obl_rolled.errors %}
+          <div class="text-red-600">{{ form.obl_rolled.errors }}</div>
+          {% endif %}
+        </label>
+        {{ form.obl_rolled }}
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">
+          {{ form.obl_stretched.label_tag }} {% if form.obl_stretched.errors %}
+          <div class="text-red-600">{{ form.obl_stretched.errors }}</div>
+          {% endif %}
+        </label>
+        {{ form.obl_stretched }}
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">
+          {{ form.ticks.label_tag }} {% if form.ticks.errors %}
+          <div class="text-red-600">{{ form.ticks.errors }}</div>
+          {% endif %}
+        </label>
+        {{ form.ticks }}
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">
+          {{ form.feces.label_tag }} {% if form.feces.errors %}
+          <div class="text-red-600">{{ form.feces.errors }}</div>
+          {% endif %}
+        </label>
+        {{ form.feces }}
+      </div>
     </div>
 
     <div>
       <label class="block text-sm font-medium text-gray-700">
-          {{ form.life_history.label_tag }}
-          {% if form.life_history.errors %}
-            <div class="text-red-600">{{ form.life_history.errors }}</div>
-          {% endif %}
-      </label>
-      {{ form.life_history }}
-  </div>
-
-  <div>
-    <label class="block text-sm font-medium text-gray-700">
-        {{ form.weight.label_tag }}
-        {% if form.weight.errors %}
-          <div class="text-red-600">{{ form.weight.errors }}</div>
+        {{ form.description.label_tag }} {% if form.description.errors %}
+        <div class="text-red-600">{{ form.description.errors }}</div>
         {% endif %}
-    </label>
-    {{ form.weight }}
-</div>
-
-  <div>
-      <label class="block text-sm font-medium text-gray-700">
-          {{ form.sex.label_tag }}
-          {% if form.sex.errors %}
-            <div class="text-red-600">{{ form.sex.errors }}</div>
-          {% endif %}
       </label>
-      {{ form.sex }}
-  </div>
-
-<div>
-  <label class="block text-sm font-medium text-gray-700">
-      {{ form.obl_rolled.label_tag }}
-      {% if form.obl_rolled.errors %}
-        <div class="text-red-600">{{ form.obl_rolled.errors }}</div>
-      {% endif %}
-  </label>
-  {{ form.obl_rolled }}
-</div>
-
-<div>
-  <label class="block text-sm font-medium text-gray-700">
-      {{ form.obl_stretched.label_tag }}
-      {% if form.obl_stretched.errors %}
-        <div class="text-red-600">{{ form.obl_stretched.errors }}</div>
-      {% endif %}
-  </label>
-  {{ form.obl_stretched }}
-</div>
-
-<div>
-  <label class="block text-sm font-medium text-gray-700">
-      {{ form.ticks.label_tag }}
-      {% if form.ticks.errors %}
-        <div class="text-red-600">{{ form.ticks.errors }}</div>
-      {% endif %}
-  </label>
-  {{ form.ticks }}
-</div>
-
-<div>
-  <label class="block text-sm font-medium text-gray-700">
-      {{ form.feces.label_tag }}
-      {% if form.feces.errors %}
-        <div class="text-red-600">{{ form.feces.errors }}</div>
-      {% endif %}
-  </label>
-  {{ form.feces }}
-</div>
-
-  </div>
-
-  <div>
-    <label class="block text-sm font-medium text-gray-700">
-        {{ form.description.label_tag }}
-        {% if form.description.errors %}
-                <div class="text-red-600">{{ form.description.errors }}</div>
-              {% endif %}
-    </label>
-    {{ form.description }}
-  </div>
+      {{ form.description }}
+    </div>
 
     <button
-        type="submit"
-        class="bg-white text-black inline-flex items-center border-2 font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-4">
-        <svg
-            class="mr-1 -ml-1 w-6 h-6"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg">
-            <path
-                fill-rule="evenodd"
-                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                clip-rule="evenodd"></path>
-        </svg>
-        Add new
+      type="submit"
+      class="py-2 px-5 mr-2 inline-flex items-center gap-x-2 text-sm rounded-lg border bg-green-800 hover:bg-green-900 text-white shadow-sm transition-all duration-300 hover:shadow-md">
+      <svg
+        class="mr-1 -ml-1 w-6 h-6"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          fill-rule="evenodd"
+          d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+          clip-rule="evenodd"></path>
+      </svg>
+      Add new
     </button>
   </form>
 </div>

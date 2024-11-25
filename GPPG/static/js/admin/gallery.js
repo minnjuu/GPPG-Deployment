@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", function () {
   initializeDropdowns();
   initializeSearch();
   initializeModals();
-  initializeYearFilter();
 });
 
 // Dropdown functionality
@@ -40,7 +39,7 @@ function initializeDropdowns() {
 
 // Search functionality
 function initializeSearch() {
-  const searchInput = document.getElementById("officers-search");
+  const searchInput = document.getElementById("gallery-search");
   const cards = document.querySelectorAll('.grid > div[class*="bg-white"]');
 
   searchInput.addEventListener("input", (e) => {
@@ -48,40 +47,13 @@ function initializeSearch() {
 
     cards.forEach((card) => {
       const name = card.querySelector("h3")?.textContent.toLowerCase() || "";
-      const position = card.querySelector("p")?.textContent.toLowerCase() || "";
-      const dateJoined = card.querySelector(".text-gray-600:first-child")?.textContent.toLowerCase() || "";
-      const socialLinks = card.querySelector(".text-gray-700")?.textContent.toLowerCase() || "";
-
-      const matches = name.includes(searchTerm) || position.includes(searchTerm) || dateJoined.includes(searchTerm) || socialLinks.includes(searchTerm);
+      const matches = name.includes(searchTerm);
 
       card.style.display = matches ? "" : "none";
     });
 
     updateEmptyState();
   });
-}
-
-// Year filter functionality
-function initializeYearFilter() {
-  const yearSelect = document.getElementById("year-filter");
-  const cards = document.querySelectorAll('.grid > div[class*="bg-white"]');
-
-  if (yearSelect) {
-    yearSelect.addEventListener("change", (e) => {
-      const selectedYear = e.target.value.toLowerCase();
-
-      cards.forEach((card) => {
-        const dateJoined = card.querySelector(".text-gray-600:first-child")?.textContent.toLowerCase() || "";
-        const yearMatch = dateJoined.match(/(\d{4})/);
-        const cardYear = yearMatch ? yearMatch[1] : "";
-
-        const matches = !selectedYear || cardYear.includes(selectedYear);
-        card.style.display = matches ? "" : "none";
-      });
-
-      updateEmptyState();
-    });
-  }
 }
 
 // Helper function to update empty state

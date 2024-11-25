@@ -4,6 +4,7 @@ from django.db.models import Count
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import *
+from datetime import datetime
 from django.http import JsonResponse, HttpResponse
 from django.template.response import TemplateResponse
 from django.shortcuts import get_object_or_404
@@ -482,24 +483,33 @@ def public_about(request):
 
 
 def public_officers(request):
-    presidents = Officer.objects.filter(position='President')
-    vice_presidents = Officer.objects.filter(position='Vice President')
-    secretary = Officer.objects.filter(position='Secretary')
-    treasurer = Officer.objects.filter(position='Treasurer')
-    auditor = Officer.objects.filter(position='Auditor')
-    pio_internal = Officer.objects.filter(position='Pio Internal')
-    pio_external = Officer.objects.filter(position='Pio External')
-    business_manager = Officer.objects.filter(position='Business Manager')
-    return render(request, 'public/officers.html', {
-        'president': presidents,
-        'vice_president': vice_presidents,
-        'secretary': secretary,
-        'treasurer': treasurer,
-        'auditor': auditor,
-        'pio_internal': pio_internal,
-        'pio_external': pio_external,
-        'business_manager': business_manager,
-    })
+    current_year = datetime.now().year
+    available_years = Officer.objects.dates(
+        'date_joined', 'year', order='DESC')
+
+    selected_year = request.GET.get('year', str(current_year))
+    context = {
+        'available_years': available_years,
+        'selected_year': selected_year,
+        'current_year': str(current_year)
+    }
+    base_filter = {'date_joined__year': selected_year} if selected_year else {}
+    positions = {
+        'president': 'President',
+        'vice_president': 'Vice President',
+        'secretary': 'Secretary',
+        'treasurer': 'Treasurer',
+        'auditor': 'Auditor',
+        'pio_internal': 'Pio Internal',
+        'pio_external': 'Pio External',
+        'business_manager': 'Business Manager'
+    }
+    for position_key, position_name in positions.items():
+        context[position_key] = Officer.objects.filter(
+            position=position_name,
+            **base_filter
+        )
+    return render(request, 'public/officers.html', context)
 
 
 # PRIVATE
@@ -687,25 +697,32 @@ def trend(request):
 
 @login_required
 def officers(request):
-    presidents = Officer.objects.filter(position='President')
-    vice_presidents = Officer.objects.filter(position='Vice President')
-    secretary = Officer.objects.filter(position='Secretary')
-    treasurer = Officer.objects.filter(position='Treasurer')
-    auditor = Officer.objects.filter(position='Auditor')
-    pio_internal = Officer.objects.filter(position='Pio Internal')
-    pio_external = Officer.objects.filter(position='Pio External')
-    business_manager = Officer.objects.filter(position='Business Manager')
-    return render(request, 'private/officers.html', {
-        'president': presidents,
-        'vice_president': vice_presidents,
-        'secretary': secretary,
-        'treasurer': treasurer,
-        'auditor': auditor,
-        'pio_internal': pio_internal,
-        'pio_external': pio_external,
-        'business_manager': business_manager,
-    })
-
+    current_year = datetime.now().year
+    available_years = Officer.objects.dates(
+        'date_joined', 'year', order='DESC')
+    selected_year = request.GET.get('year', str(current_year))
+    context = {
+        'available_years': available_years,
+        'selected_year': selected_year,
+        'current_year': str(current_year)
+    }
+    base_filter = {'date_joined__year': selected_year} if selected_year else {}
+    positions = {
+        'president': 'President',
+        'vice_president': 'Vice President',
+        'secretary': 'Secretary',
+        'treasurer': 'Treasurer',
+        'auditor': 'Auditor',
+        'pio_internal': 'Pio Internal',
+        'pio_external': 'Pio External',
+        'business_manager': 'Business Manager'
+    }
+    for position_key, position_name in positions.items():
+        context[position_key] = Officer.objects.filter(
+            position=position_name,
+            **base_filter
+        )
+    return render(request, 'private/officers.html', context)
 
 @login_required
 def maps(request):
@@ -714,7 +731,7 @@ def maps(request):
 
 @login_required
 def account_view(request):
-    change_password_form = ChangePasswordForm()
+    change_password_form = ChangePasswordForm(user=request.user)
     context = {
         'change_password_form': change_password_form,
     }
@@ -741,38 +758,30 @@ def incident_report(request):
 
 @login_required
 def change_password(request):
-   if request.method != 'POST':
-       form = ChangePasswordForm(user=request.user)
-       return render(request, 'admin/includes/modal/modal_changepass.html', {'form': form})
+    if request.method == 'POST':
+        form = ChangePasswordForm(user=request.user, data=request.POST)
+        
+        if form.is_valid():
+            user = request.user
+            new_password = form.cleaned_data['new_password']
+            
+            # Set the new password
+            user.set_password(new_password)
+            user.save()
+            update_session_auth_hash(request, user)
 
-   form = ChangePasswordForm(user=request.user, data=request.POST)
-   if not form.is_valid():
-       return render(request, 'admin/includes/modal/modal_changepass.html', {
-           'form': form,
-           'error': True
-       })
+            messages.success(request, "Your password has been changed successfully.")
+            return redirect('account_view')  
 
-   try:
-       user = request.user
-       new_password = form.cleaned_data['new_password']
-
-       user.set_password(new_password)
-       user.save()
-
-       # Add success message for HTMX response
-       return HttpResponse(
-           '<div class="bg-green-100 text-green-700 p-4 rounded">'
-           'Password changed successfully!'
-           '<script>setTimeout(() => closeChangePasswordModal(), 2000)</script>'
-           '</div>'
-       )
-
-   except Exception as e:
-       form.add_error(None, str(e))
-       return render(request, 'admin/includes/modal/modal_changepass.html', {
-           'form': form,
-           'error': True
-       })
+        else:
+            return render(request, 'admin/includes/modal/modal_changepass.html', {
+                'form': form,
+                'error': True
+            })
+    else:
+        form = ChangePasswordForm(user=request.user)
+    
+    return render(request, 'admin/includes/modal/modal_changepass.html', {'form': form})
 
 
 @login_required

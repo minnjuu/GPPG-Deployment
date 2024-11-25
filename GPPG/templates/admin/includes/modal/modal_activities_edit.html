@@ -52,11 +52,11 @@
         <div class="text-red-600">{{ form.event_image.errors }}</div>
         {% endif %}
       </label>
-      <div class="relative">
+      <div id="eventForm">
         {{ form.event_image }}
         <div
-          id="dropZone"
-          class="min-h-[200px] hidden bg-gray-50 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 cursor-pointer hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600">
+          id="dropZoneEvent"
+          class="min-h-[200px] bg-gray-50 border-2 hidden border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 cursor-pointer hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600">
           <div class="flex flex-col items-center justify-center space-y-3">
             <div class="w-12 h-12 text-gray-400">
               <svg
@@ -73,35 +73,38 @@
               </svg>
             </div>
 
+            <!-- Upload Text -->
             <div class="text-center">
               <p class="text-gray-500 dark:text-gray-400">
                 Drop your image here, or
                 <span
                   class="text-primary-600 hover:text-primary-500 cursor-pointer"
-                  id="browseLink"
+                  id="browseLinkEvent"
                   >browse</span
                 >
               </p>
-              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">PNG, JPG or GIF (MAX. 800x400px)</p>
+              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">PNG and JPG (MAX. 800x400px)</p>
             </div>
 
+            <!-- Error Message -->
             {% if form.event_image.errors %}
             <div class="text-red-600 text-sm">{{ form.event_image.errors }}</div>
             {% endif %}
           </div>
         </div>
+
         <div
-          id="previewContainer"
+          id="previewContainerEvent"
           class="{% if event.event_image %}block{% else %}hidden{% endif %} mt-4">
           <div class="relative">
             <img
-              id="imagePreview"
+              id="imagePreviewEvent"
               src="{% if event.event_image %}{{ event.event_image.url }}{% else %}#{% endif %}"
               alt="Preview"
               class="max-w-full h-60 rounded-lg shadow-md" />
             <button
               type="button"
-              id="clearImage"
+              id="clearImageEvent"
               class="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md hover:bg-gray-100">
               <svg
                 class="w-5 h-5 text-gray-600"
@@ -136,86 +139,5 @@
   </form>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script>
-  $(document).ready(function () {
-    const $dropZone = $("#dropZone");
-    const $fileInput = $('input[type="file"]');
-    const $browseLink = $("#browseLink");
-    const $previewContainer = $("#previewContainer");
-    const $imagePreview = $("#imagePreview");
-    const $clearButton = $("#clearImage");
-
-    // Trigger file input when clicking browse link or drop zone
-    $browseLink.on("click", function (e) {
-      e.stopPropagation();
-      $fileInput.click();
-    });
-
-    $dropZone.on("click", function () {
-      $fileInput.click();
-    });
-
-    // Handle file selection
-    $fileInput.on("change", function (e) {
-      handleFiles(this.files);
-    });
-
-    // Drag and drop handlers
-    $dropZone
-      .on("dragenter dragover", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        $(this).addClass("border-primary-500 bg-gray-100 dark:bg-gray-600");
-      })
-      .on("dragleave dragend", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        $(this).removeClass("border-primary-500 bg-gray-100 dark:bg-gray-600");
-      })
-      .on("drop", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        $(this).removeClass("border-primary-500 bg-gray-100 dark:bg-gray-600");
-
-        const files = e.originalEvent.dataTransfer.files;
-        handleFiles(files);
-      });
-
-    // Handle file preview
-    function handleFiles(files) {
-      if (files && files[0]) {
-        const file = files[0];
-
-        // Validate file type
-        if (!file.type.match("image.*")) {
-          alert("Please select an image file");
-          return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          $imagePreview.attr("src", e.target.result);
-          $dropZone.addClass("hidden");
-          $previewContainer.removeClass("hidden");
-        };
-
-        reader.readAsDataURL(file);
-      }
-    }
-
-    // Clear image
-    $clearButton.on("click", function (e) {
-      e.stopPropagation();
-      $fileInput.val("");
-      $previewContainer.addClass("hidden");
-      $dropZone.removeClass("hidden");
-    });
-
-    // Prevent defaults for document drag and drop
-    $(document).on("dragenter dragover drop", function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    });
-  });
-</script>
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/admin/dropzone_event.js' %}"></script>
