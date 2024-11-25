@@ -304,7 +304,7 @@ def signup(request):
 
 @csrf_exempt
 def verify_otp(request):
-    if request.method == ['POST', 'GET']:
+    if request.method == 'POST':
         try:
             data = json.loads(request.body)
             pending_user = request.session.get('pending_user')
@@ -357,7 +357,6 @@ def verify_otp(request):
                 'status': 'error',
                 'message': 'An error occurred during OTP verification'
             }, status=500)
-
 
 @csrf_exempt
 def resend_otp(request):

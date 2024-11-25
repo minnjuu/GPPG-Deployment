@@ -374,7 +374,7 @@ class ChangePasswordForm(forms.Form):
     
 
 class UserFormAdmin(forms.ModelForm):
-    # Define the fields explicitly to ensure we're using the custom model fields
+    
     first_name = forms.CharField(
         widget=forms.TextInput(attrs={
             'class': 'w-full px-4 border-b border-t-0 border-x-0 border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-b-primary-600',
@@ -407,7 +407,7 @@ class UserFormAdmin(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.instance:
-            # Set initial values from the instance
+            
             for field in self.fields:
                 self.fields[field].initial = getattr(self.instance, field, None)
 
@@ -427,14 +427,14 @@ class UserFormAdmin(forms.ModelForm):
         UserModel = get_user_model()
         
         if email:
-            # Validate email format
+            
             email_validator = EmailValidator()
             try:
                 email_validator(email)
             except ValidationError:
                 raise ValidationError("Enter a valid email address.")
                 
-            # Check for unique email
+            
             if UserModel.objects.filter(email=email).exclude(id=self.instance.id).exists():
                 raise ValidationError('This email is already in use.')
                 
