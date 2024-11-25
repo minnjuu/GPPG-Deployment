@@ -4,6 +4,10 @@ from django.forms import ModelForm, DateTimeInput
 from django import forms
 from .models import *
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.forms import get_user_model
+from django.core.exceptions import ValidationError
+from django.core.validators import EmailValidator
+
 
 
 class IncidentForm(forms.ModelForm):
@@ -390,3 +394,71 @@ class ChangePasswordForm(forms.Form):
                     'confirm_password': ["Passwords don't match!"]
                 })
         return cleaned_data
+    
+
+class UserFormAdmin(forms.ModelForm):
+    # Define the fields explicitly to ensure we're using the custom model fields
+    first_name = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'w-full px-4 border-b border-t-0 border-x-0 border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-b-primary-600',
+            'placeholder': 'Enter First Name'
+        })
+    )
+    last_name = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'w-full px-4 border-b border-t-0 border-x-0 border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-b-primary-600',
+            'placeholder': 'Enter Last Name'
+        })
+    )
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={
+            'class': 'w-full px-4 border-b border-t-0 border-x-0 border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-b-primary-600',
+            'placeholder': 'Enter your Email Address'
+        })
+    )
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'w-full px-4 border-b border-t-0 border-x-0 border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-b-primary-600',
+            'placeholder': 'Enter your Username'
+        })
+    )
+
+    class Meta:
+        model = get_user_model()
+        fields = ['first_name', 'last_name', 'email', 'username']
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance:
+            # Set initial values from the instance
+            for field in self.fields:
+                self.fields[field].initial = getattr(self.instance, field, None)
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.first_name = self.cleaned_data['first_name']
+        user.last_name = self.cleaned_data['last_name']
+        user.username = self.cleaned_data['username']
+        user.email = self.cleaned_data['email']
+        
+        if commit:
+            user.save()
+        return user
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        UserModel = get_user_model()
+        
+        if email:
+            # Validate email format
+            email_validator = EmailValidator()
+            try:
+                email_validator(email)
+            except ValidationError:
+                raise ValidationError("Enter a valid email address.")
+                
+            # Check for unique email
+            if UserModel.objects.filter(email=email).exclude(id=self.instance.id).exists():
+                raise ValidationError('This email is already in use.')
+                
+        return email

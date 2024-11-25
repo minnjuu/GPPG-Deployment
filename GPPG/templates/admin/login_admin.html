@@ -15,7 +15,6 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css" />
 
-    <!-- login.html -->
     <div class="fixed inset-0 bg-opacity-50 backdrop-blur-sm justify-center items-center w-full z-50">
       <div class="p-6 flex items-center justify-center h-full w-auto rounded-lg shadow-lg relative transition-all duration-300">
         <div class="flip-card-front flex items-center w-full h-auto justify-center top-48 overflow-hidden">
@@ -94,7 +93,17 @@
           </div>
         </div>
       </div>
+      <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2">
+        <a
+          href="{% url 'landing_page' %}"
+          class="text-white text-sm font-semibold hover:underline hover:text-gray-300 transition">
+          Go to Landing Page
+        </a>
+      </div>
     </div>
+
+    
+
 
     <!-- Add this script at the bottom of your template or in your static JS file -->
     <script>

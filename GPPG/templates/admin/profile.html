@@ -177,8 +177,12 @@
           src="{% static 'img/logo.jpg' %}"
           alt="Avatar" />
         <button
-          data-modal-target="modal_adminProfile_edit"
-          data-modal-toggle="modal_adminProfile_edit"
+          hx-get="{% url 'admin_profile_update' %}"
+          hx-target="#modal-content"
+          hx-trigger="click"
+          data-modal-toggle="modaldialog"
+          data-modal-target="modaldialog"
+          onclick="showTitle('Edit Profile');"
           class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg">
           Edit Profile
         </button>
@@ -203,11 +207,6 @@
           <p class="text-gray-600 mt-1">24</p>
         </div>
         <div>
-          <h3 class="text-lg font-medium text-gray-800">Gender</h3>
-          <p class="text-gray-600 mt-1">Male</p>
-        </div>
-
-        <div>
           <h3 class="text-lg font-medium text-gray-800">Region</h3>
           <p class="text-gray-600 mt-1">MIMAROPA</p>
         </div>
@@ -221,7 +220,7 @@
         </div>
       </div>
     </div>
-
+  </br>
     <div>
       <h3 class="text-2xl font-semibold text-gray-800 mb-4">Your Activities</h3>
       <div class="bg-gray-50 p-4 rounded-lg shadow-md">
@@ -287,4 +286,5 @@
     {% endif %}
 </div>
 </div>
-{% include 'admin/includes/modal/modal_adminProfile_edit.html' %} {% endblock %}
+{% include 'admin/includes/modal/modal_dialogs.html' %}
+{% endblock %}

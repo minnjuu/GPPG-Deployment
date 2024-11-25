@@ -2,7 +2,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.shortcuts import render, redirect
 from django.db.models import Count
 from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import *
 from django.http import JsonResponse, HttpResponse
 from django.template.response import TemplateResponse
@@ -877,6 +877,23 @@ def admin_login(request):
             return render(request, 'admin/login_admin.html', {'error': 'Invalid username or password'})
 
     return render(request, 'admin/login_admin.html')
+
+
+def admin_profile_update(request):
+    user = request.user  
+    if request.method == 'POST':
+        form = UserFormAdmin(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            
+            response = HttpResponse()
+            response.headers['HX-Trigger'] = 'closeAndRefresh'
+            messages.success(request, "Profile updated successfully!")
+            return response
+    else:
+        form = UserFormAdmin(instance=user)
+    
+    return render(request, 'admin/includes/modal/modal_adminProfile_edit.html', {'form': form})
 
 
 def admin_logout(request):
