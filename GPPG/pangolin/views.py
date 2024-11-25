@@ -304,7 +304,7 @@ def signup(request):
 
 @csrf_exempt
 def verify_otp(request):
-    if request.method == 'POST':
+    if request.method == ['POST', 'GET']:
         try:
             data = json.loads(request.body)
             pending_user = request.session.get('pending_user')
@@ -456,7 +456,7 @@ def google_login_callback(request):
                     user_email=email,
                     user_firstname=google_data.get('given_name', ''),
                     user_lastname=google_data.get('family_name', ''),
-                    password=make_password(None)  # Unusable password
+                    password=make_password(None),
                 )
 
             # Set your custom session
@@ -742,48 +742,38 @@ def incident_report(request):
 
 @login_required
 def change_password(request):
-    if request.method != 'POST':
-        form = ChangePasswordForm()
-        return render(request, 'admin/includes/modal/modal_changepass.html', {'form': form})
-    
-    form = ChangePasswordForm(request.POST)
-    if not form.is_valid():
-        return render(request, 'admin/includes/modal/modal_changepass.html', {
-            'form': form,
-            'error': True
-        })
-    
-    try:
-        current_user_id = request.session.get('user_id')
-        user = User.objects.get(id=current_user_id)
-        current_password = form.cleaned_data['current_password']
-        new_password = form.cleaned_data['new_password']
-        
-        # Fix: Use check_password method instead of calling password directly
-        if not user.check_password(current_password):
-            form.add_error('current_password', 'Current password is incorrect')
-            return render(request, 'admin/includes/modal/modal_changepass.html', {
-                'form': form,
-                'error': True
-            })
-        
-        user.set_password(new_password)
-        user.save()
-        
-        # Add success message for HTMX response
-        return HttpResponse(
-            '<div class="bg-green-100 text-green-700 p-4 rounded">'
-            'Password changed successfully!'
-            '<script>setTimeout(() => closeChangePasswordModal(), 2000)</script>'
-            '</div>'
-        )
-        
-    except Exception as e:
-        form.add_error(None, str(e))
-        return render(request, 'admin/includes/modal/modal_changepass.html', {
-            'form': form,
-            'error': True
-        })
+   if request.method != 'POST':
+       form = ChangePasswordForm(user=request.user)
+       return render(request, 'admin/includes/modal/modal_changepass.html', {'form': form})
+
+   form = ChangePasswordForm(user=request.user, data=request.POST)
+   if not form.is_valid():
+       return render(request, 'admin/includes/modal/modal_changepass.html', {
+           'form': form,
+           'error': True
+       })
+
+   try:
+       user = request.user
+       new_password = form.cleaned_data['new_password']
+
+       user.set_password(new_password)
+       user.save()
+
+       # Add success message for HTMX response
+       return HttpResponse(
+           '<div class="bg-green-100 text-green-700 p-4 rounded">'
+           'Password changed successfully!'
+           '<script>setTimeout(() => closeChangePasswordModal(), 2000)</script>'
+           '</div>'
+       )
+
+   except Exception as e:
+       form.add_error(None, str(e))
+       return render(request, 'admin/includes/modal/modal_changepass.html', {
+           'form': form,
+           'error': True
+       })
 
 
 @login_required

@@ -260,6 +260,7 @@ class User(BaseModel):
     user_email = models.EmailField(max_length=150)
     password = models.CharField(max_length=150)
     contact = models.CharField(max_length=11, validators=[validate_contact])
+    
 
     def __str__(self):
         return f"{self.user_firstname} - {self.user_email}"

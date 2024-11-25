@@ -3,7 +3,7 @@ from django.forms import ModelForm
 from django.forms import ModelForm, DateTimeInput
 from django import forms
 from .models import *
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.forms import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
@@ -285,42 +285,6 @@ class UserForm(forms.ModelForm):
         }
 
 
-class ChangePasswordForm(forms.Form):
-    current_password = forms.CharField(
-        label='Current Password',
-        widget=forms.PasswordInput(attrs={
-            'class': 'w-full px-4 border-b border-t-0 border-x-0 border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-b-primary-600',
-            'placeholder': 'Enter your current password'
-        })
-    )
-    new_password = forms.CharField(
-        label='New Password',
-        widget=forms.PasswordInput(attrs={
-            'class': 'w-full px-4 border-b border-t-0 border-x-0 border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-b-primary-600',
-            'placeholder': 'Enter your new password'
-        })
-    )
-    confirm_password = forms.CharField(
-        label='Confirm Password',
-        widget=forms.PasswordInput(attrs={
-
-            'class': 'w-full px-4 border-b border-t-0 border-x-0 border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-b-primary-600',
-            'placeholder': 'Confirm your new password'
-        })
-    )
-
-    def clean(self):
-        cleaned_data = super().clean()
-        new_password = cleaned_data.get('new_password')
-        confirm_password = cleaned_data.get('confirm_password')
-
-        if new_password and confirm_password:
-            if new_password != confirm_password:
-                raise forms.ValidationError({
-                    'confirm_password': ["Passwords don't match!"]
-                })
-        return cleaned_data
-
 
 class UserFormPrivate(forms.ModelForm):
     class Meta:
@@ -377,22 +341,35 @@ class ChangePasswordForm(forms.Form):
     confirm_password = forms.CharField(
         label='Confirm Password',
         widget=forms.PasswordInput(attrs={
-
             'class': 'w-full px-4 border-b border-t-0 border-x-0 border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-b-primary-600',
             'placeholder': 'Confirm your new password'
         })
     )
 
+    def __init__(self, user=None, *args, **kwargs):
+        self.user = user
+        super().__init__(*args, **kwargs)
+
     def clean(self):
         cleaned_data = super().clean()
+        current_password = cleaned_data.get('current_password')
         new_password = cleaned_data.get('new_password')
         confirm_password = cleaned_data.get('confirm_password')
 
+        
+        if self.user and current_password:
+            if not check_password(current_password, self.user.password):
+                raise forms.ValidationError({
+                    'current_password': ["Current password is incorrect"]
+                })
+
+        
         if new_password and confirm_password:
             if new_password != confirm_password:
                 raise forms.ValidationError({
                     'confirm_password': ["Passwords don't match!"]
                 })
+
         return cleaned_data
     
 

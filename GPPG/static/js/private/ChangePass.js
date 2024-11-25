@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   form.addEventListener("htmx:beforeRequest", function () {
-    loadingStates.toggle(true);
+    loadingStates.toggle(false);
     document.querySelectorAll(".text-red-500").forEach((el) => el.classList.add("hidden"));
   });
 
