@@ -196,13 +196,34 @@ class Officer(BaseModel):
         upload_to='officers/', null=True, blank=True
     )
 
+    is_latest = models.BooleanField(default=False)  # Add this field
+
     def save(self, *args, **kwargs):
         if self.pk:
             delete_old_file(self, self.officer_image, 'officer_image')
 
+        # Set this as the latest officer for the position
+        if not self.pk:  # Only for new officers
+            # Set all other officers of same position to not latest
+            Officer.objects.filter(
+                position=self.position).update(is_latest=False)
+            self.is_latest = True
+
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
+        # If deleting the latest officer, make the next most recent one latest
+        if self.is_latest:
+            next_latest = Officer.objects.filter(
+                position=self.position
+            ).exclude(
+                pk=self.pk
+            ).order_by('-date_joined').first()
+
+            if next_latest:
+                next_latest.is_latest = True
+                next_latest.save()
+
         delete_file(self.officer_image)
         super().delete(*args, **kwargs)
 

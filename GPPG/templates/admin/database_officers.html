@@ -168,396 +168,380 @@
 
 <!-- Database Content -->
 {% block title_content %} Officers List {% endblock title_content %} {% block content %}
-<div class="flex flex-col w-full h-auto mx-auto gap-2">
-  <div
-    class="p-4 rounded-xl overflow-hidden bg-white h-[865px] shadow-sm"
-    data-hs-datatable='{
-    "pageLength": 12,
-    "pagingOptions": {
-      "pageBtnClasses": "min-w-[40px] flex justify-center items-center text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 py-2.5 text-sm rounded-full disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:focus:bg-neutral-700 dark:hover:bg-neutral-700"
-    },
-    "selecting": true,
-    "rowSelectingOptions": {
-      "selectAllSelector": "#hs-table-search-checkbox-all"
-    },
-    "language": {
-      "zeroRecords": "<div class=\"py-10 px-5 flex flex-col justify-center items-center text-center\"><svg class=\"shrink-0 size-6 text-gray-500\" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.3-4.3\"/></svg><div class=\"max-w-sm mx-auto\"><p class=\"mt-2 text-sm text-gray-600\">No search results</p></div></div>"
-    }
-  }'>
-    <!-- Search and Add Button Section -->
-    <div class="flex items-center space-x-2 mb-4">
-      <div class="flex-0">
-        <div class="relative max-w-xs">
-          <label
-            for="hs-table-export-search"
-            class="sr-only"
-            >Search</label
-          >
-          <input
-            type="text"
-            name="hs-table-export-search"
-            id="hs-table-export-search"
-            class="py-2 px-8 ps-9 block w-full border-gray-200 transition-all duration-200 ease-in-out shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-            placeholder="Search for items"
-            data-hs-datatable-search="" />
-          <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3">
-            <svg
-              class="size-4 text-gray-400"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
+<!-- Main Officers Container -->
+<div class="p-6 rounded-xl overflow-hidden bg-white shadow-lg transition-all duration-300 hover:shadow-xl">
+  <!-- Header Section with Search and Add Button -->
+  <div class="flex flex-col md:flex-row justify-between gap-4 mb-6">
+    <div class="flex gap-2">
+      <div class="relative max-w-xs">
+        <label
+          for="officers-search"
+          class="sr-only"
+          >Search</label
+        >
+        <input
+          type="text"
+          name="officers-search"
+          id="officers-search"
+          class="py-2 px-8 ps-9 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:ring-1 transition-all duration-200 ease-in-out focus:ring-blue-500 hover:bg-gray-50"
+          placeholder="Search officers..."
+          data-hs-datatable-search="" />
+        <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3">
+          <svg
+            class="size-4 text-gray-400"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path
               stroke-linecap="round"
-              stroke-linejoin="round">
-              <circle
-                cx="11"
-                cy="11"
-                r="8"></circle>
-              <path d="m21 21-4.3-4.3"></path>
-            </svg>
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+      </div>
+      <div class=" max-w-xs">
+        <label for="year-filter" class="sr-only">Filter by Year</label>
+        <select
+            id="year-filter"
+            name="year"
+            class="text-gray-700 bg-white border border-gray-200 focus:ring-1 transition-all duration-200 ease-in-out focus:ring-blue-500 hover:bg-gray-50 font-medium rounded-lg text-sm px-5 py-2 inline-flex items-center"
+        >
+            <option value="">All Years</option>
+            {% for year in available_years %}
+            <option value="{{ year }}" {% if selected_year|stringformat:"s" == year|stringformat:"s" %}selected{% endif %}>
+                {{ year }}
+            </option>
+            {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <button
+      hx-get="{% url 'admin_officers_add' %}"
+      hx-target="#modal-content"
+      hx-trigger="click"
+      data-modal-toggle="modaldialog"
+      data-modal-target="modaldialog"
+      onclick="showTitle('Add Officer');"
+      class="flex items-center gap-2 py-2 px-4 text-sm font-medium rounded-lg bg-green-800 hover:bg-green-900 text-white shadow-sm transition-all duration-300 hover:shadow-md">
+      <svg
+        class="w-5 h-5"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+      </svg>
+      Add Officer
+    </button>
+  </div>
+
+  <!-- Officers Grid -->
+
+  <div class="min-h-[695px]">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for officer in officers %}
+      <div class="group bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden transform transition-all duration-300 hover:shadow-xl">
+        <div class="p-5">
+          <!-- Header with Actions - Matches Gallery Style -->
+          <div class="flex justify-between items-start mb-4">
+            <div>
+              <h3 class="text-lg font-semibold text-black transition-colors duration-300">{{ officer.last_name }}, {{ officer.first_name }}</h3>
+              <p class="text-sm text-gray-600">{{ officer.position }}</p>
+            </div>
+
+            <div class="relative">
+              <button
+                id="dropdownButtonOfficer{{ forloop.counter }}"
+                data-dropdown-toggle="dropdownDotsOfficer{{ forloop.counter }}"
+                class="p-2 text-gray-500 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                <svg
+                  class="w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 24 24">
+                  <path d="M12 3c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0 14c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0-7c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z" />
+                </svg>
+              </button>
+
+              <div
+                id="dropdownDotsOfficer{{ forloop.counter }}"
+                class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-xl w-auto">
+                <ul class="p-3 space-y-2">
+                  <li>
+                    <div class="flex gap-2">
+                      <button
+                        hx-get="{% url 'admin_officers_edit' officer.id %}"
+                        hx-target="#modal-content"
+                        hx-trigger="click"
+                        data-modal-toggle="modaldialog"
+                        data-modal-target="modaldialog"
+                        onclick="showTitle('Edit Officer');"
+                        class="text-center flex items-center cursor-pointer text-sm font-semibold bg-green-800 hover:bg-green-900 rounded-lg py-2 px-5 border border-black text-white transition-all duration-300 hover:shadow-md">
+                        <svg
+                          class="w-4 h-4 mr-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24">
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Edit
+                      </button>
+                      <button
+                        hx-get="{% url 'admin_officers_delete' officer.id %}"
+                        hx-target="#modal-content"
+                        hx-trigger="click"
+                        data-modal-toggle="modaldialog"
+                        data-modal-target="modaldialog"
+                        onclick="showTitle('Delete Officer');"
+                        class="text-center flex items-center border cursor-pointer text-sm font-semibold p-2 px-5 rounded-lg border-red-600 text-red-600 hover:bg-red-50 transition-all duration-300 hover:shadow-md">
+                        <svg
+                          class="w-4 h-4 mr-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24">
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        Delete
+                      </button>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Officer Image - Matches Gallery Media Style -->
+          {% if officer.officer_image %}
+          <div class="mb-4 overflow-hidden rounded-lg transition-all duration-300">
+            <a
+              href="#"
+              data-modal-target="imageModal{{ officer.id }}"
+              data-modal-toggle="imageModal{{ officer.id }}"
+              class="block relative aspect-video overflow-hidden">
+              <img
+                src="{{ officer.officer_image.url }}"
+                alt="{{ officer.first_name }} {{ officer.last_name }}"
+                class="w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-105" />
+            </a>
+          </div>
+          {% else %}
+          <div class="mb-4 overflow-hidden rounded-lg transition-all duration-300">
+            <div class="aspect-video bg-gray-100 flex items-center justify-center">
+              <svg
+                class="w-16 h-16 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- Officer Details - Matches Gallery Info Style -->
+          <div class="space-y-3">
+            <div class="flex items-center text-sm text-gray-600">
+              <svg
+                class="w-5 h-5 mr-2 text-black"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              Joined {{ officer.date_joined|date:"M d, Y" }}
+            </div>
+
+            <!-- Social Links -->
+            <div class="flex gap-3 text-sm text-gray-700">
+              {% if officer.fb_url %}
+              <a
+                href="{{ officer.fb_url }}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center gap-1 text-blue-600 hover:text-blue-700 hover:underline transition-colors duration-300">
+                <svg
+                  class="w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 24 24">
+                  <path
+                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                </svg>
+                Facebook
+              </a>
+              {% endif %} {% if officer.ig_url %}
+              <a
+                href="{{ officer.ig_url }}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center gap-1 text-pink-600 hover:text-pink-700 hover:underline transition-colors duration-300">
+                <svg
+                  class="w-5 h-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 24 24">
+                  <path
+                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                </svg>
+                Instagram
+              </a>
+              {% endif %}
+            </div>
           </div>
         </div>
       </div>
-
-      <div class="flex-1 flex items-center justify-end space-x-2">
-        <div class="relative inline-flex">
-          <button
-            hx-get="{% url 'admin_officers_add' %}"
-            hx-target="#modal-content"
-            hx-trigger="click"
-            data-modal-toggle="modaldialog"
-            data-modal-target="modaldialog"
-            onclick="showTitle('Add Officer');"
-            type="button"
-            class="py-2 px-5 inline-flex items-center gap-x-2 text-sm rounded-lg border bg-green-800 hover:bg-green-900 text-white shadow-sm transition-all duration-300 hover:shadow-md">
-            Add
-          </button>
-        </div>
+      {% empty %}
+      <div class="col-span-3 py-16 flex flex-col items-center justify-center bg-gray-50 rounded-xl border-2 border-dashed border-gray-300">
+        <svg
+          class="w-16 h-16 text-gray-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+        <p class="mt-4 text-lg font-medium text-gray-600">No Officers Found</p>
+        <p class="mt-2 text-sm text-gray-500">Get started by adding a new officer</p>
       </div>
+      {% endfor %}
     </div>
+  </div>
 
-    <!-- Table Section -->
-    <div class="min-h-[695px] overflow-x-auto">
-      <div class="min-w-full inline-block align-middle">
-        <div class="overflow-hidden rounded-lg">
-          <table
-            id="officersTable"
-            class="min-w-full divide-y divide-gray-200">
-            <!-- Table Header -->
-            <thead class="border-b border-gray-200 bg-gray-50 dark:border-neutral-700">
-              <tr>
-                <th
-                  scope="col"
-                  class="py-1 group text-start font-semibold focus:outline-none">
-                  <div
-                    class="py-1 px-2.5 inline-flex items-center border border-transparent text-sm text-black font-bold rounded-md hover:border-gray-200 dark:text-neutral-500 dark:hover:border-neutral-700">
-                    Full Name
-                    <svg
-                      class="size-3.5 ms-1 -me-0.5 text-gray-400 dark:text-neutral-500"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round">
-                      <path
-                        class="hs-datatable-ordering-asc:text-blue-600 dark:hs-datatable-ordering-asc:text-blue-500"
-                        d="m7 15 5 5 5-5"></path>
-                      <path
-                        class="hs-datatable-ordering-desc:text-blue-600 dark:hs-datatable-ordering-desc:text-blue-500"
-                        d="m7 9 5-5 5 5"></path>
-                    </svg>
-                  </div>
-                </th>
-                <th
-                  scope="col"
-                  class="py-1 group text-start font-semibold focus:outline-none">
-                  <div
-                    class="py-1 px-2.5 inline-flex items-center border border-transparent text-sm text-black font-bold rounded-md hover:border-gray-200 dark:text-neutral-500 dark:hover:border-neutral-700">
-                    Date Joined
-                    <svg
-                      class="size-3.5 ms-1 -me-0.5 text-gray-400 dark:text-neutral-500"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round">
-                      <path
-                        class="hs-datatable-ordering-asc:text-blue-600 dark:hs-datatable-ordering-asc:text-blue-500"
-                        d="m7 15 5 5 5-5"></path>
-                      <path
-                        class="hs-datatable-ordering-desc:text-blue-600 dark:hs-datatable-ordering-desc:text-blue-500"
-                        d="m7 9 5-5 5 5"></path>
-                    </svg>
-                  </div>
-                </th>
-                <th
-                  scope="col"
-                  class="py-1 group text-start font-semibold focus:outline-none">
-                  <div
-                    class="py-1 px-2.5 inline-flex items-center border border-transparent text-sm text-black font-bold rounded-md hover:border-gray-200 dark:text-neutral-500 dark:hover:border-neutral-700">
-                    Position
-                    <svg
-                      class="size-3.5 ms-1 -me-0.5 text-gray-400 dark:text-neutral-500"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round">
-                      <path
-                        class="hs-datatable-ordering-asc:text-blue-600 dark:hs-datatable-ordering-asc:text-blue-500"
-                        d="m7 15 5 5 5-5"></path>
-                      <path
-                        class="hs-datatable-ordering-desc:text-blue-600 dark:hs-datatable-ordering-desc:text-blue-500"
-                        d="m7 9 5-5 5 5"></path>
-                    </svg>
-                  </div>
-                </th>
-
-                <th
-                  scope="col"
-                  class="py-1 group text-start font-semibold focus:outline-none">
-                  <div
-                    class="py-1 px-2.5 inline-flex items-center border border-transparent text-sm text-black font-bold rounded-md hover:border-gray-200 dark:text-neutral-500 dark:hover:border-neutral-700">
-                    Facebook Link
-                    <svg
-                      class="size-3.5 ms-1 -me-0.5 text-gray-400 dark:text-neutral-500"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round">
-                      <path
-                        class="hs-datatable-ordering-asc:text-blue-600 dark:hs-datatable-ordering-asc:text-blue-500"
-                        d="m7 15 5 5 5-5"></path>
-                      <path
-                        class="hs-datatable-ordering-desc:text-blue-600 dark:hs-datatable-ordering-desc:text-blue-500"
-                        d="m7 9 5-5 5 5"></path>
-                    </svg>
-                  </div>
-                </th>
-
-                <th
-                  scope="col"
-                  class="py-1 group text-start font-semibold focus:outline-none">
-                  <div
-                    class="py-1 px-2.5 inline-flex items-center border border-transparent text-sm text-black font-bold rounded-md hover:border-gray-200 dark:text-neutral-500 dark:hover:border-neutral-700">
-                    Instagram Link
-                    <svg
-                      class="size-3.5 ms-1 -me-0.5 text-gray-400 dark:text-neutral-500"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round">
-                      <path
-                        class="hs-datatable-ordering-asc:text-blue-600 dark:hs-datatable-ordering-asc:text-blue-500"
-                        d="m7 15 5 5 5-5"></path>
-                      <path
-                        class="hs-datatable-ordering-desc:text-blue-600 dark:hs-datatable-ordering-desc:text-blue-500"
-                        d="m7 9 5-5 5 5"></path>
-                    </svg>
-                  </div>
-                </th>
-
-                <th
-                  scope="col"
-                  class="py-1 group text-start font-semibold focus:outline-none">
-                  <div
-                    class="py-1 px-2.5 inline-flex items-center border border-transparent text-sm text-black font-bold rounded-md hover:border-gray-200 dark:text-neutral-500 dark:hover:border-neutral-700">
-                    Picture
-                    <svg
-                      class="size-3.5 ms-1 -me-0.5 text-gray-400 dark:text-neutral-500"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round">
-                      <path
-                        class="hs-datatable-ordering-asc:text-blue-600 dark:hs-datatable-ordering-asc:text-blue-500"
-                        d="m7 15 5 5 5-5"></path>
-                      <path
-                        class="hs-datatable-ordering-desc:text-blue-600 dark:hs-datatable-ordering-desc:text-blue-500"
-                        d="m7 9 5-5 5 5"></path>
-                    </svg>
-                  </div>
-                </th>
-
-                <th
-                  scope="col"
-                  class="py-2 px-3 text-end text-sm text-black font-bold --exclude-from-ordering dark:text-neutral-500">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <!-- Table Body -->
-            <tbody class="divide-y divide-gray-200">
-              {% for officer in officers %}
-              <tr class="{% cycle 'bg-white' 'bg-gray-50' %} hover:bg-gray-100 transition-colors">
-                <td class="px-4 py-3 text-sm text-gray-800">{{ officer.last_name }}, {{ officer.first_name }}</td>
-                <td class="px-4 py-3 text-sm text-gray-800">{{ officer.date_joined }}</td>
-                <td class="px-4 py-3 text-sm text-gray-800">{{ officer.position }}</td>
-                <td class="px-4 py-3 text-sm text-gray-800">
-                  {% if officer.fb_url %}
-                  <a
-                    href="{{ officer.fb_url }}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-blue-600 hover:text-blue-700 hover:underline">
-                    Visit Profile
-                  </a>
-                  {% else %}
-                  <span class="text-gray-400">No Link Uploaded</span>
-                  {% endif %}
-                </td>
-                <td class="px-4 py-3 text-sm text-gray-800">
-                  {% if officer.ig_url %}
-                  <a
-                    href="{{ officer.ig_url }}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-blue-600 hover:text-blue-700 hover:underline">
-                    Visit Profile
-                  </a>
-                  {% else %}
-                  <span class="text-gray-400">No Link Uploaded</span>
-                  {% endif %}
-                </td>
-                <td class="px-4 py-3 text-sm text-gray-800">
-                  {% if officer.officer_image %}
-                  <a
-                    href="#"
-                    data-modal-target="imageModal{{ officer.id }}"
-                    data-modal-toggle="imageModal{{ officer.id }}"
-                    class="text-blue-600 hover:text-blue-700 hover:underline">
-                    View
-                  </a>
-                  {% else %}
-                  <span class="text-gray-400">No Image Uploaded</span>
-                  {% endif %}
-                </td>
-                <td class="px-4 py-3 text-end">
-                  <div class="relative inline-flex">
-                    <button
-                      id="dropdownButtonOfficer{{ forloop.counter }}"
-                      data-dropdown-toggle="dropdownDotsOfficer{{ forloop.counter }}"
-                      data-dropdown-placement="left-start"
-                      class="inline-flex items-center p-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 focus:ring-2 focus:ring-gray-100"
-                      type="button">
-                      <svg
-                        class="w-4 h-4"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="currentColor"
-                        viewBox="0 0 4 15">
-                        <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
-                      </svg>
-                    </button>
-
-                    <!-- Dropdown menu -->
-                    <div
-                      id="dropdownDotsOfficer{{ forloop.counter }}"
-                      class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-lg w-auto">
-                      <ul
-                        class="p-3 space-y-2"
-                        aria-labelledby="dropdownButtonOfficer{{ forloop.counter }}">
-                        <li>
-                          <div class="flex gap-2">
-                            <button
-                              hx-get="{% url 'admin_officers_edit' officer.id %}"
-                              hx-target="#modal-content"
-                              hx-trigger="click"
-                              data-modal-toggle="modaldialog"
-                              data-modal-target="modaldialog"
-                              onclick="showTitle('Edit Officer &quot;{{ officer }}&quot;');"
-                              class="text-center items-center cursor-pointer text-sm font-semibold bg-green-800 hover:bg-green-900 rounded-lg p-2 px-5 border border-black text-white transition-all duration-300 hover:shadow-md">
-                              Edit
-                            </button>
-                            <button
-                              hx-get="{% url 'admin_officers_delete' officer.id %}"
-                              hx-target="#modal-content"
-                              hx-trigger="click"
-                              data-modal-toggle="modaldialog"
-                              data-modal-target="modaldialog"
-                              onclick="showTitle('Delete Officer');"
-                              class="text-center items-center border cursor-pointer text-sm font-semibold p-2 px-5 rounded-lg border-red-600 text-red-600 hover:bg-red-50 transition-all duration-300 hover:shadow-md">
-                              Delete
-                            </button>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              {% empty %}
-              <tr>
-                <td
-                  colspan="7"
-                  class="px-4 py-8 text-center text-gray-500">
-                  No Officers Found.
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- Pagination -->
-    <div
-      class="py-4 px-4 flex justify-center"
-      data-hs-datatable-paging="">
-      <nav class="flex items-center space-x-1">
-        <button
-          type="button"
-          class="p-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
-          data-hs-datatable-paging-prev="">
-          <span aria-hidden="true">«</span>
+  <!-- Pagination Section -->
+  {% if page_obj.paginator.num_pages > 1 %}
+  <div class="mt-8 flex justify-center"> 
+    <div class="flex flex-col md:flex-row justify-between items-center gap-4 px-4">
+      <nav
+        class="relative z-0 inline-flex rounded-lg shadow-sm"
+        aria-label="Pagination">
+        <!-- Previous Button -->
+        {% if page_obj.has_previous %}
+        <a
+          href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
+          class="relative inline-flex items-center px-3 py-2 rounded-l-lg border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors duration-300">
           <span class="sr-only">Previous</span>
-        </button>
-        <div
-          class="flex items-center space-x-1"
-          data-hs-datatable-paging-pages=""></div>
+          <svg
+            class="h-5 w-5"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7" />
+          </svg>
+        </a>
+        {% endif %}
+
+        <!-- Page Numbers -->
+        {% for num in page_obj.paginator.page_range %} {% if num == page_obj.number %}
+        <span class="relative inline-flex items-center px-4 py-2 border border-blue-500 bg-blue-50 text-sm font-medium text-blue-600"> {{ num }} </span>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <a
+          href="?page={{ num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
+          class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-300">
+          {{ num }}
+        </a>
+        {% endif %} {% endfor %}
+
+        <!-- Next Button -->
+        {% if page_obj.has_next %}
+        <a
+          href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
+          class="relative inline-flex items-center px-3 py-2 rounded-r-lg border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors duration-300">
+          <span class="sr-only">Next</span>
+          <svg
+            class="h-5 w-5"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+        {% endif %}
+      </nav>
+    </div>
+
+  
+  </div>
+  {% endif %}
+</div>
+
+<!-- Image Preview Modals -->
+{% for officer in officers %} {% if officer.officer_image %}
+<div
+  id="imageModal{{ officer.id }}"
+  tabindex="-1"
+  aria-hidden="true"
+  class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full bg-black bg-opacity-50 items-center justify-center">
+  <div class="relative w-full max-w-2xl max-h-full">
+    <div class="relative bg-white rounded-lg shadow-xl">
+      <!-- Modal Header -->
+      <div class="flex items-start justify-between p-4 border-b rounded-t">
+        <h3 class="text-xl font-semibold text-gray-900">{{ officer.first_name }} {{ officer.last_name }} - Profile Picture</h3>
         <button
           type="button"
-          class="p-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
-          data-hs-datatable-paging-next="">
-          <span class="sr-only">Next</span>
-          <span aria-hidden="true">»</span>
+          data-modal-hide="imageModal{{ officer.id }}"
+          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center transition-colors duration-300">
+          <svg
+            class="w-3 h-3"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 14 14">
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M1 1l6 6m0 0l6 6M7 7l6-6M7 7l-6 6" />
+          </svg>
+          <span class="sr-only">Close modal</span>
         </button>
-      </nav>
+      </div>
+
+      <!-- Modal Content -->
+      <div class="p-6">
+        <img
+          src="{{ officer.officer_image.url }}"
+          alt="{{ officer.first_name }} {{ officer.last_name }}"
+          class="w-full h-auto rounded-lg" />
+      </div>
     </div>
   </div>
 </div>
-{% include "admin/includes/modal/modal_dialogs.html" %} {% include "admin/includes/modal/modal_officer_image.html" %} {% endblock %} {% block extra_js %}
-<script src="{% static 'js/admin/data.js' %}"></script>
+{% endif %} {% endfor %} {% include "admin/includes/modal/modal_dialogs.html" %} {% include "admin/includes/modal/modal_officer_image.html" %} {% endblock %} {% block extra_js %}
+<script src="{% static 'js/admin/officers.js' %}"></script>
 <script src="{% static 'js/admin/jquery.min.js' %}"></script>
 <script src="{% static 'js/admin/dataTables.min.js' %}"></script>
 

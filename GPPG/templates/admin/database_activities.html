@@ -183,7 +183,7 @@
             type="text"
             name="hs-table-export-search"
             id="hs-table-export-search"
-            class="py-2 px-8 ps-9 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+            class="py-2 px-8 ps-9 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:ring-1 transition-all duration-200 ease-in-out focus:ring-blue-500 hover:bg-gray-50"
             placeholder="Search for activities"
             data-hs-datatable-search="" />
           <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3">
@@ -317,7 +317,7 @@
               <img
                 src="{{ event.event_image.url }}"
                 alt="{{ event.name }}"
-                class="w-full h-full object-cover transform transition-transform duration-300" />
+                class="w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-105" />
             </a>
           </div>
           {% endif %}

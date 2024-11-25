@@ -12,18 +12,6 @@ body {
   height: 450px;
 }
 
-@media screen and (max-width: 768px) {
-  #header_img {
-    height: 300px;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  #header_img {
-    height: 200px;
-  }
-}
-
 #headers_img {
   background-image: url(../img/pango4.jpg);
   background-size: cover;

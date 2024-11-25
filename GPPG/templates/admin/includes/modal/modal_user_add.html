@@ -1,79 +1,73 @@
 {% load static %}
 
-<div id="adduser" class="modal-content"> 
+<div
+  id="adduser"
+  class="modal-content">
   <form
     hx-post="{% url 'admin_userAccounts_add' %}"
     hx-target="#modal-content"
     enctype="multipart/form-data"
     novalidate>
-    {% csrf_token %} 
+    {% csrf_token %}
     <div class="grid grid-cols-2 gap-4">
       <div>
-          <label class="block text-sm font-medium text-gray-700">
-              {{ form.user_firstname.label_tag }}
-              {% if form.user_firstname.errors %}
-                <div class="text-red-600">{{ form.user_firstname.errors }}</div>
-              {% endif %}
-          </label>
-          {{ form.user_firstname }}
-          
+        <label class="block text-sm font-medium text-gray-700">
+          {{ form.user_firstname.label_tag }} {% if form.user_firstname.errors %}
+          <div class="text-red-600">{{ form.user_firstname.errors }}</div>
+          {% endif %}
+        </label>
+        {{ form.user_firstname }}
       </div>
       <div>
-          <label class="block text-sm font-medium text-gray-700">
-              {{ form.user_lastname.label_tag }}
-              {% if form.user_lastname.errors %}
-                <div class="text-red-600">{{ form.user_lastname.errors }}</div>
-              {% endif %}
-          </label>
-          {{ form.user_lastname }}
-          
+        <label class="block text-sm font-medium text-gray-700">
+          {{ form.user_lastname.label_tag }} {% if form.user_lastname.errors %}
+          <div class="text-red-600">{{ form.user_lastname.errors }}</div>
+          {% endif %}
+        </label>
+        {{ form.user_lastname }}
       </div>
 
       <div>
-          <label class="block text-sm font-medium text-gray-700">
-              {{ form.user_email.label_tag }}
-              {% if form.user_email.errors %}
-                <div class="text-red-600">{{ form.user_email.errors }}</div>
-              {% endif %}
-          </label>
-          {{ form.user_email }}
-          
+        <label class="block text-sm font-medium text-gray-700">
+          {{ form.user_email.label_tag }} {% if form.user_email.errors %}
+          <div class="text-red-600">{{ form.user_email.errors }}</div>
+          {% endif %}
+        </label>
+        {{ form.user_email }}
       </div>
       <div>
-          <label class="block text-sm font-medium text-gray-700">
-              {{ form.contact.label_tag }}
-              {% if form.contact.errors %}
-                <div class="text-red-600">{{ form.contact.errors }}</div>
-              {% endif %}
-          </label>
-          {{ form.contact }}
+        <label class="block text-sm font-medium text-gray-700">
+          {{ form.contact.label_tag }} {% if form.contact.errors %}
+          <div class="text-red-600">{{ form.contact.errors }}</div>
+          {% endif %}
+        </label>
+        {{ form.contact }}
       </div>
-  </div>
-  <br>
-  <div>
-    <label class="block text-sm font-medium text-gray-700">
-        {{ form.password.label_tag }}
-        {% if form.password.errors %}
-          <div class="text-red-600">{{ form.password.errors }}</div>
+    </div>
+    <br />
+    <div>
+      <label class="block text-sm font-medium text-gray-700">
+        {{ form.password.label_tag }} {% if form.password.errors %}
+        <div class="text-red-600">{{ form.password.errors }}</div>
         {% endif %}
-    </label>
-    {{ form.password }}
-</div>
-  
+      </label>
+      {{ form.password }}
+    </div>
+
     <button
-        type="submit"
-        class="bg-white text-black inline-flex items-center border-2 font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-4">
-        <svg
-            class="mr-1 -ml-1 w-6 h-6"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg">
-            <path
-                fill-rule="evenodd"
-                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                clip-rule="evenodd"></path>
-        </svg>
-        Add new
+      type="submit"
+      class="bg-white text-black inline-flex items-center border-2 font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-4">
+      <svg
+        class="mr-1 -ml-1 w-6 h-6"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          fill-rule="evenodd"
+          d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+          clip-rule="evenodd"></path>
+      </svg>
+      Add new
     </button>
   </form>
 </div>

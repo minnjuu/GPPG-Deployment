@@ -1186,6 +1186,34 @@ class GalleryListView(ListView):
     model = Gallery
     context_object_name = "gallery_items"
     template_name = "admin/database_gallery.html"
+    paginate_by = 6
+    ordering = ['-created_at']
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        search_query = self.request.GET.get('search', '')
+        media_type = self.request.GET.get('media_type', '')
+
+        if search_query:
+            queryset = queryset.filter(
+                Q(title__icontains=search_query) |
+                Q(description__icontains=search_query) |
+                Q(uploader__icontains=search_query)
+            )
+
+        if media_type in ['Image', 'Video']:
+            queryset = queryset.filter(media_type=media_type)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add search query and media type to context for maintaining state
+        context['search_query'] = self.request.GET.get('search', '')
+        context['current_media_type'] = self.request.GET.get('media_type', '')
+        return context
+
 
 
 def gallery_add(request):
@@ -1275,6 +1303,26 @@ class OfficerListView(ListView):
     model = Officer
     context_object_name = "officers"
     template_name = "admin/database_officers.html"
+    paginate_by = 6
+    ordering = ['-date_joined']
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        # Handle year filter
+        year_filter = self.request.GET.get('year', '')
+        if year_filter:
+            queryset = queryset.filter(date_joined__year=year_filter)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add available years for filter
+        context['available_years'] = Officer.objects.dates(
+            'date_joined', 'year').values_list('date_joined__year', flat=True)
+        context['selected_year'] = self.request.GET.get('year', '')
+        return context
 
 
 @admin_required

@@ -1,11 +1,41 @@
 {% extends "private/index.html" %} {% load static %} {% block title %}GPPG - Maps{% endblock title %} {% block css %}
 <script src="{% static 'maps/ol.js' %}"></script>
 <link rel="stylesheet" href="{% static "maps/ol.css" %}"> {% endblock css%} {% block nav %} {% include 'private/includes/nav.html' %} {% endblock nav %} {% block content %}
+
 <div x-data="{ isOpen: true }">
   <div class="w-full h-screen bg-blue-200 p-5 relative">
     <div
-      class="absolute top-0 left-0 h-full bg-white scroll-thin overflow-y-auto w-[400px] transform transition-transform duration-500 ease-in-out shadow-lg z-50"
+      class="absolute top-0 left-0 h-full bg-white scroll-thin overflow-y-auto w-[370px] transform transition-transform duration-500 ease-in-out shadow-lg z-50"
       :class="isOpen ? 'translate-x-0' : '-translate-x-full'">
+      <!-- Added X button -->
+      <button
+        @click="isOpen = false"
+        class="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
+        x-show="isOpen">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="text-gray-600">
+          <line
+            x1="18"
+            y1="6"
+            x2="6"
+            y2="18"></line>
+          <line
+            x1="6"
+            y1="6"
+            x2="18"
+            y2="18"></line>
+        </svg>
+      </button>
+
       <div class="p-4">
         <div class="mb-8">
           <div class="flex justify-center mb-4">
@@ -311,10 +341,11 @@
       </div>
     </div>
 
+    <!-- Preserved side button -->
     <button
       @click="isOpen = !isOpen"
       class="fixed top-1/2 -translate-y-1/2 z-50 bg-white p-2 rounded-r-lg shadow-lg transition-all duration-500 ease-in-out hover:bg-gray-50 focus:outline-none"
-      :class="isOpen ? 'left-[400px]' : 'left-0'">
+      :class="isOpen ? 'left-[370px]' : 'left-0'">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         class="h-6 w-6 text-gray-600 transition-transform duration-500"
@@ -329,6 +360,7 @@
       </svg>
     </button>
 
+    <!-- Rest of the content remains the same -->
     <section class="absolute bottom-4 left-4 md:right-12 md:bottom-auto md:left-auto bg-white rounded-2xl shadow-lg flex md:flex-col px-4 md:px-8 py-4 md:py-6 z-40 w-[calc(100%-2rem)] md:w-fit">
       <h3 class="text-base md:text-lg font-semibold mb-0 md:mb-4 mr-4 md:mr-0 whitespace-nowrap">Cluster Legend</h3>
       <div class="flex md:flex-col gap-4 w-fit overflow-x-auto md:overflow-x-visible">
@@ -355,11 +387,8 @@
     </div>
   </div>
 </div>
-
-{% include 'admin/includes/modal/modal_dialogs.html' %}
 {% endblock %}
-
-
+{% include 'admin/includes/modal/modal_dialogs.html' %}
 <!-- Extra Javascript you can add -->
 {% block extra_js %}
 <script src="{% static 'js/chart_3.7.1.js' %}"></script>

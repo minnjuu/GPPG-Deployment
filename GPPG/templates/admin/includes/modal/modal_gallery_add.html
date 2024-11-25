@@ -1,49 +1,119 @@
 {% load static %}
 
-<div id="addgallery" class="modal-content"> 
+<div
+  id="addgallery"
+  class="modal-content">
   <form
     hx-post="{% url 'admin_gallery_add' %}"
     hx-target="#modal-content"
     enctype="multipart/form-data"
     novalidate>
-    {% csrf_token %} 
-    <div class="grid grid-cols-2 gap-4">
-        <div>
-            <label class="block text-sm font-medium text-gray-700">
-                {{ form.uploader.label_tag }}
-                {% if form.uploader.errors %}
-                    <div class="text-red-600">{{ form.uploader.errors }}</div>
-                  {% endif %}
-            </label>
-            {{ form.uploader }}
-        </div>
-  
-        <div>
-          <label class="block text-sm font-medium text-gray-700">
-              {{ form.media.label_tag }}
-              {% if form.media.errors %}
-                    <div class="text-red-600">{{ form.media.errors }}</div>
-                  {% endif %}
-          </label>
-          {{ form.media }}
+    {% csrf_token %}
+    <div class="gap-2 flex flex-col">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">
+          {{ form.uploader.label_tag }} {% if form.uploader.errors %}
+          <div class="text-red-600">{{ form.uploader.errors }}</div>
+          {% endif %}
+        </label>
+        {{ form.uploader }}
       </div>
-     
-  </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">
+          {{ form.media.label_tag }} {% if form.media.errors %}
+          <div class="text-red-600">{{ form.media.errors }}</div>
+          {% endif %}
+        </label>
+        <div class="relative">
+          <div
+            id="dropZone"
+            class="min-h-[200px] bg-gray-50 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 cursor-pointer hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600">
+            <div class="flex flex-col items-center justify-center space-y-3">
+              <div class="w-12 h-12 text-gray-400">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-12 h-12"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+
+              <!-- Upload Text -->
+              <div class="text-center">
+                <p class="text-gray-500 dark:text-gray-400">
+                  Drop your image here, or
+                  <span
+                    class="text-primary-600 hover:text-primary-500 cursor-pointer"
+                    id="browseLink"
+                    >browse</span
+                  >
+                </p>
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">PNG and JPG (MAX. 800x400px)</p>
+              </div>
+
+              <!-- Error Message -->
+              {% if form.event_image.errors %}
+              <div class="text-red-600 text-sm">{{ form.event_image.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          {{ form.event_image }}
+
+          <div
+            id="previewContainer"
+            class="hidden mt-4">
+            <div class="relative">
+              <img
+                id="imagePreview"
+                src="#"
+                alt="Preview"
+                class="max-w-full h-60 rounded-lg shadow-md" />
+              <button
+                type="button"
+                id="clearImage"
+                class="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md hover:bg-gray-100">
+                <svg
+                  class="w-5 h-5 text-gray-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <button
-        type="submit"
-        class="bg-white text-black inline-flex items-center border-2 font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-4">
-        <svg
-            class="mr-1 -ml-1 w-6 h-6"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg">
-            <path
-                fill-rule="evenodd"
-                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                clip-rule="evenodd"></path>
-        </svg>
-        Add new
+      type="submit"
+      class="py-2 px-5 inline-flex items-center gap-x-2 text-sm rounded-lg border bg-green-800 hover:bg-green-900 text-white shadow-sm transition-all duration-300 hover:shadow-md mt-4">
+      <svg
+        class="mr-1 -ml-1 w-6 h-6"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          fill-rule="evenodd"
+          d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+          clip-rule="evenodd"></path>
+      </svg>
+      Add new
     </button>
   </form>
 </div>
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/admin/dropzone.js' %}"></script>

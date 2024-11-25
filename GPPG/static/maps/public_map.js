@@ -99,11 +99,11 @@ $(document).ready(function () {
 
     const vectorLayer = new ol.layer.Vector({
       source: new ol.source.Vector({
-        url: "https://gppg-bucket.s3.amazonaws.com/static/maps/ClusterOfPalawan_filtereds.geojson",
+        url: "https://gppg-bucket.s3.amazonaws.com/static/maps/Cluster_Of_Palawan.geojson",
         format: new ol.format.GeoJSON(),
       }),
       style: function (feature) {
-        const clusterName = feature.get("Cluster");
+        const clusterName = feature.get("Municipalities");
         const color = getClusterColor(clusterName);
 
         return new ol.style.Style({
@@ -148,7 +148,7 @@ $(document).ready(function () {
         }
         if (feature) {
           featureOverlay.getSource().addFeature(feature);
-          const regionName = feature.get("Cluster") || "Unknown Region";
+          const regionName = feature.get("Municipalities") || "Unknown Region";
           updateOverlay(regionName, evt.coordinate);
         } else {
           overlay.setPosition(undefined);
@@ -164,7 +164,7 @@ $(document).ready(function () {
         selectedFeature = feature;
         featureOverlay.getSource().clear();
         featureOverlay.getSource().addFeature(feature);
-        const regionName = feature.get("Cluster") || "Unknown Region";
+        const regionName = feature.get("Municipalities") || "Unknown Region";
         updateOverlay(regionName, evt.coordinate);
       } else {
         removeOverlay();

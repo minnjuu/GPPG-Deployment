@@ -24,6 +24,7 @@
   {% endblock nav %}
 </header>
 {% block content %}
+
 <section class="my-5 mx-16 h-full overflow-hidden py-2">
   <div>
     <!-- First row 2 -->
@@ -374,7 +375,7 @@
           src="{{ business_manager.officer_image.url }}"
           alt="Officer Image" />
         <h2 class="mt-4 text-xl font-semibold">{{ business_manager.first_name }} {{ business_manager.last_name }}</h2>
-        <p class="text-gray-500">Pio External</p>
+        <p class="text-gray-500">Business Manager</p>
         <div class="mt-4 flex justify-center space-x-2">
           {% if business_manager.fb_url %}
           <a
