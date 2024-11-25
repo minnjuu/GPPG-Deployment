@@ -276,7 +276,13 @@
                 <span>Account Settings</span>
               </a>
               <a
-                href="{% url 'account_view' %}"
+                href="#"
+                hx-get="{% url 'incident_report' %}"
+                hx-target="#modal-content"
+                hx-trigger="click"
+                data-modal-toggle="modaldialog"
+                data-modal-target="modaldialog"
+                onclick="showTitle('Submit a Pangolin Incident Report');"
                 class="flex items-center gap-x-3.5 py-2 px-3 text-sm focus:outline-none hover:bg-gray-100 hover:text-black rounded-md">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -479,14 +485,16 @@
       <div class="md:mx-16 p-6 h-full">{% include 'private/includes/card_carousel.html' %}</div>
     </section>
 
-    {% include 'private/includes/footer.html' %} {% include 'global/warning.html' %} {% endblock %} {% block extra_js %} {% endblock extra_js %}
+    {% include 'private/includes/footer.html' %} {% include 'global/warning.html' %} {% include 'admin/includes/modal/modal_dialogs.html' %} {% endblock %} {% block extra_js %} {% endblock extra_js %}
     <script src="{% static 'js/typed.js' %}"></script>
     <script src="{% static 'js/index.js' %}"></script>
     <script src="{% static 'js/popper.js' %}"></script>
     <script src="{% static 'js/cdn.min.js' %}"></script>
+    <script src="{% static 'js/admin/modal.js' %}"></script>
     <script src="{% static 'js/taos.js' %}"></script>
     <script src="{% static 'js/admin/flowbite.min.js' %}"></script>
     <script src="{% static 'js/preline.js' %}"></script>
     <script src="{% static 'js/private/navbar.js' %}"></script>
+    <script src="{% static 'js/htmx.min.js' %}"></script>
   </body>
 </html>

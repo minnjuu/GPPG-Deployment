@@ -1,4 +1,6 @@
 {% extends "private/index.html" %} {% load static %} {% block title %}GPPG - Gallery{% endblock title %}
 <header>{% block nav %} {% include 'private/includes/nav.html' %} {% endblock nav %}</header>
 
-{% block content %} {% endblock %}
+{% block content %} 
+{% include 'admin/includes/modal/modal_dialogs.html' %}
+{% endblock %}

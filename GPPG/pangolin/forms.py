@@ -74,6 +74,43 @@ class IncidentForm(forms.ModelForm):
         }
 
 
+
+class IncidentReportForm(forms.ModelForm):
+
+    date_reported = forms.DateField(
+        widget=forms.DateInput(attrs={
+            'type': 'date',  # 'date' input type triggers browser date picker
+            'class': 'bg-gray-50 border-b-2 border-t-0 border-x-0 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-b-primary-600',
+            'placeholder': 'Select Date',
+        })
+    )
+
+    class Meta:
+        model = IncidentReport
+        fields = "__all__"
+
+        labels = {
+            'municity': 'Municipality/City',
+            'status': 'Status',
+            'date_reported': 'Date Reported',
+            'description': 'Description',
+        }
+
+        widgets = {
+            'municity': forms.Select(attrs={
+                'class': 'bg-gray-50 border-b-2 border-t-0 border-x-0 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-b-primary-600',
+                'placeholder': 'Enter Municipality/City'
+            }),
+            'status': forms.Select(attrs={
+                'class': 'bg-gray-50 border-b-2 border-t-0 border-x-0 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-b-primary-600',
+            }),
+            'description': forms.Textarea(attrs={
+                'class': 'bg-gray-50 border-b-2 border-t-0 border-x-0 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-b-primary-600',
+                'placeholder': 'Write a description here'
+            }),
+        }
+
+
 class OfficerForm(forms.ModelForm):
 
     date_joined = forms.DateField(

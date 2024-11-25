@@ -721,6 +721,21 @@ def account_view(request):
     }
     return render(request, 'private/account_view.html', context)
 
+@login_required
+def incident_report(request):
+    if request.method == 'POST':
+        form = IncidentReportForm(request.POST)
+        if form.is_valid():
+            form.save()
+            response = HttpResponse()
+            response.headers['HX-Trigger'] = 'closeAndRefresh'
+            messages.success(request, 'Incident Saved and logged!')
+            return response
+    else:
+        form = IncidentReportForm()
+
+    return render(request, 'private/includes/incident_report.html', {'form': form})
+
 
 # views.py
 
@@ -730,30 +745,31 @@ def change_password(request):
     if request.method != 'POST':
         form = ChangePasswordForm()
         return render(request, 'admin/includes/modal/modal_changepass.html', {'form': form})
-
+    
     form = ChangePasswordForm(request.POST)
     if not form.is_valid():
         return render(request, 'admin/includes/modal/modal_changepass.html', {
             'form': form,
             'error': True
         })
-
+    
     try:
         current_user_id = request.session.get('user_id')
         user = User.objects.get(id=current_user_id)
         current_password = form.cleaned_data['current_password']
         new_password = form.cleaned_data['new_password']
-
-        if not user.user_password(current_password):
+        
+        # Fix: Use check_password method instead of calling password directly
+        if not user.check_password(current_password):
             form.add_error('current_password', 'Current password is incorrect')
             return render(request, 'admin/includes/modal/modal_changepass.html', {
                 'form': form,
                 'error': True
             })
-
+        
         user.set_password(new_password)
         user.save()
-
+        
         # Add success message for HTMX response
         return HttpResponse(
             '<div class="bg-green-100 text-green-700 p-4 rounded">'
@@ -761,7 +777,7 @@ def change_password(request):
             '<script>setTimeout(() => closeChangePasswordModal(), 2000)</script>'
             '</div>'
         )
-
+        
     except Exception as e:
         form.add_error(None, str(e))
         return render(request, 'admin/includes/modal/modal_changepass.html', {

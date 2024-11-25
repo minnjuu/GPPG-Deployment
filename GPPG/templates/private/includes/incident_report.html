@@ -1,0 +1,56 @@
+<div id="addincidentreport" class="modal-content"> 
+  <form
+    hx-post="{% url 'incident_report' %}"
+    hx-target="#modal-content"
+    novalidate>
+    {% csrf_token %} 
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+          <label class="block text-sm font-medium text-gray-700">
+              {{ form.municity.label_tag }}
+              {% if form.municity.errors %}
+                <div class="text-red-600">{{ form.municity.errors }}</div>
+              {% endif %}
+          </label>
+          {{ form.municity }}
+      </div>
+
+      <div>
+          <label class="block text-sm font-medium text-gray-700">
+              {{ form.status.label_tag }}
+              {% if form.status.errors %}
+                <div class="text-red-600">{{ form.status.errors }}</div>
+              {% endif %}
+          </label>
+          {{ form.status }}
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">
+            {{ form.date_reported.label_tag }}
+            {% if form.date_reported.errors %}
+              <div class="text-red-600">{{ form.date_reported.errors }}</div>
+            {% endif %}
+        </label>
+        {{ form.date_reported }}
+    </div>
+
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium text-gray-700">
+        {{ form.description.label_tag }}
+        {% if form.description.errors %}
+                <div class="text-red-600">{{ form.description.errors }}</div>
+              {% endif %}
+    </label>
+    {{ form.description }}
+  </div>
+
+    <button
+        type="submit"
+        class="bg-white text-black inline-flex items-center border-2 font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-4">
+        Submit Report
+    </button>
+  </form>
+</div>
