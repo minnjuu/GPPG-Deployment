@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'compressor',
     'widget_tweaks',
     'django_admin_logs',
+    'analytical'
 ]
 SITE_ID = 2
 
@@ -82,6 +83,7 @@ MIDDLEWARE = [
     'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
+GOOGLE_ANALYTICS_PROPERTY_ID = 'G-P4VNGN1W54'
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {

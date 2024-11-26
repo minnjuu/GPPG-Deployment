@@ -1,54 +1,86 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const form = document.querySelector("#adduser form");
+$(document).ready(function () {
   const loadingStates = {
     toggle: function (isLoading) {
-      const normalState = form.querySelector(".normal-state");
-      const loadingState = form.querySelector(".loading-state");
-      const submitBtn = form.querySelector('button[type="submit"]');
+      const $submitBtn = $('#changePasswordForm button[type="submit"]');
+      const $normalState = $(".normal-state");
+      const $loadingState = $(".loading-state");
 
-      submitBtn.disabled = isLoading;
-      normalState.classList.toggle("hidden", isLoading);
-      loadingState.classList.toggle("hidden", !isLoading);
+      $submitBtn.prop("disabled", isLoading);
+      $normalState.toggleClass("hidden", isLoading);
+      $loadingState.toggleClass("hidden", !isLoading);
     },
   };
 
-  form.addEventListener("htmx:beforeRequest", function () {
-    loadingStates.toggle(false);
-    document.querySelectorAll(".text-red-500").forEach((el) => el.classList.add("hidden"));
-  });
+  const clearErrors = () => {
+    $(".text-red-500").addClass("hidden");
+  };
 
-  form.addEventListener("htmx:afterRequest", function (event) {
-    loadingStates.toggle(false);
-
-    const response = JSON.parse(event.detail.xhr.response);
-    if (response.status === "error") {
-      if (response.errors) {
-        Object.entries(response.errors).forEach(([field, errors]) => {
-          const errorEl = document.getElementById(`${field}_error`);
-          if (errorEl) {
-            errorEl.textContent = errors[0];
-            errorEl.classList.remove("hidden");
-          }
-        });
+  const showErrors = (errors) => {
+    Object.entries(errors).forEach(([field, error]) => {
+      const $errorEl = $(`#${field}_error`);
+      if ($errorEl.length) {
+        $errorEl.text(error).removeClass("hidden");
       }
-    } else if (response.status === "success") {
-      setTimeout(closeChangePasswordModal, 2000);
-      form.reset();
+    });
+  };
+
+  $("#changePasswordForm").on("submit", async function (e) {
+    e.preventDefault();
+    clearErrors();
+    loadingStates.toggle(true);
+
+    const formData = {
+      current_password: $("#current_password").val(),
+      new_password: $("#new_password").val(),
+      confirm_password: $("#confirm_password").val(),
+    };
+
+    try {
+      const response = await $.ajax({
+        url: "/change_password/",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val(),
+        },
+        data: JSON.stringify(formData),
+      });
+
+      if (response.status === "error") {
+        showErrors(response.errors);
+      } else if (response.status === "success") {
+        closeChangePasswordModal();
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      showErrors({ __all__: "An unexpected error occurred. Please try again." });
+    } finally {
+      loadingStates.toggle(false);
     }
   });
 });
 
-function togglePassword(fieldName) {
-  const input = document.querySelector(`input[name="${fieldName}"]`);
-  const icon = document.getElementById(`${fieldName}_icon`);
+function openChangePasswordModal() {
+  $("#changePasswordModal").removeClass("hidden");
+  $("body").css("overflow", "hidden");
+}
 
-  if (input.type === "password") {
-    input.type = "text";
-    icon.classList.remove("mdi-eye-off");
-    icon.classList.add("mdi-eye");
+function closeChangePasswordModal() {
+  $("#changePasswordModal").addClass("hidden");
+  $("body").css("overflow", "");
+  $("#changePasswordForm")[0].reset();
+  $(".text-red-500").addClass("hidden");
+}
+
+function togglePassword(fieldName) {
+  const $input = $(`#${fieldName}`);
+  const $icon = $(`#${fieldName}_icon`);
+
+  if ($input.attr("type") === "password") {
+    $input.attr("type", "text");
+    $icon.removeClass("mdi-eye-off").addClass("mdi-eye");
   } else {
-    input.type = "password";
-    icon.classList.remove("mdi-eye");
-    icon.classList.add("mdi-eye-off");
+    $input.attr("type", "password");
+    $icon.removeClass("mdi-eye").addClass("mdi-eye-off");
   }
 }

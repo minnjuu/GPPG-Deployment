@@ -1,3 +1,4 @@
+import bcrypt
 import mimetypes
 from django.db import models
 from django.core.exceptions import ValidationError
@@ -277,6 +278,16 @@ class Event(BaseModel):
 
     def __str__(self):
         return f"{self.name} ({self.date})"
+
+    def check_password(self, raw_password):
+        try:
+            return bcrypt.checkpw(raw_password.encode(), self.password.encode())
+        except Exception:
+            return False
+    def set_password(self, raw_password):
+        salt = bcrypt.gensalt()
+        hashed = bcrypt.hashpw(raw_password.encode(), salt)
+        self.password = hashed.decode()
 
 
 class User(BaseModel):

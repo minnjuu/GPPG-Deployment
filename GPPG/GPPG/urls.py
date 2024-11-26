@@ -40,9 +40,11 @@ urlpatterns = [
     path('maps/', views.maps, name='maps'),
     path('account_view/', views.account_view, name='account_view'),
     path('incident_report/', views.incident_report, name='incident_report'),
+    path('report/', views.reports, name='report'),
     path('change_password/', views.change_password, name='change_password'),
     path('account_view/<int:id>/edit', views.user_update_private,
          name='private_userAccounts_edit'),
+     
     # ADMIN
     path('admin_home/', views.admin_home, name='admin_home'),
     path('admin_login/', views.admin_login, name='admin_login'),

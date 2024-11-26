@@ -2,7 +2,7 @@ var highlightDash;
 var isSearchingDash = false;
 
 function removeHighlightDash() {
-  featureOverlayDash.getSource().clear();
+  featureOverlayDash.geatSource().clear();
   overlayDash.setPosition(undefined);
   isSearchingDash = false;
 }
@@ -29,8 +29,9 @@ var mapDash = new ol.Map({
   view: new ol.View({
     center: ol.proj.fromLonLat([118.7384, 9.8349]),
     zoom: 7,
-    minZoom: 2,
-    maxZoom: 18,
+    minZoom: 5,
+    maxZoom: 10,
+    constrainResolution: true,
   }),
 });
 
@@ -52,25 +53,19 @@ async function fetchAdminMapData(municity) {
 
     // Calculate total incidents across all municipalities first
     totalIncidents = 0;
-    Object.values(data).forEach(municipality => {
+    Object.values(data).forEach((municipality) => {
       if (municipality) {
-        totalIncidents += municipality.dead + 
-                          municipality.alive + 
-                          municipality.scales + 
-                          municipality.illegalTrades;
+        totalIncidents += municipality.dead + municipality.alive + municipality.scales + municipality.illegalTrades;
       }
     });
 
-    municipalityData = data;  // Set the global municipality data
+    municipalityData = data; // Set the global municipality data
 
     if (municipalityData[municity]) {
       const municipality = municipalityData[municity];
-      
+
       // Calculate percentage for this municipality
-      const municipalityTotal = municipality.dead + 
-                                municipality.alive + 
-                                municipality.scales + 
-                                municipality.illegalTrades;
+      const municipalityTotal = municipality.dead + municipality.alive + municipality.scales + municipality.illegalTrades;
       const percentage = ((municipalityTotal / totalIncidents) * 100).toFixed(2);
 
       // Add percentage to the municipality data object
@@ -83,7 +78,7 @@ async function fetchAdminMapData(municity) {
 
 var vectorLayerDash = new ol.layer.Vector({
   source: new ol.source.Vector({
-    url: "https://gppg-bucket.s3.amazonaws.com/static/maps/map.geojson",
+    url: "/static/maps/map.geojson", // Geojson file input kuno
     format: new ol.format.GeoJSON(),
   }),
   style: function (feature) {
@@ -150,11 +145,8 @@ mapDash.on("pointermove", async function (evt) {
 
       const municipalityDataForRegion = municipalityData[regionName] || {};
 
-      // Get the total poaching incidents and percentage for this region
-      const totalPoachingIncidents = municipalityDataForRegion.dead + 
-                                     municipalityDataForRegion.alive + 
-                                     municipalityDataForRegion.scales + 
-                                     municipalityDataForRegion.illegalTrades;
+      // Get the total poachinaag incidents and percentage for this region
+      const totalPoachingIncidents = municipalityDataForRegion.dead + municipalityDataForRegion.alive + municipalityDataForRegion.scales + municipalityDataForRegion.illegalTrades;
 
       // Handle the case where there's no data or incidents
       const totalDisplay = totalPoachingIncidents > 0 ? totalPoachingIncidents : "No Poaching Incidents";

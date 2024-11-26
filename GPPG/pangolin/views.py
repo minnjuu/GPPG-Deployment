@@ -759,36 +759,62 @@ def incident_report(request):
 
     return render(request, 'private/includes/incident_report.html', {'form': form})
 
+@login_required
+def reports(request):
+    reports = IncidentReport.objects.all()
+    return render(request, 'private/reports.html', {'report': reports})
 
 # views.py
 
 
 @login_required
 def change_password(request):
-    if request.method == 'POST':
-        form = ChangePasswordForm(user=request.user, data=request.POST)
-        
-        if form.is_valid():
-            user = request.user
-            new_password = form.cleaned_data['new_password']
-            
-            # Set the new password
-            user.set_password(new_password)
-            user.save()
-            update_session_auth_hash(request, user)
+    try:
+        data = json.loads(request.body)
+        current_password = data.get('current_password')
+        new_password = data.get('new_password')
+        confirm_password = data.get('confirm_password')
 
-            messages.success(request, "Your password has been changed successfully.")
-            return redirect('account_view')  
+        user_id = request.session.get('user_id')
+        user = User.objects.get(id=user_id)
 
-        else:
-            return render(request, 'admin/includes/modal/modal_changepass.html', {
-                'form': form,
-                'error': True
+        if not check_password(current_password, user.password):
+            return JsonResponse({
+                'status': 'error',
+                'errors': {'current_password': 'Current password is incorrect'}
             })
-    else:
-        form = ChangePasswordForm(user=request.user)
-    
-    return render(request, 'admin/includes/modal/modal_changepass.html', {'form': form})
+
+        if not new_password:
+            return JsonResponse({
+                'status': 'error',
+                'errors': {'new_password': 'New password is required'}
+            })
+
+        if new_password != confirm_password:
+            return JsonResponse({
+                'status': 'error',
+                'errors': {'confirm_password': 'Passwords do not match'}
+            })
+
+        user.password = make_password(new_password)
+        user.save()
+
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Your password has been changed successfully!'
+        })
+
+    except User.DoesNotExist:
+        return JsonResponse({
+            'status': 'error',
+            'errors': {'__all__': 'User not found'}
+        })
+    except Exception as e:
+        print("Error:", str(e))
+        return JsonResponse({
+            'status': 'error',
+            'errors': {'__all__': str(e)}
+        })
 
 
 @login_required
@@ -1091,27 +1117,66 @@ def activity_update(request, id):
     })
 
 
+@transaction.atomic
 def activity_delete(request, id):
-    event = get_object_or_404(Event, id=id)
+   event = get_object_or_404(Event, id=id)
+   
+   if request.method == 'POST':
+       try:
+           # Optional: Delete image from S3 if it exists
+           if event.event_image:
+               try:
+                   s3 = boto3.client('s3', 
+                       aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                       aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+                   )
+                   
+                   s3_key = str(event.event_image).replace(
+                       f"https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/", 
+                       ""
+                   )
+                   
+                   s3.delete_object(
+                       Bucket=settings.AWS_STORAGE_BUCKET_NAME, 
+                       Key=s3_key
+                   )
+               except ClientError as e:
+                   # Log S3 deletion error but continue with event deletion
+                   messages.warning(request, f"Could not delete event image from S3: {str(e)}")
 
-    if request.method == 'POST':
-        LogEntry.objects.log_action(
-            user_id=request.user.id,
-            content_type_id=ContentType.objects.get_for_model(Event).pk,
-            object_id=event.pk,
-            object_repr=str(event),
-            action_flag=DELETION,
-            change_message="Deleted an Event"
-        )
-        event.delete()
-        response = HttpResponse()
-        response.headers['HX-Trigger'] = 'closeAndRefresh'
-        messages.success(request, 'Gallery Record Deleted!')
-        return response
-    else:
-        return render(request, 'admin/includes/modal/modal_activities_delete.html', {
-            'event': event
-        })
+           # Log the action
+           LogEntry.objects.log_action(
+               user_id=request.user.id,
+               content_type_id=ContentType.objects.get_for_model(Event).pk,
+               object_id=event.pk,
+               object_repr=str(event),
+               action_flag=DELETION,
+               change_message="Deleted an Event"
+           )
+
+           # Clear the image field before deleting
+           event.event_image = None
+           event.save()
+
+           # Delete the event record
+           event.delete()
+
+           response = HttpResponse()
+           response.headers['HX-Trigger'] = 'closeAndRefresh'
+           messages.success(request, 'Event Record Deleted!')
+           return response
+
+       except Exception as e:
+           # Catch any unexpected errors during the process
+           messages.error(request, f"Error deleting event record: {str(e)}")
+           response = HttpResponse()
+           response.headers['HX-Trigger'] = 'closeAndRefresh'
+           return response
+
+   else:
+       return render(request, 'admin/includes/modal/modal_activities_delete.html', {
+           'event': event
+       })
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -1296,24 +1361,62 @@ def gallery_update(request, id):
     })
 
 
+@transaction.atomic
 def gallery_delete(request, id):
     gallery = get_object_or_404(Gallery, id=id)
-
+    
     if request.method == 'POST':
+        try:
+            # Optional: Delete media file from S3 if it exists
+            if gallery.media:
+                try:
+                    s3 = boto3.client('s3', 
+                        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+                    )
+                    
+                    s3_key = str(gallery.media).replace(
+                        f"https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/", 
+                        ""
+                    )
+                    
+                    s3.delete_object(
+                        Bucket=settings.AWS_STORAGE_BUCKET_NAME, 
+                        Key=s3_key
+                    )
+                except ClientError as e:
+                    # Log S3 deletion error but continue with gallery deletion
+                    messages.warning(request, f"Could not delete media from S3: {str(e)}")
 
-        LogEntry.objects.log_action(
-            user_id=request.user.id,
-            content_type_id=ContentType.objects.get_for_model(Gallery).pk,
-            object_id=gallery.pk,
-            object_repr=str(gallery),
-            action_flag=DELETION,
-            change_message="Media Deleted from Gallery"
-        )
-        gallery.delete()
-        response = HttpResponse()
-        response.headers['HX-Trigger'] = 'closeAndRefresh'
-        messages.success(request, 'Gallery Record Deleted!')
-        return response
+            # Log the action
+            LogEntry.objects.log_action(
+                user_id=request.user.id,
+                content_type_id=ContentType.objects.get_for_model(Gallery).pk,
+                object_id=gallery.pk,
+                object_repr=str(gallery),
+                action_flag=DELETION,
+                change_message="Media Deleted from Gallery"
+            )
+
+            # Clear the media field before deleting
+            gallery.media = None
+            gallery.save()
+
+            # Delete the gallery record
+            gallery.delete()
+
+            messages.success(request, 'Gallery Record Deleted!')
+            response = HttpResponse()
+            response.headers['HX-Trigger'] = 'closeAndRefresh'
+            return response
+
+        except Exception as e:
+            # Catch any unexpected errors during the process
+            messages.error(request, f"Error deleting gallery record: {str(e)}")
+            response = HttpResponse()
+            response.headers['HX-Trigger'] = 'closeAndRefresh'
+            return response
+
     else:
         return render(request, 'admin/includes/modal/modal_gallery_delete.html', {
             'gallery': gallery
@@ -1431,20 +1534,57 @@ def officer_delete(request, id):
     officer = get_object_or_404(Officer, id=id)
 
     if request.method == 'POST':
+       try:
+           # Optional: Delete image from S3 if it exists
+           if officer.officer_image:
+               try:
+                   s3 = boto3.client('s3', 
+                       aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                       aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+                   )
+                   
+                   s3_key = str(officer.officer_image).replace(
+                       f"https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/", 
+                       ""
+                   )
+                   
+                   s3.delete_object(
+                       Bucket=settings.AWS_STORAGE_BUCKET_NAME, 
+                       Key=s3_key
+                   )
+               except ClientError as e:
+                   # Log S3 deletion error but continue with event deletion
+                   messages.warning(request, f"Could not delete officer image from S3: {str(e)}")
 
-        LogEntry.objects.log_action(
-            user_id=request.user.id,
-            content_type_id=ContentType.objects.get_for_model(Officer).pk,
-            object_id=officer.pk,
-            object_repr=str(officer),
-            action_flag=DELETION,
-            change_message="Officer Deleted"
-        )
-        officer.delete()
-        response = HttpResponse()
-        response.headers['HX-Trigger'] = 'closeAndRefresh'
-        messages.success(request, 'Officer Deleted!')
-        return response
+           # Log the action
+           LogEntry.objects.log_action(
+               user_id=request.user.id,
+               content_type_id=ContentType.objects.get_for_model(Officer).pk,
+               object_id=officer.pk,
+               object_repr=str(officer),
+               action_flag=DELETION,
+               change_message="Deleted an Event"
+           )
+
+           # Clear the image field before deleting
+           officer.officer_image = None
+           officer.save()
+
+           # Delete the event record
+           officer.delete()
+
+           response = HttpResponse()
+           response.headers['HX-Trigger'] = 'closeAndRefresh'
+           messages.success(request, 'Officer Record Deleted!')
+           return response
+
+       except Exception as e:
+           # Catch any unexpected errors during the process
+           messages.error(request, f"Error deleting officer record: {str(e)}")
+           response = HttpResponse()
+           response.headers['HX-Trigger'] = 'closeAndRefresh'
+           return response
+
     else:
         return render(request, 'admin/includes/modal/modal_officer_delete.html', {
             'officer': officer
