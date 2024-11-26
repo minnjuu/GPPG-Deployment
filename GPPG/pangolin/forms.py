@@ -89,8 +89,18 @@ class IncidentReportForm(forms.ModelForm):
             'placeholder': 'Select Date',
         })
     )
+    evidence = forms.ImageField(
+            widget=forms.FileInput(attrs={
+                'class': 'hidden',
+                'accept': 'image/*'
+            }),
+            required=False
+    )
+
 
     class Meta:
+
+        
         model = IncidentReport
         fields = "__all__"
 
@@ -99,6 +109,9 @@ class IncidentReportForm(forms.ModelForm):
             'status': 'Status',
             'date_reported': 'Date Reported',
             'description': 'Description',
+            'email': 'Email',
+            'contact': 'Contact',
+            'evidence': 'Evidence',
         }
 
         widgets = {
@@ -113,7 +126,22 @@ class IncidentReportForm(forms.ModelForm):
                 'class': 'bg-gray-50 border-b-2 border-t-0 border-x-0 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-b-primary-600',
                 'placeholder': 'Write a description here'
             }),
+            'email': forms.TextInput(attrs={
+                'class': 'bg-gray-50 border-b-2 border-t-0 border-x-0 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-b-primary-600',
+                'placeholder': 'Enter Email Address'
+            }),
+            'contact': forms.TextInput(attrs={
+                'class': 'bg-gray-50 border-b-2 border-t-0 border-x-0 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-b-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-b-primary-600',
+                'placeholder': 'Enter Contact Number'
+            }),
+            'evidence': forms.FileInput(attrs={
+                'class': 'hidden',
+                'accept': 'image/*'
+            }),
         }
+            
+            
+        
 
 
 class OfficerForm(forms.ModelForm):

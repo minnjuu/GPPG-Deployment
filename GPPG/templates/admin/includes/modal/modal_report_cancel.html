@@ -34,6 +34,12 @@
       <p class="text-sm text-gray-600 dark:text-gray-300">
         <strong>Status:</strong> {{ report.get_status_display }}
       </p>
+      <p class="text-sm text-gray-600 dark:text-gray-300">
+        <strong>Email Address:</strong> {{ report.email}}
+      </p>
+      <p class="text-sm text-gray-600 dark:text-gray-300">
+        <strong>Contact Number:</strong> {{ report.contact }}
+      </p>
       {% endif %}
     </div>
     {% csrf_token %} {% include 'admin/includes/form.html' %}

@@ -4,6 +4,9 @@ from django.db.models import Count
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import *
+from django.db import transaction
+from botocore.exceptions import ClientError
+import boto3
 from datetime import datetime
 from django.http import JsonResponse, HttpResponse
 from django.template.response import TemplateResponse
@@ -740,13 +743,17 @@ def account_view(request):
 @login_required
 def incident_report(request):
     if request.method == 'POST':
-        form = IncidentReportForm(request.POST)
+        
+        form = IncidentReportForm(request.POST, request.FILES)
+        
         if form.is_valid():
             form.save()
             response = HttpResponse()
-            response.headers['HX-Trigger'] = 'closeAndRefresh'
+            response.headers['HX-Trigger'] = 'closeAndRefresh'  
             messages.success(request, 'Incident Saved and logged!')
             return response
+        else:
+            messages.error(request, 'There was an error in your form submission.')
     else:
         form = IncidentReportForm()
 
@@ -1460,31 +1467,69 @@ def confirm_accept(request, report_id):
     return render(request, 'admin/includes/modal/modal_report_accept.html', {'report': report})
 
 
+@transaction.atomic
 def accept_incident(request, report_id):
+    try:
+        # Fetch the report
+        report = get_object_or_404(IncidentReport, id=report_id)
 
-    report = get_object_or_404(IncidentReport, id=report_id)
+        # Create the incident
+        incident = Incident.objects.create(
+            municity=report.municity,
+            status=report.status,
+            date_reported=report.date_reported,
+            description=report.description,
+        )
 
-    incident = Incident.objects.create(
-        municity=report.municity,
-        status=report.status,
-        date_reported=report.date_reported,
-        description=report.description,
-    )
+        # Optional: Delete evidence from S3 if it exists
+        if report.evidence:
+            try:
+                s3 = boto3.client('s3', 
+                    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+                )
+                
+                s3_key = str(report.evidence).replace(
+                    f"https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/", 
+                    ""
+                )
+                
+                s3.delete_object(
+                    Bucket=settings.AWS_STORAGE_BUCKET_NAME, 
+                    Key=s3_key
+                )
+            except ClientError as e:
+                # Log S3 deletion error but continue with incident creation
+                messages.warning(request, f"Could not delete evidence from S3: {str(e)}")
 
-    LogEntry.objects.log_action(
-        user_id=request.user.id,
-        content_type_id=ContentType.objects.get_for_model(Incident).pk,
-        object_id=incident.pk,
-        object_repr=str(incident),
-        action_flag=ADDITION,
-        change_message="Report Accepted and Added to Incidents"
-    )
+        # Log the action
+        LogEntry.objects.log_action(
+            user_id=request.user.id,
+            content_type_id=ContentType.objects.get_for_model(Incident).pk,
+            object_id=incident.pk,
+            object_repr=str(incident),
+            action_flag=ADDITION,
+            change_message="Report Accepted and Added to Incidents"
+        )
 
-    report.delete()
-    messages.success(request, "Incident accepted and added to the database.")
-    response = HttpResponse()
-    response.headers['HX-Trigger'] = 'closeAndRefresh'
-    return response
+        # Clear the evidence field before deleting the report
+        report.evidence = None
+        report.save()
+
+        # Delete the original report
+        report.delete()
+
+        messages.success(request, "Incident accepted and added to the database.")
+        response = HttpResponse()
+        response.headers['HX-Trigger'] = 'closeAndRefresh'
+        return response
+
+    except Exception as e:
+        # Catch any unexpected errors during the process
+        messages.error(request, f"Error accepting incident report: {str(e)}")
+        response = HttpResponse()
+        response.headers['HX-Trigger'] = 'closeAndRefresh'
+        return response
 
 
 def confirm_cancel(request, report_id):
@@ -1492,25 +1537,61 @@ def confirm_cancel(request, report_id):
     return render(request, 'admin/includes/modal/modal_report_cancel.html', {'report': report})
 
 
+@transaction.atomic
 def cancel_incident(request, report_id):
+    try:
+        # Fetch the report
+        report = get_object_or_404(IncidentReport, id=report_id)
 
-    report = get_object_or_404(IncidentReport, id=report_id)
+        # Optional: Delete evidence from S3 if it exists
+        if report.evidence:
+            try:
+                s3 = boto3.client('s3', 
+                    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+                )
+                
+                s3_key = str(report.evidence).replace(
+                    f"https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/", 
+                    ""
+                )
+                
+                s3.delete_object(
+                    Bucket=settings.AWS_STORAGE_BUCKET_NAME, 
+                    Key=s3_key
+                )
+            except ClientError as e:
+                # Log S3 deletion error but continue with report deletion
+                messages.warning(request, f"Could not delete evidence from S3: {str(e)}")
 
-    LogEntry.objects.log_action(
-        user_id=request.user.id,
-        content_type_id=ContentType.objects.get_for_model(IncidentReport).pk,
-        object_id=report.pk,
-        object_repr=str(report),
-        action_flag=DELETION,
-        change_message="Report canceled and removed"
-    )
+        # Log the action before deletion
+        LogEntry.objects.log_action(
+            user_id=request.user.id,
+            content_type_id=ContentType.objects.get_for_model(IncidentReport).pk,
+            object_id=report.pk,
+            object_repr=str(report),
+            action_flag=DELETION,
+            change_message="Report canceled and removed"
+        )
 
-    report.delete()
+        # Clear the evidence field before deleting
+        report.evidence = None
+        report.save()
 
-    messages.info(request, "Incident report removed.")
-    response = HttpResponse()
-    response.headers['HX-Trigger'] = 'closeAndRefresh'
-    return response
+        # Delete the report
+        report.delete()
+
+        messages.info(request, "Incident report removed.")
+        response = HttpResponse()
+        response.headers['HX-Trigger'] = 'closeAndRefresh'
+        return response
+
+    except Exception as e:
+        # Catch any unexpected errors during the process
+        messages.error(request, f"Error canceling incident report: {str(e)}")
+        response = HttpResponse()
+        response.headers['HX-Trigger'] = 'closeAndRefresh'
+        return response
 
 
 def admin_charts(request):

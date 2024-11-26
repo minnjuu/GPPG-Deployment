@@ -113,8 +113,8 @@ class Evidence(BaseModel):
     def __str__(self):
 
         if self.file:
-            return self.file.name  # Returns the relative file path
-        return "No file uploaded"
+            return self.file.name  
+        
 
 
 class Admin(BaseModel):
@@ -168,8 +168,33 @@ class IncidentReport(BaseModel):
     status = models.CharField(max_length=150, choices=st_choices)
     date_reported = models.DateField()
     description = models.CharField(max_length=500)
+    email=models.EmailField(max_length=150, null=True, blank=True,)
+    contact = models.CharField(max_length=11, null=True, blank=True, validators=[validate_contact])
+    evidence = models.FileField(
+        upload_to='evidences/', null=True, blank=True, validators=[validate_file_type]
+    )
 
-    def __str__(self):
+    def save(self, *args, **kwargs):
+        if self.pk:
+            
+            delete_old_file(self, self.evidence, 'evidence')
+
+        
+        if self.evidence:
+            mime_type, encoding = mimetypes.guess_type(self.evidence.name)
+            if mime_type:
+                if mime_type.startswith('image/'):
+                    self.media_type = 'Image'
+                elif mime_type.startswith('video/'):
+                    self.media_type = 'Video'
+                else:
+                    raise ValidationError("Unsupported file type")
+
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        delete_file(self.evidence)
+        super().delete(*args, **kwargs)
 
         return f"{self.municity} - {self.id} ({self.status})"
 

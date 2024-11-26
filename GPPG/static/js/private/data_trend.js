@@ -124,8 +124,99 @@ let chartData = function () {
     },
 
     renderChart: function () {
-      // Rest of the renderChart method remains the same as in the original code
-      // ... (previous renderChart implementation)
+      // Ensure data exists for the selected date
+      if (!this.data || !this.data[this.date] || !this.data[this.date].data) {
+        console.error("No data available for chart rendering:", this.date);
+        return;
+      }
+    
+      const ctx = document.getElementById("chart");
+      if (!ctx) {
+        console.error("Canvas element not found!");
+        return;
+      }
+    
+      const chartCtx = ctx.getContext("2d");
+      if (!chartCtx) {
+        console.error("Could not get 2D rendering context!");
+        return;
+      }
+    
+      // Destroy the existing chart instance if it exists
+      if (this.chart) {
+        this.chart.destroy();
+        this.chart = null;
+      }
+    
+      const selectedData = JSON.parse(JSON.stringify(this.data[this.date].data));
+    
+      // Debug logging
+      console.log("Rendering chart for date:", this.date);
+      console.log("Selected data:", selectedData);
+    
+      // Create new chart configuration
+      const config = {
+        type: "line",
+        data: {
+          labels: selectedData.labels,
+          datasets: [
+            {
+              label: "Alive",
+              backgroundColor: "rgba(102, 126, 234, 0.25)",
+              borderColor: "rgba(102, 126, 234, 1)",
+              pointBackgroundColor: "rgba(102, 126, 234, 1)",
+              data: selectedData.alive,
+            },
+            {
+              label: "Dead",
+              backgroundColor: "rgba(255, 99, 132, 0.25)",
+              borderColor: "rgba(255, 99, 132, 1)",
+              pointBackgroundColor: "rgba(255, 99, 132, 1)",
+              data: selectedData.dead,
+            },
+            {
+              label: "Scales",
+              backgroundColor: "rgba(54, 162, 235, 0.25)",
+              borderColor: "rgba(54, 162, 235, 1)",
+              pointBackgroundColor: "rgba(54, 162, 235, 1)",
+              data: selectedData.scales,
+            },
+            {
+              label: "Illegal Trades",
+              backgroundColor: "rgba(255, 206, 86, 0.25)",
+              borderColor: "rgba(255, 206, 86, 1)",
+              pointBackgroundColor: "rgba(255, 206, 86, 1)",
+              data: selectedData.illegal_trade,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: `Poaching Trends - ${this.date}`,
+            },
+            legend: {
+              display: true,
+              position: 'top',
+            },
+          },
+        },
+      };
+    
+      try {
+        
+        this.chart = new Chart(chartCtx, config);
+      } catch (error) {
+        console.error("Error creating chart:", error);
+      }
     }
   };
 };
