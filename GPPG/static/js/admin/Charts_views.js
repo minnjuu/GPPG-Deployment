@@ -520,50 +520,40 @@ document.getElementById("DeadAlive_yearSelector").addEventListener("change", fun
 fetchDataDeadAlive();
 
 //############################################################################################################
-// Horizontal Chart for Found Scales
+// Vertical Bar Chart for Found Scales
 
-const FoundScales_ctx = document.getElementById("FoundScales_horizontalBarChart").getContext("2d");
+const FoundScales_ctx = document.getElementById("FoundScales_verticalBarChart").getContext("2d");
 const FoundScales_labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 let FoundScales_filteredData = {};
 
 // Function to filter and organize the data for the chart
 function FoundScales_filterData(data, labels) {
-  const filteredData = [];
-  const filteredLabels = [];
+  // Instead of filtering out zero values, return the full 12-month array
+  const fullYearData = labels.map((_, index) => data[index] || 0);
 
-  // Only add non-zero data points
-  data.forEach((value, index) => {
-    if (value !== 0) {
-      filteredData.push(value);
-      filteredLabels.push(labels[index]);
-    }
-  });
-
-  // If no data points, return empty arrays
   return {
-    filteredData: filteredData.length ? filteredData : [],
-    filteredLabels: filteredLabels.length ? filteredLabels : [],
+    filteredData: fullYearData,
+    filteredLabels: labels,
   };
 }
 
-// Initial chart configuration
+
 const chartData = {
-  labels: [], // Will be updated dynamically
+  labels: FoundScales_labels, 
   datasets: [
     {
       label: "Data",
-      data: [],
-      backgroundColor: "rgb(251, 146, 60)",
+      data: Array(12).fill(0), 
+      backgroundColor: "rgb(255, 165, 0)",
       borderRadius: 10,
     },
   ],
 };
 
 const config = {
-  type: "bar",
+  type: "bar", // Changed to bar chart
   data: chartData,
   options: {
-    indexAxis: "y",
     responsive: true,
     maintainAspectRatio: true,
     scales: {
@@ -577,7 +567,6 @@ const config = {
         },
       },
       x: {
-        beginAtZero: true,
         ticks: {
           color: "black",
         },
@@ -594,7 +583,7 @@ const config = {
   },
 };
 
-const horizontalBarChart = new Chart(FoundScales_ctx, config);
+const verticalBarChart = new Chart(FoundScales_ctx, config);
 
 // Fetch data dynamically from API
 async function fetchAndProcessData() {
@@ -646,21 +635,13 @@ async function fetchAndProcessData() {
 
 // Function to update chart data based on the selected year
 function updateChartScales(selectedYear) {
-  const selectedData = selectedYear ? FoundScales_filteredData[selectedYear] || { filteredData: [], filteredLabels: [] } : { filteredData: [], filteredLabels: [] };
+  const selectedData = selectedYear ? FoundScales_filteredData[selectedYear] || { filteredData: Array(12).fill(0), filteredLabels: FoundScales_labels } : { filteredData: Array(12).fill(0), filteredLabels: FoundScales_labels };
 
-  // Only update and render if there's data
-  if (selectedData.filteredData.length) {
-    horizontalBarChart.data.labels = selectedData.filteredLabels;
-    horizontalBarChart.data.datasets[0].data = selectedData.filteredData;
-    horizontalBarChart.data.datasets[0].label = `${selectedYear} Data`;
-    horizontalBarChart.update();
-  } else {
-    // Clear the chart or show a "No data" message
-    horizontalBarChart.data.labels = [];
-    horizontalBarChart.data.datasets[0].data = [];
-    horizontalBarChart.data.datasets[0].label = "No Data Available";
-    horizontalBarChart.update();
-  }
+  // Always update with full 12-month labels and data
+  verticalBarChart.data.labels = FoundScales_labels;
+  verticalBarChart.data.datasets[0].data = selectedData.filteredData;
+  verticalBarChart.data.datasets[0].label = selectedYear ? `${selectedYear} Data` : "No Data Available";
+  verticalBarChart.update();
 }
 
 // Event listener for year selection
@@ -671,3 +652,4 @@ document.getElementById("FoundScales_yearSelect").addEventListener("change", fun
 
 // Initial data fetch
 document.addEventListener("DOMContentLoaded", fetchAndProcessData);
+
