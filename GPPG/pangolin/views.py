@@ -1481,10 +1481,10 @@ def accept_incident(request, report_id):
     )
 
     report.delete()
-
     messages.success(request, "Incident accepted and added to the database.")
-
-    return redirect("admin_report")
+    response = HttpResponse()
+    response.headers['HX-Trigger'] = 'closeAndRefresh'
+    return response
 
 
 def confirm_cancel(request, report_id):
