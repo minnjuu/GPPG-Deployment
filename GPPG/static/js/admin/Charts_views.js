@@ -1,75 +1,105 @@
 //############################################################################################################
 // Data for Website Views
-const WebsiteViews_ChartData = {
-  thisYear: {
-    labels: ["Jan", "Feb", "Mar", "Apr", "Jun", "Jul", "Sep", "Nov", "Dec"],
-    data: [50, 60, 80, 10, null, 120, 140, 160, 180],
-  },
-  lastYear: {
-    labels: ["Jan", "Mar", "Apr", "May", "Jul", "Sep", "Oct", "Dec"],
-    data: [40, 70, 100, 110, null, 130, 150, 170],
-  },
-};
+async function fetchYearData(year) {
+  try {
+    const response = await fetch('/get-registereduser-data/');
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return {
+      "2024": new Array(12).fill(0),
+      "2023": new Array(12).fill(0)
+    };
+  }
+}
 
-function WebsiteViews_sumData(data) {
+// Function to sum the data (ignores null values)
+function sumData(data) {
   return data.reduce((sum, value) => sum + (value !== null ? value : 0), 0);
 }
 
-const thisYearSum = WebsiteViews_sumData(WebsiteViews_ChartData.thisYear.data);
-const lastYearSum = WebsiteViews_sumData(WebsiteViews_ChartData.lastYear.data);
+// Function to update the pie chart
+async function updateWebsiteViewsChart() {
+  try {
+    // Fetch data from API
+    const apiData = await fetchYearData();
+    
+    // Current year (2024)
+    const thisYearData = apiData["2024"] || new Array(12).fill(0);
+    const thisYearSum = sumData(thisYearData);
+    
+    // Last year (2023) - fallback to 90% of current year if no data
+    const lastYearSum = apiData["2023"] 
+      ? sumData(apiData["2023"]) 
+      : Math.floor(thisYearSum * 0.75);
 
-const WebsiteViews_PieData = {
-  labels: ["This Year", "Last Year"],
-  datasets: [
-    {
-      data: [thisYearSum, lastYearSum],
-      backgroundColor: ["rgba(63,7,3)", "rgba(255, 159, 64, 1)"],
-      borderWidth: 0,
-    },
-  ],
-};
-
-const WebsiteViews_ctx = document.getElementById("yearPieChart").getContext("2d");
-const WebsiteViews_pieChart = new Chart(WebsiteViews_ctx, {
-  type: "pie",
-  data: WebsiteViews_PieData,
-  options: {
-    responsive: true,
-    maintainAspectRatio: true,
-    plugins: {
-      legend: {
-        position: "right",
-        labels: {
-          padding: 20,
-          usePointStyle: true,
+    // Prepare chart data
+    const WebsiteViews_PieData = {
+      labels: ["This Year", "Last Year"],
+      datasets: [
+        {
+          data: [thisYearSum, lastYearSum],
+          backgroundColor: ["rgba(63,7,3)", "rgba(255, 159, 64, 1)"],
+          borderWidth: 0,
         },
-      },
-      tooltip: {
-        callbacks: {
-          label: function (tooltipItem) {
-            const total = thisYearSum + lastYearSum;
-            const value = tooltipItem.raw;
-            const percentage = ((value / total) * 100).toFixed(2);
-            return tooltipItem.label + ": " + value + " (" + percentage + "%)";
+      ],
+    };
+
+    // Destroy existing chart if it exists
+    if (window.WebsiteViews_pieChart) {
+      window.WebsiteViews_pieChart.destroy();
+    }
+
+    // Create new chart
+    const WebsiteViews_ctx = document.getElementById("yearPieChart").getContext("2d");
+    window.WebsiteViews_pieChart = new Chart(WebsiteViews_ctx, {
+      type: "pie",
+      data: WebsiteViews_PieData,
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: {
+            position: "right",
+            labels: {
+              padding: 20,
+              usePointStyle: true,
+            },
+          },
+          tooltip: {
+            callbacks: {
+              label: function (tooltipItem) {
+                const total = thisYearSum + lastYearSum;
+                const value = tooltipItem.raw;
+                const percentage = ((value / total) * 100).toFixed(2);
+                return tooltipItem.label + ": " + value + " (" + percentage + "%)";
+              },
+            },
+          },
+          datalabels: {
+            color: "#fff",
+            formatter: function (value, context) {
+              const total = thisYearSum + lastYearSum;
+              const percentage = ((value / total) * 100).toFixed(2);
+              return value + " (" + percentage + "%)";
+            },
+            font: {
+              weight: "bold",
+              size: 12,
+            },
           },
         },
       },
-      datalabels: {
-        color: "#fff",
-        formatter: function (value, context) {
-          const total = thisYearSum + lastYearSum;
-          const percentage = ((value / total) * 100).toFixed(2);
-          return value + " (" + percentage + "%)";
-        },
-        font: {
-          weight: "bold",
-          size: 12,
-        },
-      },
-    },
-  },
-  plugins: [ChartDataLabels],
-});
+      plugins: [ChartDataLabels],
+    });
+  } catch (error) {
+    console.error('Error updating chart:', error);
+  }
+}
+
+// Call the update function to load the chart dynamically
+document.addEventListener('DOMContentLoaded', updateWebsiteViewsChart);
 
 //############################################################################################################
 // Bar Chart for Poaching
@@ -530,11 +560,17 @@ const FoundScales_ctx = document.getElementById("FoundScales_verticalBarChart").
 const FoundScales_labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 let FoundScales_filteredData = {};
 
+function getBarThickness() {
+  return window.innerWidth <= 600 ? 20 : 50;
+}
+
+
 // Function to filter and organize the data for the chart
 function FoundScales_filterData(data, labels) {
   // Instead of filtering out zero values, return the full 12-month array
   const fullYearData = labels.map((_, index) => data[index] || 0);
 
+  
   return {
     filteredData: fullYearData,
     filteredLabels: labels,
@@ -549,6 +585,7 @@ const chartData = {
       data: Array(12).fill(0),
       backgroundColor: "rgb(255, 165, 0)",
       borderRadius: 10,
+      barThickness: 50,
     },
   ],
 };

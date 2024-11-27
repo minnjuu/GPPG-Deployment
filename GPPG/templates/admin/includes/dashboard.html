@@ -2,11 +2,11 @@
 <section class="grid grid-cols-5 gap-4 mb-5 font-['Roboto']">
   <div class="stat-card flex flex-col border h-full p-6 sm:p-8 bg-white dark:bg-gray-800 shadow-md rounded-xl transform transition-all duration-300 hover:scale-105 opacity-0 animate-fadeInUp">
     <div class="flex flex-col items-center text-center">
-      <p class="text-sm sm:text-base lg:text-lg xl:text-xl font-semibold text-gray-600 mb-2">Registered User</p>
+      <p class="text-sm sm:text-base lg:text-lg xl:text-xl font-semibold text-gray-600 mb-2">Registered Users</p>
       <p
         id="visitorCount"
         class="text-xl sm:text-2xl font-extrabold text-black">
-        0
+        {{ user_count }}
       </p>
     </div>
   </div>

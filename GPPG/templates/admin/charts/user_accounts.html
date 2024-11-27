@@ -47,7 +47,7 @@
     <div class="flex items-center gap-2">
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        class="w-6 h-6 text-green-800"
+        class="w-6 h-6 text-black"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor">
@@ -62,7 +62,7 @@
   </div>
 
   <div class="flex justify-center items-center w-full h-full mt-4">
-    <canvas id="yearPieChart"></canvas>
+    <canvas id="yearPieChart" class="w-full max-w-lg h-96"></canvas>
   </div>
 </div>
 {% endblock %} {% block extra_js %}
@@ -70,92 +70,106 @@
 <script src="{% static 'js/datatables_chartjs.js' %}"></script>
 
 <script>
-  const chartData = {
-    thisYear: {
-      labels: ["Jan", "Feb", "Mar", "Apr", "Jun", "Jul", "Sep", "Nov", "Dec"],
-      data: [50, 60, 80, 10, null, 120, 140, 160, 180],
-    },
-    lastYear: {
-      labels: ["Jan", "Mar", "Apr", "May", "Jul", "Sep", "Oct", "Dec"],
-      data: [40, 70, 100, 110, null, 130, 150, 170],
-    },
-  };
+  async function fetchYearData(year) {
+  try {
+    const response = await fetch('/get-registereduser-data/');
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return {
+      "2024": new Array(12).fill(0),
+      "2023": new Array(12).fill(0)
+    };
+  }
+}
 
-  const sumData = (data) => data.reduce((sum, val) => sum + (val !== null ? val : 0), 0);
-  const thisYearSum = sumData(chartData.thisYear.data);
-  const lastYearSum = sumData(chartData.lastYear.data);
-  const total = thisYearSum + lastYearSum;
+// Function to sum the data (ignores null values)
+function sumData(data) {
+  return data.reduce((sum, value) => sum + (value !== null ? value : 0), 0);
+}
 
-  const ctx = document.getElementById("yearPieChart").getContext("2d");
-  new Chart(ctx, {
-    type: "pie",
-    data: {
+// Function to update the pie chart
+async function updateWebsiteViewsChart() {
+  try {
+    // Fetch data from API
+    const apiData = await fetchYearData();
+    
+    // Current year (2024)
+    const thisYearData = apiData["2024"] || new Array(12).fill(0);
+    const thisYearSum = sumData(thisYearData);
+    
+    // Last year (2023) - fallback to 90% of current year if no data
+    const lastYearSum = apiData["2023"] 
+      ? sumData(apiData["2023"]) 
+      : Math.floor(thisYearSum * 0.75);
+
+    // Prepare chart data
+    const WebsiteViews_PieData = {
       labels: ["This Year", "Last Year"],
       datasets: [
         {
           data: [thisYearSum, lastYearSum],
           backgroundColor: ["rgba(63,7,3)", "rgba(255, 159, 64, 1)"],
+          borderWidth: 0,
         },
       ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      animation: {
-        animateRotate: true,
-        animateScale: true,
-        duration: 1000,
-        easing: "easeInOutQuart",
-      },
-      plugins: {
-        legend: {
-          position: "top",
-          labels: {
-            usePointStyle: true,
-            pointStyle: "circle",
-            padding: 20,
+    };
+
+    // Destroy existing chart if it exists
+    if (window.WebsiteViews_pieChart) {
+      window.WebsiteViews_pieChart.destroy();
+    }
+
+    // Create new chart
+    const WebsiteViews_ctx = document.getElementById("yearPieChart").getContext("2d");
+    window.WebsiteViews_pieChart = new Chart(WebsiteViews_ctx, {
+      type: "pie",
+      data: WebsiteViews_PieData,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: "right",
+            labels: {
+              padding: 20,
+              usePointStyle: true,
+            },
+          },
+          tooltip: {
+            callbacks: {
+              label: function (tooltipItem) {
+                const total = thisYearSum + lastYearSum;
+                const value = tooltipItem.raw;
+                const percentage = ((value / total) * 100).toFixed(2);
+                return tooltipItem.label + ": " + value + " (" + percentage + "%)";
+              },
+            },
+          },
+          datalabels: {
+            color: "#fff",
+            formatter: function (value, context) {
+              const total = thisYearSum + lastYearSum;
+              const percentage = ((value / total) * 100).toFixed(2);
+              return value + " (" + percentage + "%)";
+            },
             font: {
-              family: "'Bahnschrift', sans-serif",
+              weight: "bold",
               size: 12,
             },
           },
         },
-        tooltip: {
-          backgroundColor: "rgba(0,0,0,0.8)",
-          titleFont: {
-            family: "'Bahnschrift', sans-serif",
-            size: 13,
-          },
-          bodyFont: {
-            family: "'Bahnschrift', sans-serif",
-            size: 12,
-          },
-          padding: 12,
-          cornerRadius: 8,
-          callbacks: {
-            label: function (context) {
-              const value = context.raw;
-              const percentage = ((value / total) * 100).toFixed(1);
-              return `${context.label}: ${value} (${percentage}%)`;
-            },
-          },
-        },
-        datalabels: {
-          color: "#fff",
-          formatter: function (value, context) {
-            const total = thisYearSum + lastYearSum;
-            const percentage = ((value / total) * 100).toFixed(2);
-            return value + " (" + percentage + "%)";
-          },
-          font: {
-            weight: "bold",
-            size: 12,
-          },
-        },
       },
-    },
-    plugins: [ChartDataLabels],
-  });
+      plugins: [ChartDataLabels],
+    });
+  } catch (error) {
+    console.error('Error updating chart:', error);
+  }
+}
+
+// Call the update function to load the chart dynamically
+document.addEventListener('DOMContentLoaded', updateWebsiteViewsChart);
 </script>
 
 {% endblock extra_js %}

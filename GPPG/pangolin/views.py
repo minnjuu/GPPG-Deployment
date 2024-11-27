@@ -951,15 +951,14 @@ def admin_home(request):
         'scales': 0,
         'illegal_trade': 0,
     }
-
+    
     # Aggregate data by status and count occurrences
-    aggregated_data = Incident.objects.values(
-        'status').annotate(count=Count('id'))
-
+    aggregated_data = Incident.objects.values('status').annotate(count=Count('id'))
+    
     for entry in aggregated_data:
-        status = entry['status']  # Get the status
-        count = entry['count']    # Get the count
-
+        status = entry['status']
+        count = entry['count']
+        
         # Update the overall trend counts based on status
         if status == 'Alive':
             overall_trend['alive'] += count
@@ -969,12 +968,16 @@ def admin_home(request):
             overall_trend['scales'] += count
         elif status == 'Illegal Trade':
             overall_trend['illegal_trade'] += count
-
+    
+    # Count registered users
+    user_count = User.objects.count()
+    
     # Prepare the response with the total count for each status
     response_data = {
         'overall_trend': overall_trend,
+        'user_count': user_count,
     }
-
+    
     return render(request, 'admin/admin.html', response_data)
 
 
