@@ -171,6 +171,7 @@ class IncidentReport(BaseModel):
     description = models.CharField(max_length=500)
     email=models.EmailField(max_length=150, null=True, blank=True,)
     contact = models.CharField(max_length=11, null=True, blank=True, validators=[validate_contact])
+    reporter=models.CharField(max_length=100)
     evidence = models.FileField(
         upload_to='evidences/', null=True, blank=True, validators=[validate_file_type]
     )
@@ -197,6 +198,7 @@ class IncidentReport(BaseModel):
         delete_file(self.evidence)
         super().delete(*args, **kwargs)
 
+    def __str__(self):
         return f"{self.municity} - {self.id} ({self.status})"
 
 

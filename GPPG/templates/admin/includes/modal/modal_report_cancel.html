@@ -1,16 +1,24 @@
 {% load static %}
 <div id="reportdelete" class="modal-content">
-  <svg
-        class="text-gray-400 dark:text-gray-500 w-11 h-11 mb-3.5 mx-auto"
-        aria-hidden="true"
-        fill="currentColor"
-        viewBox="0 0 20 20"
-        xmlns="http://www.w3.org/2000/svg">
-        <path
-          fill-rule="evenodd"
-          d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-          clip-rule="evenodd"></path>
-      </svg>
+  {% if report.evidence %}
+  <div class="mb-4 flex items-center justify-center overflow-hidden rounded-lg transition-all duration-300 max-w-md max-h-96 mx-auto">
+    <img 
+      src="{{ report.evidence.url }}" 
+      alt="Evidence Image" 
+      class="object-cover rounded-lg w-full h-auto"
+    >
+  </div>
+  
+  
+{% else %}
+<div class="mb-4 overflow-hidden rounded-lg transition-all duration-300">
+  <div class="aspect-video bg-gray-100 flex items-center justify-center">
+    <p class="mb-4 text-gray-500 dark:text-gray-300 text-center">
+      No Evidence Uploaded
+    </p>
+  </div>
+</div>
+{% endif %}
   <form
     hx-post="{% url 'cancel-incident' report.id %}"
     hx-target="#modal-content"
@@ -33,6 +41,9 @@
       {% if report.status %}
       <p class="text-sm text-gray-600 dark:text-gray-300">
         <strong>Status:</strong> {{ report.get_status_display }}
+      </p>
+      <p class="text-sm text-gray-600 dark:text-gray-300">
+        <strong>Reporter:</strong> {{ report.reporter}}
       </p>
       <p class="text-sm text-gray-600 dark:text-gray-300">
         <strong>Email Address:</strong> {{ report.email}}

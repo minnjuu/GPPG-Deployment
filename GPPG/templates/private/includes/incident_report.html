@@ -1,6 +1,7 @@
 {% load static %}
 <div id="addincidentreport" class="modal-content"> 
   <form
+    id="formevidence"
     hx-post="{% url 'incident_report' %}"
     hx-target="#modal-content"
     enctype="multipart/form-data"
@@ -56,6 +57,16 @@
       </label>
       {{ form.contact }}
   </div>
+
+  <div>
+    <label class="block text-sm font-medium text-gray-700">
+        {{ form.reporter.label_tag }}
+        {% if form.reporter.errors %}
+          <div class="text-red-600">{{ form.reporter.errors }}</div>
+        {% endif %}
+    </label>
+    {{ form.reporter }}
+</div>
 
   </div>
 
@@ -165,3 +176,40 @@
 
 <script src="{% static 'js/jquery.js' %}"></script>
 <script src="{% static 'js/private/dropzone_incidentreport.js' %}"></script>
+<script>
+  document.getElementById("formevidence").addEventListener("submit", async function (event) {
+    event.preventDefault(); // Prevent default form submission
+
+    // Collect form data
+    const formData = new FormData(event.target);
+    const data = {};
+    formData.forEach((value, key) => {
+      data[key] = value;
+    });
+
+    try {
+      // Send POST request
+      const response = await fetch("{% url 'submit_report' %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{ csrf_token }}", // Ensure CSRF token is included
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        alert(result.message);
+        // Optionally, reset the form or hide the modal
+        event.target.reset();
+        document.getElementById("modaldialog").classList.add("hidden");
+      } else {
+        alert(result.message || "Failed to submit the incident report.");
+      }
+    } catch (error) {
+      console.error("Error submitting the incident report:", error);
+      
+    }
+  });
+</script>

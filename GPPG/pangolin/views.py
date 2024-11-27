@@ -747,10 +747,9 @@ def incident_report(request):
         form = IncidentReportForm(request.POST, request.FILES)
         
         if form.is_valid():
-            form.save()
+            form.save
             response = HttpResponse()
             response.headers['HX-Trigger'] = 'closeAndRefresh'  
-            messages.success(request, 'Incident Saved and logged!')
             return response
         else:
             messages.error(request, 'There was an error in your form submission.')
@@ -758,6 +757,91 @@ def incident_report(request):
         form = IncidentReportForm()
 
     return render(request, 'private/includes/incident_report.html', {'form': form})
+
+
+
+@method_decorator(csrf_protect, name='dispatch')
+class IncidentReportsView(View):
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            required_fields = ['reporter', 'contact', 'email', 'description', 'municity', 'status']
+            
+            for field in required_fields:
+                if not data.get(field):
+                    return JsonResponse({
+                        'status': 'error',
+                        'message': f'{field.replace("_", " ").title()} is required.'
+                    }, status=400)
+
+            try:
+                # Create the incident report
+                incident = IncidentReport.objects.create(**{
+                    field: data[field] for field in [
+                        'reporter', 'email', 'description', 'contact', 
+                        'status', 'municity', 'date_reported'
+                    ]
+                })
+
+                # Prepare email context
+                context = {
+                    'incident': {
+                        'incident': incident,
+                        'reporter': incident.reporter,
+                        'municity': incident.municity,
+                        'status': incident.status,
+                        'date_reported': incident.date_reported,
+                        'description': incident.description,
+                    },
+                    'site_name': settings.SITE_NAME,
+                }
+
+                # Send email
+                try:
+                    email_html = render_to_string(
+                        'private/includes/report_email.html', context)
+                    email_text = render_to_string(
+                        'private/includes/report_received.txt', context)
+
+                    msg = EmailMultiAlternatives(
+                        subject=f"{settings.SITE_NAME} - Incident Report Received",
+                        body=email_text,
+                        from_email=settings.EMAIL_HOST_USER,
+                        to=[incident.email]
+                    )
+                    msg.attach_alternative(email_html, "text/html")
+                    msg.send()
+
+                except Exception as email_error:
+                    logger.error(f"Incident report email failed: {email_error}")
+                    incident.email_status = 'Failed'
+                    incident.save()
+
+                return JsonResponse({
+                    'status': 'success',
+                    'message': 'Incident report submitted successfully.',
+                    'incident_id': incident.id
+                })
+
+            except Exception as save_error:
+                logger.error(f"Failed to save incident report: {save_error}")
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Failed to submit incident report.'
+                }, status=500)
+
+        except json.JSONDecodeError:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Invalid request format.'
+            }, status=400)
+
+        except Exception as e:
+            logger.error(f"Unexpected error in incident report submission: {e}")
+            return JsonResponse({
+                'status': 'error',
+                'message': 'An unexpected error occurred.'
+            }, status=500)
 
 @login_required
 def reports(request):
@@ -1654,7 +1738,7 @@ def accept_incident(request, report_id):
 
         # Clear the evidence field before deleting the report
         report.evidence = None
-        report.save()
+        
 
         # Delete the original report
         report.delete()
@@ -1671,6 +1755,60 @@ def accept_incident(request, report_id):
         response.headers['HX-Trigger'] = 'closeAndRefresh'
         return response
 
+
+@method_decorator(csrf_protect, name='dispatch')
+class AcceptReportsView(View):
+    def post(self, request, id):
+        try:
+            incident = get_object_or_404(IncidentReport, id=id)
+            
+            # Prepare email context
+            context = {
+                'incident': {
+                    'incident': incident,
+                    'reporter': incident.reporter,
+                    'municity': incident.municity,
+                    'status': incident.status,
+                    'date_reported': incident.date_reported,
+                    'description': incident.description,
+                },
+                'site_name': settings.SITE_NAME,
+            }
+            
+            # Send confirmation email
+            try:
+                email_html = render_to_string(
+                    'admin/includes/report_app_email.html', context)
+                email_text = render_to_string(
+                    'admin/includes/report_app.txt', context)
+                
+                msg = EmailMultiAlternatives(
+                    subject=f"{settings.SITE_NAME} - Incident Report Accepted",
+                    body=email_text,
+                    from_email=settings.EMAIL_HOST_USER,
+                    to=[incident.email]
+                )
+                msg.attach_alternative(email_html, "text/html")
+                msg.send()
+                
+                return JsonResponse({
+                    'status': 'success',
+                    'message': 'Acceptance email sent successfully.'
+                })
+                
+            except Exception as email_error:
+                logger.error(f"Incident report email failed: {email_error}")
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Failed to send acceptance email.'
+                }, status=500)
+        
+        except Exception as e:
+            logger.error(f"Unexpected error in incident report acceptance: {e}")
+            return JsonResponse({
+                'status': 'error',
+                'message': 'An unexpected error occurred.'
+            }, status=500)
 
 def confirm_cancel(request, report_id):
     report = get_object_or_404(IncidentReport, id=report_id)

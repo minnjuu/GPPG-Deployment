@@ -1,0 +1,17 @@
+Your Incident Report has been Approved and Recorded to the Pangolin Incidents List
+
+Hello {{ incident.reporter }},
+
+We are pleased to inform you that your incident report (ID: {{ incident.incident }}) has been approved and added to the system.
+
+Report Summary:
+Municipality: {{ incident.municity }}
+Status: {{ incident.status }}
+Date Reported: {{ incident.date_reported }}
+Description: {{ incident.description }}
+
+We will now begin the necessary actions based on the report you submitted. Thank you for your contribution.
+
+Best regards,
+{{ site_name }} Support Team
+

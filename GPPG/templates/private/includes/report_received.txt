@@ -1,0 +1,14 @@
+Dear {{ incident.reporter }},
+
+We have received your incident report (ID: {{ incident.id }}) and it is currently pending review.
+
+Report Summary:
+- Municipality: {{ incident.municity }}
+- Status: {{ incident.status }}
+- Date Reported: {{ incident.date_reported }}
+- Description: {{ incident.description }}
+
+We will investigate your report and follow up as soon as possible. Thank you for helping us keep our community safe.
+
+Best regards,  
+{{ site_name }} Support Team  

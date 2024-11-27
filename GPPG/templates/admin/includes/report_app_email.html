@@ -1,0 +1,65 @@
+{% autoescape off %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Incident Report Submission</title>
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #f9fafb; font-family: Arial, sans-serif; color: #374151;">
+    <table
+      role="presentation"
+      style="width: 100%; border-spacing: 0; border-collapse: collapse; background-color: #f9fafb; padding: 20px 0">
+      <tr>
+        <td align="center">
+          <table
+            role="presentation"
+            style="width: 100%; max-width: 600px; border-spacing: 0; border-collapse: collapse; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1)">
+            <!-- Header -->
+            <tr>
+              <td style="background-color: #3f0703; padding: 20px; text-align: center;">
+                <h2 style="margin: 0; font-size: 24px; color: #ffffff;">{{ site_name }}</h2>
+              </td>
+            </tr>
+
+            <!-- Content -->
+            <tr>
+              <td style="padding: 20px; color: #374151;">
+                <h3 style="margin-top: 0; font-size: 18px;">Dear {{ incident.reporter }},</h3>
+                <p style="margin: 0 0 15px; line-height: 1.6;">
+                    We are pleased to inform you that your incident report (<strong>ID: {{ incident.incident }}</strong>) has been approved and added to the system.
+
+                </p>
+                <p style="margin: 0 0 15px; line-height: 1.6;">
+                  <strong>Report Summary:</strong>
+                  <br>Municipality: {{ incident.municity }}
+                  <br>Status: {{ incident.status }}
+                  <br>Date Reported: {{ incident.date_reported }}
+                  <br>Description: {{ incident.description }}
+                </p>
+                <p style="margin: 0 0 15px; line-height: 1.6;">
+                    We will now begin the necessary actions based on the report you submitted. Thank you for your contribution.
+                </p>
+        
+                <p>Best regards,<br/>{{ site_name }} Support Team</p>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="padding: 20px; text-align: center; font-size: 12px; background-color: #f3f4f6; color: #6b7280;">
+                <p style="margin: 0; line-height: 1.4;">
+                  This is an automated message. Please do not reply.
+                </p>
+                <p style="margin: 5px 0 0; line-height: 1.4;">
+                  &copy; {% now "Y" %} {{ site_name }}. All rights reserved.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
+{% endautoescape %}

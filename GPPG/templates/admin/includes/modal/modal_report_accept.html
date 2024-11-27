@@ -1,27 +1,25 @@
 {% load static %}
 <div id="reportdelete" class="modal-content p-6 bg-white rounded-lg shadow-lg">
   {% if report.evidence %}
-<div class="mb-4 overflow-hidden rounded-lg transition-all duration-300">
-  <img 
-    src="{{ report.evidence.url }}" 
-    alt="Evidence Image" 
-    class="w-full h-auto object-cover rounded-lg"
-  >
-</div>
+  <div class="mb-4 flex items-center justify-center overflow-hidden rounded-lg transition-all duration-300 max-w-md max-h-96 mx-auto">
+    <img 
+      src="{{ report.evidence.url }}" 
+      alt="Evidence Image" 
+      class="object-cover rounded-lg w-full h-auto"
+    >
+  </div>
+  
+  
 {% else %}
 <div class="mb-4 overflow-hidden rounded-lg transition-all duration-300">
   <div class="aspect-video bg-gray-100 flex items-center justify-center">
-    <svg
-      class="w-16 h-16 text-gray-400"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24">
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-    </svg>
+    <div class="mb-4 overflow-hidden rounded-lg transition-all duration-300">
+      <div class="aspect-video bg-gray-100 flex items-center justify-center">
+        <p class="mb-4 text-gray-500 dark:text-gray-300 text-center">
+          No Evidence Uploaded
+        </p>
+      </div>
+    </div>
   </div>
 </div>
 {% endif %}
@@ -46,6 +44,9 @@
       <strong>Status:</strong> {{ report.get_status_display }}
     </p>
     <p class="text-sm text-gray-600 dark:text-gray-300">
+      <strong>Reporter:</strong> {{ report.reporter}}
+    </p>
+    <p class="text-sm text-gray-600 dark:text-gray-300">
       <strong>Email Address:</strong> {{ report.email}}
     </p>
     <p class="text-sm text-gray-600 dark:text-gray-300">
@@ -55,6 +56,7 @@
   </div>
   
   <form
+    id="acceptreportform"
     hx-post="{% url 'accept-incident' report.id %}"
     hx-target="#modal-content"
     novalidate>
@@ -76,3 +78,42 @@
     </div>
   </form>
 </div>
+
+<script src="{% static 'js/jquery.js' %}"></script>
+<script>
+  document.getElementById("acceptreportform").addEventListener("submit", async function (event) {
+    event.preventDefault(); // Prevent default form submission
+
+    // Collect form data
+    const formData = new FormData(event.target);
+    const data = {};
+    formData.forEach((value, key) => {
+      data[key] = value;
+    });
+
+    try {
+      // Send POST request
+      const response = await fetch("{% url 'accept_report' report.id %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{ csrf_token }}", // Ensure CSRF token is included
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        alert(result.message);
+        // Optionally, reset the form or hide the modal
+        event.target.reset();
+        document.getElementById("modaldialog").classList.add("hidden");
+      } else {
+        alert(result.message || "Failed to submit the incident report.");
+      }
+    } catch (error) {
+      console.error("Error submitting the incident report:", error);
+      
+    }
+  });
+</script>

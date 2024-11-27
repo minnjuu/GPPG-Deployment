@@ -266,7 +266,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'postmaster@gppg.systems'
 EMAIL_HOST_PASSWORD = '2a5057a300930cb4c7e3509165a753d4-f6fe91d3-ae3fd37f'
-DEFAULT_FROM_EMAIL = 'postmaster@gppg.systems'
+DEFAULT_FROM_EMAIL = 'GPPG<noreply@gppg-webapp.onrender.com'
 
 # Session settings
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
