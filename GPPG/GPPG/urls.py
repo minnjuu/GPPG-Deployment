@@ -108,6 +108,12 @@ urlpatterns = [
          name='get_region_data'),
     path('get-municity-data/', views.get_municity_data,
          name='get_municity_data'),
+    path('chartdeadalive/', views.chart_dead_alive, name='chart_dead_alive'),
+    path('chartillegaltrade/', views.chart_illegal_trade,
+         name='chart_illegal_trade'),
+    path('chartscales/', views.chart_scales, name='chart_scales'),
+    path('chartuseraccounts/', views.chart_user_accounts,
+         name='chart_user_accounts'),
 
     path('password-reset/', PasswordResetView.as_view(), name='password_reset'),
     path('reset/<uidb64>/<token>/', PasswordResetConfirmView.as_view(),

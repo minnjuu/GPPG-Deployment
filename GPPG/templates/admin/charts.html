@@ -216,40 +216,41 @@
 
 <!-- Charts Content -->
 {% block title_content %} Charts {% endblock title_content %} {% block content %}
-<div
-  id="chartModal"
-  class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 items-center justify-center">
-  <div class="bg-white rounded-xl p-6 w-11/12 h-5/6 relative">
-    <button
-      id="closeModal"
-      class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
-      <svg
-        class="w-6 h-6"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M6 18L18 6M6 6l12 12" />
-      </svg>
-    </button>
-    <div
-      id="expandedChartContainer"
-      class="w-full h-full"></div>
-  </div>
-</div>
 <section class="h-auto grid grid-cols-1 md:grid-cols-1 gap-4 mb-4 font-['Roboto']">
   <div class="h-full bg-gray-50 dark:bg-gray-800 rounded-xl px-5 stat-card animate-cardEntry transform transition-all duration-300 opacity-0">
-    <p class="text-md text-black mt-2.5 font-bold font-['Bahnschrift']">
-      Found Scales /
-      <span>
-        <select
-          id="FoundScales_yearSelect"
-          class="w-auto text-gray-500 -ml-2.5 h-fit border-0 bg-transparent rounded focus:outline-none focus:ring-0"></select>
-      </span>
-    </p>
+    <div class="flex items-center justify-between">
+      <p class="text-md text-black mt-2.5 font-bold font-['Bahnschrift']">
+        Found Scales /
+        <span>
+          <select
+            id="FoundScales_yearSelect"
+            class="w-auto text-gray-500 -ml-2.5 h-fit border-0 bg-transparent rounded focus:outline-none focus:ring-0"></select>
+        </span>
+      </p>
+      <a
+        href="{% url 'chart_scales' %}"
+        class="p-2 hover:bg-gray-100 rounded-full transition-all duration-300">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-5 h-5 text-gray-600 hover:text-gray-800 transition-colors duration-300"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 26 26">
+          <polyline points="15 3 21 3 21 9"></polyline>
+          <polyline points="9 21 3 21 3 15"></polyline>
+          <line
+            x1="21"
+            y1="3"
+            x2="14"
+            y2="10"></line>
+          <line
+            x1="3"
+            y1="21"
+            x2="10"
+            y2="14"></line>
+        </svg>
+      </a>
+    </div>
     <div>
       <canvas
         id="FoundScales_verticalBarChart"
@@ -260,27 +261,74 @@
 </section>
 
 <section class="h-auto grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 font-['Roboto']">
-  
   <div class="h-auto bg-gray-50 dark:bg-gray-800 rounded-xl px-5 stat-card animate-cardEntry transform transition-all duration-300 opacity-0">
-    <p class="text-md text-black mt-2.5 font-bold font-['Bahnschrift']">
-      Found /
-      <span>
-        <select
-          id="DeadAlive_yearSelector"
-          class="w-auto text-gray-500 -ml-2.5 h-fit border-0 bg-transparent rounded focus:outline-none focus:ring-0"></select>
-      </span>
-    </p>
+    <div class="flex items-center justify-between">
+      <p class="text-md text-black mt-2.5 font-bold font-['Bahnschrift']">
+        Found /
+        <span>
+          <select
+            id="DeadAlive_yearSelector"
+            class="w-auto text-gray-500 -ml-2.5 h-fit border-0 bg-transparent rounded focus:outline-none focus:ring-0"></select>
+        </span>
+      </p>
+      <a
+        href="{% url 'chart_dead_alive' %}"
+        class="p-2 hover:bg-gray-100 rounded-full transition-all duration-300">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-5 h-5 text-gray-600 hover:text-gray-800 transition-colors duration-300"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 26 26">
+          <polyline points="15 3 21 3 21 9"></polyline>
+          <polyline points="9 21 3 21 3 15"></polyline>
+          <line
+            x1="21"
+            y1="3"
+            x2="14"
+            y2="10"></line>
+          <line
+            x1="3"
+            y1="21"
+            x2="10"
+            y2="14"></line>
+        </svg>
+      </a>
+    </div>
     <canvas
       id="DeadAliveChart"
       class="w-full"
       height="285"></canvas>
   </div>
 
-  <div class="h-auto w-full bg-gray-50 dark:bg-gray-800 rounded-xl px-5 t flex flex-col items-center stat-card animate-cardEntry transform transition-all duration-300 opacity-0">
-    <div class="text-start w-full">
-      <p class="text-md text-black mt-5 ml-2 font-bold font-['Bahnschrift'] justify-start">Website Views</p>
+  <div class="h-auto bg-gray-50 dark:bg-gray-800 rounded-xl px-5 flex flex-col items-center stat-card animate-cardEntry transform transition-all duration-300 opacity-0">
+    <div class="flex w-full justify-between items-center mt-2.5">
+      <p class="text-md text-black font-bold font-['Bahnschrift']">User Registered Accounts</p>
+      <a
+        href="{% url 'chart_user_accounts' %}"
+        class="p-2 hover:bg-gray-100 rounded-full transition-all duration-300">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-5 h-5 text-gray-600 hover:text-gray-800 transition-colors duration-300"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 26 26">
+          <polyline points="15 3 21 3 21 9"></polyline>
+          <polyline points="9 21 3 21 3 15"></polyline>
+          <line
+            x1="21"
+            y1="3"
+            x2="14"
+            y2="10"></line>
+          <line
+            x1="3"
+            y1="21"
+            x2="10"
+            y2="14"></line>
+        </svg>
+      </a>
     </div>
-    <div class="max-w-xs flex justify-center items-center w-full">
+    <div class="max-w-xs flex justify-center items-center w-full h-64">
       <canvas
         id="yearPieChart"
         class="-mt-5"></canvas>
@@ -292,17 +340,38 @@
   class="h-fit bg-gray-50 dark:bg-gray-800 rounded-xl px-5 overflow-hidden stat-card animate-cardEntry transform transition-all duration-300 opacity-0"
   onclick="expandChart('IllegalTrade_Chart', this)">
   <div class="text-md mt-3 font-['Bahnschrift']">
-    <div class="flex w-full">
-      <div class="font-bold">
-        <p>
-          Illegal Trades /
-          <span>
-            <select
-              id="yearSelect"
-              class="w-auto h-fit text-gray-500 -ml-2.5 border-0 bg-transparent rounded focus:outline-none focus:ring-0"></select>
-          </span>
-        </p>
-      </div>
+    <div class="flex items-center justify-between">
+      <p class="font-bold font-['Bahnschrift']">
+        Illegal Trades /
+        <span>
+          <select
+            id="yearSelect"
+            class="w-auto h-fit text-gray-500 -ml-2.5 border-0 bg-transparent rounded focus:outline-none focus:ring-0"></select>
+        </span>
+      </p>
+      <a
+        href="{% url 'chart_illegal_trade' %}"
+        class="p-2 hover:bg-gray-100 rounded-full transition-all duration-300">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-5 h-5 text-gray-600 hover:text-gray-800 transition-colors duration-300"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 26 26">
+          <polyline points="15 3 21 3 21 9"></polyline>
+          <polyline points="9 21 3 21 3 15"></polyline>
+          <line
+            x1="21"
+            y1="3"
+            x2="14"
+            y2="10"></line>
+          <line
+            x1="3"
+            y1="21"
+            x2="10"
+            y2="14"></line>
+        </svg>
+      </a>
     </div>
     <div class="mt-0">
       <canvas
@@ -317,55 +386,5 @@
 <script src="{% static 'js/chart_3.7.1.js' %}"></script>
 <script src="{% static 'js/datatables_chartjs.js' %}"></script>
 <script src="{% static 'js/admin/Charts_views.js' %}"></script>
-
-{{ block.super }}
-<script>
-  let currentChart = null;
-  let originalParent = null;
-
-  function expandChart(chartId, container) {
-    const modal = document.getElementById("chartModal");
-    const expandedContainer = document.getElementById("expandedChartContainer");
-    const chartCanvas = document.getElementById(chartId);
-
-    if (!chartCanvas) return;
-
-    originalParent = chartCanvas.parentElement;
-    currentChart = chartCanvas;
-
-    modal.classList.remove("hidden");
-    expandedContainer.appendChild(chartCanvas);
-
-    // Resize chart to fit expanded container
-    const chart = Chart.getChart(chartId);
-    if (chart) {
-      chart.resize();
-    }
-  }
-
-  document.getElementById("closeModal").addEventListener("click", function (e) {
-    e.stopPropagation();
-    if (currentChart && originalParent) {
-      originalParent.appendChild(currentChart);
-      const chart = Chart.getChart(currentChart.id);
-      if (chart) {
-        chart.resize();
-      }
-    }
-    document.getElementById("chartModal").classList.add("hidden");
-  });
-
-  // Close modal on escape key
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape") {
-      document.getElementById("closeModal").click();
-    }
-  });
-
-  // Prevent click inside modal from closing it
-  document.getElementById("expandedChartContainer").addEventListener("click", function (e) {
-    e.stopPropagation();
-  });
-</script>
 
 {% endblock extra_js %}

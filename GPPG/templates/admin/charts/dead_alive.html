@@ -1,0 +1,230 @@
+{% extends "admin/charts.html" %} {% load static %} {% block title %}Charts{% endblock title %}
+
+<!-- Charts Content -->
+{% block title_content %} Charts - Dead/Alive {% endblock title_content %} {% block content %}
+<div class="w-full h-auto bg-white rounded-2xl shadow-lg p-5">
+  <div class="flex justify-between items-center">
+    <a
+      href="{% url 'admin_charts' %}"
+      class="btn-animate py-2 px-5 inline-flex items-center gap-x-2 text-sm rounded-lg border bg-green-800 hover:bg-green-900 text-white shadow-sm hover:shadow-md transition-all duration-300">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="icon-animate w-5 h-5 text-white transition-transform duration-300 transform group-hover:-translate-x-1"
+        fill="currentColor"
+        stroke="currentColor"
+        viewBox="0 0 26 26">
+        <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" />
+      </svg>
+      Back
+    </a>
+
+    <a
+      href="{% url 'admin_charts' %}"
+      class="p-2 hover:bg-gray-100 rounded-full transition-all duration-300">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-5 h-5 text-gray-600 hover:text-gray-800 transition-colors duration-300"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 26 26">
+        <polyline points="15 3 21 3 21 9"></polyline>
+        <polyline points="9 21 3 21 3 15"></polyline>
+        <line
+          x1="21"
+          y1="3"
+          x2="14"
+          y2="10"></line>
+        <line
+          x1="3"
+          y1="21"
+          x2="10"
+          y2="14"></line>
+      </svg>
+    </a>
+  </div>
+
+  <div class="flex items-center gap-2 mt-4">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="w-6 h-6 text-black"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor">
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M16 8v8m-4-5v5M8 8v8m12 0H4" />
+    </svg>
+    <p class="text-lg font-bold font-['Bahnschrift'] flex items-center">
+      Found /
+      <select
+        id="DeadAlive_yearSelector"
+        class="ml-2 text-gray-500 border-0 bg-transparent rounded focus:outline-none focus:ring-0 cursor-pointer"></select>
+    </p>
+  </div>
+
+  <div class="mt-4 h-[750px]">
+    <canvas id="DeadAliveChart"></canvas>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script src="{% static 'js/chart_3.7.1.js' %}"></script>
+<script src="{% static 'js/datatables_chartjs.js' %}"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const ctx = document.getElementById("DeadAliveChart").getContext("2d");
+    let globalAliveTrend = {};
+    let globalDeadTrend = {};
+
+    const chartConfig = {
+      type: "bar",
+      data: {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        datasets: [
+          {
+            label: "Alive",
+            data: [],
+            backgroundColor: "rgb(251, 146, 60)",
+            borderColor: "rgb(249, 115, 22)",
+            borderWidth: 2,
+            borderRadius: 10,
+            barThickness: "flex",
+            maxBarThickness: 30,
+            animation: {
+              duration: 1000,
+              easing: "easeInOutQuart",
+            },
+          },
+          {
+            label: "Dead",
+            data: [],
+            backgroundColor: "rgba(63,7,3)",
+            borderColor: "rgba(63,7,3)",
+            borderWidth: 2,
+            borderRadius: 10,
+            barThickness: "flex",
+            maxBarThickness: 30,
+            animation: {
+              duration: 1000,
+              easing: "easeInOutQuart",
+            },
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+          intersect: false,
+          mode: "index",
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              display: true,
+              color: "rgba(0,0,0,0.1)",
+              drawBorder: false,
+            },
+            ticks: {
+              font: {
+                family: "'Bahnschrift', sans-serif",
+                size: 12,
+              },
+              color: "rgba(0,0,0,0.7)",
+            },
+          },
+          x: {
+            grid: {
+              display: false,
+            },
+            ticks: {
+              font: {
+                family: "'Bahnschrift', sans-serif",
+                size: 12,
+              },
+              color: "rgba(0,0,0,0.7)",
+            },
+          },
+        },
+        plugins: {
+          legend: {
+            display: true,
+            position: "top",
+            align: "center",
+            labels: {
+              padding: 30,
+              usePointStyle: true,
+              pointStyle: "circle",
+              font: {
+                family: "'Bahnschrift', sans-serif",
+                size: 12,
+              },
+            },
+          },
+          tooltip: {
+            backgroundColor: "rgba(0,0,0,0.8)",
+            titleFont: {
+              family: "'Bahnschrift', sans-serif",
+              size: 13,
+            },
+            bodyFont: {
+              family: "'Bahnschrift', sans-serif",
+              size: 12,
+            },
+            padding: 12,
+            cornerRadius: 8,
+          },
+        },
+      },
+    };
+
+    const chart = new Chart(ctx, chartConfig);
+
+    async function fetchData() {
+      try {
+        const response = await fetch("/get-chart-data?status=Dead,Alive&period=overall");
+        const data = await response.json();
+
+        globalAliveTrend = data.alive_trend?.yearly || {};
+        globalDeadTrend = data.dead_trend?.yearly || {};
+
+        const years = new Set([...Object.keys(globalAliveTrend), ...Object.keys(globalDeadTrend)].sort());
+
+        const yearSelect = document.getElementById("DeadAlive_yearSelector");
+        yearSelect.innerHTML = Array.from(years)
+          .map((year) => `<option value="${year}">${year}</option>`)
+          .join("");
+
+        if (years.size > 0) {
+          const mostRecentYear = Math.max(...Array.from(years).map(Number));
+          yearSelect.value = mostRecentYear;
+          updateChart(mostRecentYear);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        updateChart(null);
+      }
+    }
+
+    function updateChart(year) {
+      const emptyData = Array(12).fill(0);
+      const aliveData = year ? globalAliveTrend[year] || emptyData : emptyData;
+      const deadData = year ? globalDeadTrend[year] || emptyData : emptyData;
+
+      chart.data.datasets[0].data = aliveData;
+      chart.data.datasets[1].data = deadData;
+
+      chart.update("active");
+    }
+
+    document.getElementById("DeadAlive_yearSelector").addEventListener("change", function () {
+      updateChart(this.value);
+    });
+
+    fetchData();
+  });
+</script>
+
+{% endblock extra_js %}

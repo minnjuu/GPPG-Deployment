@@ -1,3 +1,32 @@
+// Forest/environment color palette
+const baseColors = ["#2d5a27", "#4a7856", "#8fbc8f", "#228b22", "#556b2f", "#6b8e23", "#808000", "#90ee90", "#98fb98", "#3cb371"];
+
+function generateColorVariations(baseColors) {
+  let variations = [];
+  baseColors.forEach((color) => {
+    variations.push(color);
+    variations.push(adjustColor(color, 10));
+    variations.push(adjustColor(color, -10));
+  });
+  return variations;
+}
+
+function adjustColor(hex, percent) {
+  let r = parseInt(hex.slice(1, 3), 16);
+  let g = parseInt(hex.slice(3, 5), 16);
+  let b = parseInt(hex.slice(5, 7), 16);
+
+  r = Math.min(255, Math.max(0, r + (r * percent) / 100));
+  g = Math.min(255, Math.max(0, g + (g * percent) / 100));
+  b = Math.min(255, Math.max(0, b + (b * percent) / 100));
+
+  return `#${Math.round(r).toString(16).padStart(2, "0")}${Math.round(g).toString(16).padStart(2, "0")}${Math.round(b).toString(16).padStart(2, "0")}`;
+}
+
+const colorVariations = generateColorVariations(baseColors);
+const regionColors = new Map();
+let colorIndex = 0;
+
 var highlightDash;
 var isSearchingDash = false;
 
@@ -11,7 +40,7 @@ function showLoadingDash() {
   const loadingElement = document.getElementById("Loading_Animation");
   if (loadingElement) {
     loadingElement.classList.remove("hidden");
-    loadingElement.innerHTML = '<div class="flex items-center   mt-40 justify-center "><div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900"></div></div>';
+    loadingElement.innerHTML = '<div class="flex items-center mt-40 justify-center"><div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900"></div></div>';
   }
 }
 
@@ -34,11 +63,9 @@ var mapDash = new ol.Map({
   }),
 });
 
-// Show loading animation when map starts loading
 showLoadingDash();
 
 mapDash.on("rendercomplete", function () {
-  // Hide loading animation when map finishes rendering
   hideLoadingDash();
 });
 
@@ -50,30 +77,19 @@ async function fetchAdminMapData(municity) {
     const response = await fetch(`/get-municity-data/`);
     const data = await response.json();
 
-    // Calculate total incidents across all municipalities first
     totalIncidents = 0;
-    Object.values(data).forEach(municipality => {
+    Object.values(data).forEach((municipality) => {
       if (municipality) {
-        totalIncidents += municipality.dead + 
-                          municipality.alive + 
-                          municipality.scales + 
-                          municipality.illegalTrades;
+        totalIncidents += municipality.dead + municipality.alive + municipality.scales + municipality.illegalTrades;
       }
     });
 
-    municipalityData = data;  // Set the global municipality data
+    municipalityData = data;
 
     if (municipalityData[municity]) {
       const municipality = municipalityData[municity];
-      
-      // Calculate percentage for this municipality
-      const municipalityTotal = municipality.dead + 
-                                municipality.alive + 
-                                municipality.scales + 
-                                municipality.illegalTrades;
+      const municipalityTotal = municipality.dead + municipality.alive + municipality.scales + municipality.illegalTrades;
       const percentage = ((municipalityTotal / totalIncidents) * 100).toFixed(2);
-
-      // Add percentage to the municipality data object
       municipality.percentage = percentage;
     }
   } catch (error) {
@@ -88,15 +104,22 @@ var vectorLayerDash = new ol.layer.Vector({
   }),
   style: function (feature) {
     const regionName = feature.get("Municipalities");
+
+    if (!regionColors.has(regionName)) {
+      const color = colorVariations[colorIndex % colorVariations.length];
+      regionColors.set(regionName, color + "B3");
+      colorIndex++;
+    }
+
     feature.set("data", municipalityData[regionName] || "No data available");
 
     return new ol.style.Style({
       stroke: new ol.style.Stroke({
-        color: "#ff8c00",
+        color: "#1a4314",
         width: 0.5,
       }),
       fill: new ol.style.Fill({
-        color: "rgba(255, 140, 0, 0.3)",
+        color: regionColors.get(regionName) || "#2d5a27B3",
       }),
     });
   },
@@ -114,11 +137,11 @@ mapDash.addOverlay(overlayDash);
 
 var highlightStyleDash = new ol.style.Style({
   stroke: new ol.style.Stroke({
-    color: "#ff0000",
-    width: 0.5,
+    color: "#90ee90",
+    width: 2,
   }),
   fill: new ol.style.Fill({
-    color: "rgba(255, 0, 0, 0.1)",
+    color: "#98fb9880",
   }),
 });
 
@@ -145,22 +168,14 @@ mapDash.on("pointermove", async function (evt) {
       const properties = feature.getProperties();
       const regionName = properties.name || properties.Municipalities || "Unknown Region";
 
-      // Fetch the data and update the overlay after the data is ready
       await fetchAdminMapData(regionName);
 
       const municipalityDataForRegion = municipalityData[regionName] || {};
+      const totalPoachingIncidents = municipalityDataForRegion.dead + municipalityDataForRegion.alive + municipalityDataForRegion.scales + municipalityDataForRegion.illegalTrades;
 
-      // Get the total poaching incidents and percentage for this region
-      const totalPoachingIncidents = municipalityDataForRegion.dead + 
-                                     municipalityDataForRegion.alive + 
-                                     municipalityDataForRegion.scales + 
-                                     municipalityDataForRegion.illegalTrades;
-
-      // Handle the case where there's no data or incidents
       const totalDisplay = totalPoachingIncidents > 0 ? totalPoachingIncidents : "No Poaching Incidents";
       const percentage = municipalityDataForRegion.percentage || 0;
 
-      // Update the overlay with both total incidents and percentage
       overlayDash.getElement().innerHTML = `
         <div class="bg-white p-2 rounded shadow-2xl">
           <p class="font-bold">${regionName}</p><br>

@@ -2141,3 +2141,13 @@ def get_municity_data(request):
     }
 
     return JsonResponse(response_data)
+
+
+def chart_dead_alive(request):
+    return render(request, 'admin/charts/dead_alive.html')
+def chart_scales(request):
+    return render(request, 'admin/charts/scales.html')
+def chart_user_accounts(request):
+    return render(request, 'admin/charts/user_accounts.html')
+def chart_illegal_trade(request):
+    return render(request, 'admin/charts/illegal_trade.html')

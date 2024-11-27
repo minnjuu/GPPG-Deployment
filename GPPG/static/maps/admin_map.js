@@ -1,36 +1,49 @@
 let municipalityDataCache = null;
-
 let isSearching = false;
 let isClickActive = false;
 let highlight;
 
-// Function to initialize data
+// Forest color palette and management
+const forestColors = [
+  "rgba(45, 90, 39, 0.7)", // Dark forest green
+  "rgba(74, 120, 86, 0.7)", // Sage green
+  "rgba(143, 188, 143, 0.7)", // Dark sea green
+  "rgba(34, 139, 34, 0.7)", // Forest green
+  "rgba(85, 107, 47, 0.7)", // Dark olive green
+  "rgba(107, 142, 35, 0.7)", // Olive drab
+  "rgba(128, 128, 0, 0.7)", // Olive
+  "rgba(60, 179, 113, 0.7)", // Medium sea green
+];
+
+const regionColorMap = new Map();
+let colorCounter = 0;
+
+function getRegionColor(regionName) {
+  if (!regionColorMap.has(regionName)) {
+    regionColorMap.set(regionName, forestColors[colorCounter % forestColors.length]);
+    colorCounter++;
+  }
+  return regionColorMap.get(regionName);
+}
+
 async function initializeMunicipalityData() {
   try {
     showLoading();
-    const response = await fetch('/get-municity-data/');
+    const response = await fetch("/get-municity-data/");
     const data = await response.json();
-    
-    // Calculate total incidents once
+
     let totalIncidents = 0;
-    Object.values(data).forEach(municipalityData => {
+    Object.values(data).forEach((municipalityData) => {
       if (municipalityData) {
-        totalIncidents += municipalityData.dead + 
-                         municipalityData.alive + 
-                         municipalityData.scales + 
-                         municipalityData.illegalTrades;
+        totalIncidents += municipalityData.dead + municipalityData.alive + municipalityData.scales + municipalityData.illegalTrades;
       }
     });
 
-    // Pre-process all municipality data with totals and percentages
-    Object.keys(data).forEach(municity => {
+    Object.keys(data).forEach((municity) => {
       const municipalityData = data[municity];
       if (municipalityData) {
-        const municipalityTotal = municipalityData.dead + 
-                                municipalityData.alive + 
-                                municipalityData.scales + 
-                                municipalityData.illegalTrades;
-        
+        const municipalityTotal = municipalityData.dead + municipalityData.alive + municipalityData.scales + municipalityData.illegalTrades;
+
         municipalityData.municipalityTotal = municipalityTotal;
         municipalityData.percentage = ((municipalityTotal / totalIncidents) * 100).toFixed(2);
       }
@@ -47,19 +60,16 @@ async function initializeMunicipalityData() {
   }
 }
 
-// Function to get municipality data from cache
 function getMunicipalityData(municity) {
   return municipalityDataCache?.[municity] || null;
 }
 
-// Modified search function
 async function searchMunicipality(event) {
   event.preventDefault();
   const searchValue = document.getElementById("search-dropdown").value.toLowerCase();
-  
+
   showLoading();
-  
-  // Ensure data is loaded
+
   if (!municipalityDataCache) {
     await initializeMunicipalityData();
   }
@@ -77,19 +87,19 @@ async function searchMunicipality(event) {
     const geometry = foundFeature.getGeometry();
     const centroid = ol.extent.getCenter(geometry.getExtent());
     map.getView().fit(geometry.getExtent(), { duration: 1000, maxZoom: 10 });
-    
+
     featureOverlay.getSource().clear();
     featureOverlay.getSource().addFeature(foundFeature);
 
     const properties = foundFeature.getProperties();
     const regionName = properties.name || properties.Municipalities || "Unknown Region";
-    
+
     const infoElement = createOverlayHTML(regionName);
     overlay.setElement(infoElement);
     overlay.setPosition(centroid);
-    
+
     updateChartForRegion(regionName);
-    
+
     isSearching = true;
   } else {
     showError("Municipality not found. Please try again.");
@@ -97,34 +107,7 @@ async function searchMunicipality(event) {
   hideLoading();
 }
 
-// Function to update chart data
-function updateChartForRegion(regionName) {
-  const municipalityData = getMunicipalityData(regionName);
-  createDoughnutChart(municipalityData);
-  
-  const percentageElement = document.getElementById("percentage-text");
-  const totalElement = document.getElementById("total-text");
-  
-  if (municipalityData) {
-    if (percentageElement) {
-      percentageElement.innerHTML = `<span class='font-bold'>${municipalityData.percentage}%</span> of total incidents`;
-    }
-    if (totalElement) {
-      totalElement.innerHTML = `<span class='font-bold'>${municipalityData.municipalityTotal}</span>`;
-    }
-  } else {
-    if (percentageElement) {
-      percentageElement.innerHTML = "0% of total incidents";
-    }
-    if (totalElement) {
-      totalElement.innerHTML = "0";
-    }
-  }
-}
-
-// Error message display function
 function showError(message) {
-  // Create error message element if it doesn’t exist
   let errorElement = document.getElementById("error-message");
   if (!errorElement) {
     errorElement = document.createElement("div");
@@ -140,8 +123,6 @@ function showError(message) {
   }, 3000);
 }
 
-
-// Function to remove highlight from the municipality
 function removeHighlight() {
   featureOverlay.getSource().clear();
   overlay.setPosition(undefined);
@@ -149,7 +130,6 @@ function removeHighlight() {
   isClickActive = false;
 }
 
-// Function to show loading animation
 function showLoading() {
   const loadingElement = document.getElementById("loading-animation");
   if (loadingElement) {
@@ -159,7 +139,6 @@ function showLoading() {
   }
 }
 
-// Function to hide loading animation
 function hideLoading() {
   const loadingElement = document.getElementById("loading-animation");
   if (loadingElement) {
@@ -167,67 +146,14 @@ function hideLoading() {
     loadingElement.innerHTML = "";
   }
 }
-let municipalityData = {};
-// Function to fetch the incident data for a specific municipality
-let totalIncidents = 0;
 
-function getMunicipalityData(municity) {
-  return municipalityDataCache?.[municity] || null;
-}
-
-// Modified search function
-async function searchMunicipality(event) {
-  event.preventDefault();
-  const searchValue = document.getElementById("search-dropdown").value.toLowerCase();
-  
-  showLoading();
-  
-  // Ensure data is loaded
-  if (!municipalityDataCache) {
-    await initializeMunicipalityData();
-  }
-
-  let foundFeature = null;
-  vectorLayer.getSource().forEachFeature(function (feature) {
-    const properties = feature.getProperties();
-    const name = properties.name || properties.Municipalities || "";
-    if (name.toLowerCase() === searchValue) {
-      foundFeature = feature;
-    }
-  });
-
-  if (foundFeature) {
-    const geometry = foundFeature.getGeometry();
-    const centroid = ol.extent.getCenter(geometry.getExtent());
-    map.getView().fit(geometry.getExtent(), { duration: 1000, maxZoom: 10 });
-    
-    featureOverlay.getSource().clear();
-    featureOverlay.getSource().addFeature(foundFeature);
-
-    const properties = foundFeature.getProperties();
-    const regionName = properties.name || properties.Municipalities || "Unknown Region";
-    
-    const infoElement = createOverlayHTML(regionName);
-    overlay.setElement(infoElement);
-    overlay.setPosition(centroid);
-    
-    updateChartForRegion(regionName);
-    
-    isSearching = true;
-  } else {
-    showError("Municipality not found. Please try again.");
-  }
-  hideLoading();
-}
-
-// Function to update chart data
 function updateChartForRegion(regionName) {
   const municipalityData = getMunicipalityData(regionName);
   createDoughnutChart(municipalityData);
-  
+
   const percentageElement = document.getElementById("percentage-text");
   const totalElement = document.getElementById("total-text");
-  
+
   if (municipalityData) {
     if (percentageElement) {
       percentageElement.innerHTML = `<span class='font-bold'>${municipalityData.percentage}%</span> of total incidents`;
@@ -245,8 +171,7 @@ function updateChartForRegion(regionName) {
   }
 }
 
-// Update the overlay HTML creation in both click and pointermove events
-function createOverlayHTML(regionName, coordinate) {
+function createOverlayHTML(regionName) {
   const infoElement = document.createElement("div");
   infoElement.innerHTML = `
     <div class="bg-white p-5 rounded-2xl relative shadow-2xl">
@@ -255,7 +180,7 @@ function createOverlayHTML(regionName, coordinate) {
         <p class="font-bold">${regionName}</p>
         <div class="text-sm mt-2">
           <p class="font-semibold">Poaching Incidents Recorded:</p>
-          <p class="text-2xl font-bold text-orange-600" id="total-text">Loading...</p>
+          <p class="text-2xl font-bold text-green-700" id="total-text">Loading...</p>
         </div>
         <p class="text-sm text-gray-600" id="percentage-text">Loading...</p>
       </div>
@@ -265,30 +190,26 @@ function createOverlayHTML(regionName, coordinate) {
   return infoElement;
 }
 
-let chartInstance; 
+let chartInstance;
 
 function createDoughnutChart(municipalityData) {
   const ctx = document.getElementById("donutchart").getContext("2d");
   const percentageElement = document.getElementById("percentage-text");
   const totalElement = document.getElementById("total-text");
 
-  // Clear the canvas before rendering new content
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-  // Check if municipalityData is null or empty
-  if (!municipalityData || Object.values(municipalityData).every(value => value === 0 || typeof value === 'string')) {
-    // Display "No recorded incidents" message
+  if (!municipalityData || Object.values(municipalityData).every((value) => value === 0 || typeof value === "string")) {
     ctx.font = "bold 15px Roboto";
     ctx.fillStyle = "gray";
     ctx.textAlign = "center";
     const message = "No poaching incidents recorded\nin this area";
     const lines = message.split("\n");
 
-    // Adjust y position for multi-line text
     lines.forEach((line, index) => {
       ctx.fillText(line, ctx.canvas.width / 2, ctx.canvas.height / 2 - 10 + index * 20);
     });
-    
+
     if (percentageElement) {
       percentageElement.innerHTML = "0% of total incidents";
       totalElement.innerHTML = "0";
@@ -296,22 +217,18 @@ function createDoughnutChart(municipalityData) {
     return;
   }
 
-  // Update percentage text
   if (percentageElement) {
     percentageElement.innerHTML = `<span class='font-bold'>${municipalityData.percentage}%</span> of total incidents`;
     totalElement.innerHTML = `<span class='font-bold'>${municipalityData.municipalityTotal}</span>`;
   }
 
-  // Prepare the data
   const dataValues = [municipalityData.dead, municipalityData.alive, municipalityData.scales, municipalityData.illegalTrades];
   const total = dataValues.reduce((sum, value) => sum + value, 0);
 
-  // If a chart instance already exists, destroy it before creating a new one
   if (chartInstance) {
     chartInstance.destroy();
   }
 
-  // Create a new chart instance
   chartInstance = new Chart(ctx, {
     type: "doughnut",
     data: {
@@ -319,7 +236,12 @@ function createDoughnutChart(municipalityData) {
       datasets: [
         {
           data: dataValues,
-          backgroundColor: ["#ffa500", "#008000", "#8b4513", "#a52a2a"],
+          backgroundColor: [
+            "rgba(34, 139, 34, 0.8)", // Forest green
+            "rgba(85, 107, 47, 0.8)", // Dark olive green
+            "rgba(60, 179, 113, 0.8)", // Medium sea green
+            "rgba(143, 188, 143, 0.8)", // Dark sea green
+          ],
         },
       ],
     },
@@ -350,7 +272,7 @@ function createDoughnutChart(municipalityData) {
         datalabels: {
           color: "white",
           formatter: (value) => `${value}`,
-          font: { weight: "semibold"},
+          font: { weight: "semibold" },
           align: "center",
           anchor: "center",
         },
@@ -360,18 +282,14 @@ function createDoughnutChart(municipalityData) {
   });
 }
 
-
-
-// Create a map instance
 var map = new ol.Map({
   target: "map",
   layers: [],
   view: new ol.View({
     center: ol.proj.fromLonLat([118.7384, 9.8349]),
-    zoom: 1,
+    zoom: 7.5,
     minZoom: 2,
     maxZoom: 18,
-    extent: ol.proj.transformExtent([114, 7.5, 124.5, 25], "EPSG:4326", "EPSG:3857"),
   }),
 });
 
@@ -381,7 +299,6 @@ map.on("rendercomplete", function () {
   hideLoading();
 });
 
-// Define a vector layer to load GeoJSON
 var vectorLayer = new ol.layer.Vector({
   source: new ol.source.Vector({
     url: "https://gppg-bucket.s3.ap-southeast-2.amazonaws.com/static/maps/map.geojson",
@@ -393,11 +310,11 @@ var vectorLayer = new ol.layer.Vector({
 
     return new ol.style.Style({
       stroke: new ol.style.Stroke({
-        color: "#ff8c00",
+        color: "#1a4314",
         width: 0.5,
       }),
       fill: new ol.style.Fill({
-        color: "rgba(255, 140, 0, 0.3)",
+        color: getRegionColor(regionName),
       }),
     });
   },
@@ -405,7 +322,6 @@ var vectorLayer = new ol.layer.Vector({
 
 map.addLayer(vectorLayer);
 
-// Overlay for displaying information about the municipality
 var overlay = new ol.Overlay({
   element: document.createElement("div"),
   positioning: "bottom-center",
@@ -414,25 +330,22 @@ var overlay = new ol.Overlay({
 });
 map.addOverlay(overlay);
 
-// Highlight style for hovered municipality
 var highlightStyle = new ol.style.Style({
   stroke: new ol.style.Stroke({
-    color: "#ff0000",
-    width: 0.5,
+    color: "#90EE90",
+    width: 2,
   }),
   fill: new ol.style.Fill({
-    color: "rgba(255, 0, 0, 0.1)",
+    color: "rgba(144, 238, 144, 0.3)",
   }),
 });
 
-// Feature overlay for highlighting municipalities
 var featureOverlay = new ol.layer.Vector({
   source: new ol.source.Vector(),
   map: map,
   style: highlightStyle,
 });
 
-// Map pointer move event to highlight features
 map.on("click", function (evt) {
   var feature = map.forEachFeatureAtPixel(evt.pixel, function (feature) {
     return feature;
@@ -452,14 +365,13 @@ map.on("click", function (evt) {
     const infoElement = createOverlayHTML(regionName);
     overlay.setElement(infoElement);
     overlay.setPosition(centroid);
-    
+
     updateChartForRegion(regionName);
   } else {
     removeOverlay();
   }
 });
 
-// Modified pointermove event
 map.on("pointermove", function (evt) {
   if (isSearching || isClickActive) return;
 
@@ -479,7 +391,7 @@ map.on("pointermove", function (evt) {
       const infoElement = createOverlayHTML(regionName);
       overlay.setElement(infoElement);
       overlay.setPosition(evt.coordinate);
-      
+
       updateChartForRegion(regionName);
     } else {
       overlay.setPosition(undefined);
@@ -488,13 +400,11 @@ map.on("pointermove", function (evt) {
   }
 });
 
-// Initialize data when the map loads
-vectorLayer.getSource().once('change', function(e) {
-  if (vectorLayer.getSource().getState() === 'ready') {
+vectorLayer.getSource().once("change", function (e) {
+  if (vectorLayer.getSource().getState() === "ready") {
     initializeMunicipalityData();
   }
 });
-
 
 function removeOverlay() {
   overlay.setPosition(undefined);

@@ -1,0 +1,214 @@
+{% extends "admin/charts.html" %} {% load static %} {% block title %}Charts{% endblock title %}
+
+<!-- Charts Content -->
+{% block title_content %} Charts - Scales {% endblock title_content %} {% block content %}
+<div class="w-full h-auto bg-white rounded-2xl shadow-lg p-5">
+  <div class="flex justify-between items-center">
+    <a
+      href="{% url 'admin_charts' %}"
+      class="btn-animate py-2 px-5 inline-flex items-center gap-x-2 text-sm rounded-lg border bg-green-800 hover:bg-green-900 text-white shadow-sm hover:shadow-md transition-all duration-300">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="icon-animate w-5 h-5 text-white transition-transform duration-300 transform group-hover:-translate-x-1"
+        fill="currentColor"
+        stroke="currentColor"
+        viewBox="0 0 26 26">
+        <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" />
+      </svg>
+      Back
+    </a>
+
+    <a
+      href="{% url 'admin_charts' %}"
+      class="p-2 hover:bg-gray-100 rounded-full transition-all duration-300">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-5 h-5 text-gray-600 hover:text-gray-800 transition-colors duration-300"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 26 26">
+        <polyline points="15 3 21 3 21 9"></polyline>
+        <polyline points="9 21 3 21 3 15"></polyline>
+        <line
+          x1="21"
+          y1="3"
+          x2="14"
+          y2="10"></line>
+        <line
+          x1="3"
+          y1="21"
+          x2="10"
+          y2="14"></line>
+      </svg>
+    </a>
+  </div>
+  <div class="flex mt-5 items-center justify-between">
+    <div class="flex items-center gap-2">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-5 h-5 text-black"
+        fill="currentColor"
+        stroke="currentColor"
+        viewBox="0 0 24 24">
+        <path d="M3,22V8H7V22H3M10,22V2H14V22H10M17,22V14H21V22H17Z" />
+      </svg>
+
+      <p class="font-bold font-['Bahnschrift'] text-xl">
+        Found Scales /
+        <span>
+          <select
+            id="FoundScales_yearSelect"
+            class="w-auto h-fit text-gray-500 -ml-2.5 border-0 bg-transparent rounded focus:outline-none focus:ring-0 cursor-pointer"></select>
+        </span>
+      </p>
+    </div>
+  </div>
+  <div class="mt-4 h-[750px]">
+    <canvas
+      id="FoundScales_verticalBarChart"
+      class="w-full mt-1"></canvas>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script src="{% static 'js/chart_3.7.1.js' %}"></script>
+<script src="{% static 'js/datatables_chartjs.js' %}"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const ctx = document.getElementById("FoundScales_verticalBarChart").getContext("2d");
+    const labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    let filteredData = {};
+
+    const chartConfig = {
+      type: "bar",
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: "Found Scales",
+            data: Array(12).fill(0),
+            backgroundColor: "rgb(255, 165, 0)",
+            borderRadius: 10,
+            barThickness: "flex",
+            maxBarThickness: 40,
+            animation: {
+              duration: 1000,
+              easing: "easeInOutQuart",
+            },
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+          intersect: false,
+          mode: "index",
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              display: true,
+              color: "rgba(0,0,0,0.1)",
+              drawBorder: false,
+            },
+            ticks: {
+              font: {
+                family: "'Bahnschrift', sans-serif",
+                size: 12,
+              },
+              color: "rgba(0,0,0,0.7)",
+            },
+          },
+          x: {
+            grid: {
+              display: false,
+            },
+            ticks: {
+              font: {
+                family: "'Bahnschrift', sans-serif",
+                size: 12,
+              },
+              color: "rgba(0,0,0,0.7)",
+            },
+          },
+        },
+        plugins: {
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            backgroundColor: "rgba(0,0,0,0.8)",
+            titleFont: {
+              family: "'Bahnschrift', sans-serif",
+              size: 13,
+            },
+            bodyFont: {
+              family: "'Bahnschrift', sans-serif",
+              size: 12,
+            },
+            padding: 12,
+            cornerRadius: 8,
+            callbacks: {
+              label: function (context) {
+                return `Count: ${context.parsed.y}`;
+              },
+            },
+          },
+        },
+      },
+    };
+
+    const chart = new Chart(ctx, chartConfig);
+
+    async function fetchData() {
+      try {
+        const response = await fetch("/get-chart-data?status=Scales&period=overall");
+        const data = await response.json();
+
+        if (!data.scales_trend?.yearly) {
+          throw new Error("Invalid data format");
+        }
+
+        const yearSelect = document.getElementById("FoundScales_yearSelect");
+        yearSelect.innerHTML = "";
+
+        const years = Object.keys(data.scales_trend.yearly).sort();
+        years.forEach((year) => {
+          filteredData[year] = data.scales_trend.yearly[year];
+
+          const option = document.createElement("option");
+          option.value = year;
+          option.textContent = year;
+          yearSelect.appendChild(option);
+        });
+
+        if (years.length > 0) {
+          const mostRecentYear = Math.max(...years.map(Number));
+          yearSelect.value = mostRecentYear;
+          updateChart(mostRecentYear);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        updateChart(null);
+      }
+    }
+
+    function updateChart(year) {
+      const data = year ? filteredData[year] || Array(12).fill(0) : Array(12).fill(0);
+
+      chart.data.datasets[0].data = data;
+      chart.data.datasets[0].label = year ? `${year} Data` : "No Data Available";
+
+      chart.update("active");
+    }
+
+    document.getElementById("FoundScales_yearSelect").addEventListener("change", function () {
+      updateChart(this.value);
+    });
+
+    fetchData();
+  });
+</script>
+
+{% endblock extra_js %}

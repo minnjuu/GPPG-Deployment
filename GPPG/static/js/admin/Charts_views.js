@@ -239,140 +239,145 @@ const WebsiteViews_pieChart = new Chart(WebsiteViews_ctx, {
 
 //############################################################################################################
 // Line Chart Code for Illegal Trades
-const IllegalTradeChart_ctx = document.getElementById("IllegalTrade_Chart").getContext("2d");
+document.addEventListener("DOMContentLoaded", function () {
+  const ctx = document.getElementById("IllegalTrade_Chart").getContext("2d");
+  const yearSelect = document.getElementById("yearSelect");
 
-const IllegalTrade_labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-const yearSelect = document.getElementById("yearSelect");
+  let gradient = ctx.createLinearGradient(0, 0, 0, 400);
+  gradient.addColorStop(0, "rgba(255, 159, 64, 0.6)");
+  gradient.addColorStop(1, "rgba(75, 192, 192, 0)");
 
-// Initialize the chart
-let IllegalTradeGradient = IllegalTradeChart_ctx.createLinearGradient(0, 0, 0, 400);
-IllegalTradeGradient.addColorStop(0, "rgba(255, 159, 64, 0.6)");
-IllegalTradeGradient.addColorStop(1, "rgba(75, 192, 192, 0)");
-
-const IllegalTradeChartConfig = {
-  type: "line",
-  data: {
-    labels: IllegalTrade_labels,
-    datasets: [
-      {
-        label: "", // Will be set dynamically
-        data: [], // Will be set dynamically
-        fill: true,
-        backgroundColor: IllegalTradeGradient,
-        borderColor: "rgba(255, 159, 64, 1)",
-        tension: 0.4,
-        pointRadius: 5,
-        pointBackgroundColor: "rgba(255, 159, 64, 0.6)",
-      },
-    ],
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      y: {
-        beginAtZero: true,
-        ticks: {
-          color: "black",
+  const chartConfig = {
+    type: "line",
+    data: {
+      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+      datasets: [
+        {
+          label: "",
+          data: [],
+          fill: true,
+          backgroundColor: gradient,
+          borderColor: "rgba(255, 159, 64, 1)",
+          tension: 0.4,
+          pointRadius: 4,
+          pointBackgroundColor: "rgba(255, 159, 64, 0.8)",
+          pointBorderColor: "rgba(255, 159, 64, 1)",
+          pointHoverRadius: 8,
+          pointHoverBackgroundColor: "rgba(255, 159, 64, 1)",
+          borderWidth: 3,
         },
-        grid: {
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        intersect: false,
+        mode: "index",
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: {
+            display: false,
+            color: "rgba(0,0,0,0.1)",
+            drawBorder: false,
+          },
+          ticks: {
+            color: "rgba(0,0,0,0.7)",
+            font: {
+              size: 12,
+              family: "'Bahnschrift', sans-serif",
+            },
+            padding: 10,
+          },
+        },
+        x: {
+          grid: {
+            display: false,
+          },
+          ticks: {
+            color: "rgba(0,0,0,0.7)",
+            font: {
+              size: 12,
+              family: "'Bahnschrift', sans-serif",
+            },
+            padding: 5,
+          },
+        },
+      },
+      plugins: {
+        legend: {
           display: false,
         },
-      },
-      x: {
-        ticks: {
-          color: "black",
-        },
-        grid: {
-          display: false,
+        tooltip: {
+          backgroundColor: "rgba(0,0,0,0.8)",
+          titleFont: {
+            size: 13,
+            family: "'Bahnschrift', sans-serif",
+          },
+          bodyFont: {
+            size: 12,
+            family: "'Bahnschrift', sans-serif",
+          },
+          padding: 12,
+          cornerRadius: 8,
         },
       },
     },
-    plugins: {
-      legend: {
-        display: false,
-      },
-    },
-  },
-};
+  };
 
-let IllegalTradeChart = new Chart(IllegalTradeChart_ctx, IllegalTradeChartConfig);
+  let chart = new Chart(ctx, chartConfig);
 
-function fetchDataIllegalTrade() {
-  fetch(`/get-chart-data?status=Illegal Trade&period=overall`)
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("Fetched Data:", data);
+  // Fetch and update data functions
+  async function fetchData() {
+    try {
+      const response = await fetch("/get-chart-data?status=Illegal Trade&period=overall");
+      const data = await response.json();
 
-      const trends = data["illegal trade_trend"];
-      if (!trends || !trends.yearly) {
-        console.error("Invalid data format:", data);
-        return;
+      if (!data["illegal trade_trend"]?.yearly) {
+        throw new Error("Invalid data format");
       }
 
-      // Populate year dropdown
-      const years = Object.keys(trends.yearly).sort(); // Sort years to get the latest easily
-      yearSelect.innerHTML = ""; // Clear previous options
-      years.forEach((year) => {
-        const option = document.createElement("option");
-        option.value = year;
-        option.textContent = year;
-        yearSelect.appendChild(option);
-      });
+      // Update year select options
+      const years = Object.keys(data["illegal trade_trend"].yearly).sort();
+      yearSelect.innerHTML = years.map((year) => `<option value="${year}">${year}</option>`).join("");
 
-      // Set the default to the most recent year and update the chart
-      const mostRecentYear = Math.max(...years.map(Number)); // Find the most recent year
-      yearSelect.value = mostRecentYear; // Set the dropdown to the most recent year
-      updateChartIllegalTrade(mostRecentYear, trends.yearly[mostRecentYear]);
-    })
-    .catch((error) => {
+      // Set most recent year
+      const mostRecentYear = Math.max(...years.map(Number));
+      yearSelect.value = mostRecentYear;
+
+      updateChart(mostRecentYear, data["illegal trade_trend"].yearly[mostRecentYear]);
+    } catch (error) {
       console.error("Error fetching data:", error);
-    });
-}
-
-
-function updateChartIllegalTrade(year, chartData) {
-  if (!chartData || !Array.isArray(chartData)) {
-    console.error("Invalid data for the selected year:", chartData);
-    return;
+    }
   }
 
+  function updateChart(year, data) {
+    if (!Array.isArray(data)) return;
 
-  IllegalTradeChart.data.datasets[0].data = chartData;
-  IllegalTradeChart.data.datasets[0].label = `Illegal Trade - ${year}`;
-  IllegalTradeChart.update();
-}
+    chart.data.datasets[0].data = data;
+    chart.data.datasets[0].label = `Illegal Trade - ${year}`;
+    chart.update("show");
+  }
 
-// Handle year selection
-yearSelect.addEventListener("change", function () {
-  const selectedYear = this.value;
+  // Event listeners
+  yearSelect.addEventListener("change", async function () {
+    try {
+      const response = await fetch(`/get-chart-data?status=Illegal Trade&period=${this.value}`);
+      const data = await response.json();
 
-  fetch(`/get-chart-data?status=Illegal Trade&period=${selectedYear}`)
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("Data for Selected Year:", data);
-
-      // Ensure the data structure is valid
-      const trends = data["illegal trade_trend"];
-      if (trends && trends.yearly && selectedYear in trends.yearly) {
-        updateChartIllegalTrade(selectedYear, trends.yearly[selectedYear]);
-      } else {
-        console.error(
-          `No data found for the selected year '${selectedYear}' or invalid structure:`,
-          trends
-        );
-        alert(`No data available for the selected year: ${selectedYear}`);
+      if (data["illegal trade_trend"]?.yearly?.[this.value]) {
+        updateChart(this.value, data["illegal trade_trend"].yearly[this.value]);
       }
-    })
-    .catch((error) => {
-      console.error("Error fetching data for the selected year:", error);
-    });
+    } catch (error) {
+      console.error("Error updating chart:", error);
+    }
+  });
+
+  // Initialize
+  fetchData();
 });
-
-
-// Initialize the fetch on page load
-fetchDataIllegalTrade();
-
 
 //############################################################################################################
 // Bar two Chart Code for Dead and alive
@@ -436,24 +441,23 @@ let DeadAlive_currentChart = new Chart(DeadAliveChartCtx, {
   },
 });
 
-// Store the trend data globally
 let globalAliveTrend = {};
 let globalDeadTrend = {};
 
 // Function to get all unique years from the data
 function getUniqueYears(data) {
   const years = new Set();
-  
+
   // Add years from alive trend
   if (data.alive_trend?.yearly) {
-    Object.keys(data.alive_trend.yearly).forEach(year => years.add(year));
+    Object.keys(data.alive_trend.yearly).forEach((year) => years.add(year));
   }
-  
+
   // Add years from dead trend
   if (data.dead_trend?.yearly) {
-    Object.keys(data.dead_trend.yearly).forEach(year => years.add(year));
+    Object.keys(data.dead_trend.yearly).forEach((year) => years.add(year));
   }
-  
+
   return Array.from(years).sort();
 }
 
@@ -467,15 +471,15 @@ function fetchDataDeadAlive() {
       // Store the trend data globally
       globalAliveTrend = data.alive_trend?.yearly || {};
       globalDeadTrend = data.dead_trend?.yearly || {};
-      
+
       // Get all unique years
       const availableYears = getUniqueYears(data);
 
       // Populate the year dropdown
       const yearSelect = document.getElementById("DeadAlive_yearSelector");
       // Clear existing options first
-      yearSelect.innerHTML = '';
-      
+      yearSelect.innerHTML = "";
+
       availableYears.forEach((year) => {
         const option = document.createElement("option");
         option.value = year;
@@ -499,7 +503,7 @@ function fetchDataDeadAlive() {
 function updateChartData(selectedYear) {
   // Initialize arrays with zeros
   const emptyData = new Array(12).fill(0);
-  
+
   // Get data for the selected year or use zeros if not available
   const aliveData = globalAliveTrend[selectedYear] || emptyData;
   const deadData = globalDeadTrend[selectedYear] || emptyData;
@@ -537,13 +541,12 @@ function FoundScales_filterData(data, labels) {
   };
 }
 
-
 const chartData = {
-  labels: FoundScales_labels, 
+  labels: FoundScales_labels,
   datasets: [
     {
       label: "Data",
-      data: Array(12).fill(0), 
+      data: Array(12).fill(0),
       backgroundColor: "rgb(255, 165, 0)",
       borderRadius: 10,
     },
@@ -635,7 +638,9 @@ async function fetchAndProcessData() {
 
 // Function to update chart data based on the selected year
 function updateChartScales(selectedYear) {
-  const selectedData = selectedYear ? FoundScales_filteredData[selectedYear] || { filteredData: Array(12).fill(0), filteredLabels: FoundScales_labels } : { filteredData: Array(12).fill(0), filteredLabels: FoundScales_labels };
+  const selectedData = selectedYear
+    ? FoundScales_filteredData[selectedYear] || { filteredData: Array(12).fill(0), filteredLabels: FoundScales_labels }
+    : { filteredData: Array(12).fill(0), filteredLabels: FoundScales_labels };
 
   // Always update with full 12-month labels and data
   verticalBarChart.data.labels = FoundScales_labels;
@@ -652,4 +657,3 @@ document.getElementById("FoundScales_yearSelect").addEventListener("change", fun
 
 // Initial data fetch
 document.addEventListener("DOMContentLoaded", fetchAndProcessData);
-

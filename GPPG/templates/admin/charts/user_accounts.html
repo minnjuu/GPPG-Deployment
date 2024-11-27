@@ -1,0 +1,161 @@
+{% extends "admin/charts.html" %} {% load static %} {% block title %}Charts{% endblock title %}
+
+<!-- Charts Content -->
+{% block title_content %} Charts - User Accounts {% endblock title_content %} {% block content %}
+<div class="w-full h-auto bg-white rounded-2xl shadow-lg p-5">
+  <div class="flex justify-between items-center">
+    <a
+      href="{% url 'admin_charts' %}"
+      class="btn-animate py-2 px-5 inline-flex items-center gap-x-2 text-sm rounded-lg border bg-green-800 hover:bg-green-900 text-white shadow-sm hover:shadow-md transition-all duration-300">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="icon-animate w-5 h-5 text-white transition-transform duration-300 transform group-hover:-translate-x-1"
+        fill="currentColor"
+        stroke="currentColor"
+        viewBox="0 0 26 26">
+        <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" />
+      </svg>
+      Back
+    </a>
+
+    <a
+      href="{% url 'admin_charts' %}"
+      class="p-2 hover:bg-gray-100 rounded-full transition-all duration-300">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-5 h-5 text-gray-600 hover:text-gray-800 transition-colors duration-300"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 26 26">
+        <polyline points="15 3 21 3 21 9"></polyline>
+        <polyline points="9 21 3 21 3 15"></polyline>
+        <line
+          x1="21"
+          y1="3"
+          x2="14"
+          y2="10"></line>
+        <line
+          x1="3"
+          y1="21"
+          x2="10"
+          y2="14"></line>
+      </svg>
+    </a>
+  </div>
+
+  <div class="flex w-full justify-between items-center mt-4">
+    <div class="flex items-center gap-2">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-6 h-6 text-green-800"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+      </svg>
+      <h2 class="text-lg font-bold font-['Bahnschrift']">User Registered Accounts</h2>
+    </div>
+  </div>
+
+  <div class="flex justify-center items-center w-full h-full mt-4">
+    <canvas id="yearPieChart"></canvas>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script src="{% static 'js/chart_3.7.1.js' %}"></script>
+<script src="{% static 'js/datatables_chartjs.js' %}"></script>
+
+<script>
+  const chartData = {
+    thisYear: {
+      labels: ["Jan", "Feb", "Mar", "Apr", "Jun", "Jul", "Sep", "Nov", "Dec"],
+      data: [50, 60, 80, 10, null, 120, 140, 160, 180],
+    },
+    lastYear: {
+      labels: ["Jan", "Mar", "Apr", "May", "Jul", "Sep", "Oct", "Dec"],
+      data: [40, 70, 100, 110, null, 130, 150, 170],
+    },
+  };
+
+  const sumData = (data) => data.reduce((sum, val) => sum + (val !== null ? val : 0), 0);
+  const thisYearSum = sumData(chartData.thisYear.data);
+  const lastYearSum = sumData(chartData.lastYear.data);
+  const total = thisYearSum + lastYearSum;
+
+  const ctx = document.getElementById("yearPieChart").getContext("2d");
+  new Chart(ctx, {
+    type: "pie",
+    data: {
+      labels: ["This Year", "Last Year"],
+      datasets: [
+        {
+          data: [thisYearSum, lastYearSum],
+          backgroundColor: ["rgba(63,7,3)", "rgba(255, 159, 64, 1)"],
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: {
+        animateRotate: true,
+        animateScale: true,
+        duration: 1000,
+        easing: "easeInOutQuart",
+      },
+      plugins: {
+        legend: {
+          position: "top",
+          labels: {
+            usePointStyle: true,
+            pointStyle: "circle",
+            padding: 20,
+            font: {
+              family: "'Bahnschrift', sans-serif",
+              size: 12,
+            },
+          },
+        },
+        tooltip: {
+          backgroundColor: "rgba(0,0,0,0.8)",
+          titleFont: {
+            family: "'Bahnschrift', sans-serif",
+            size: 13,
+          },
+          bodyFont: {
+            family: "'Bahnschrift', sans-serif",
+            size: 12,
+          },
+          padding: 12,
+          cornerRadius: 8,
+          callbacks: {
+            label: function (context) {
+              const value = context.raw;
+              const percentage = ((value / total) * 100).toFixed(1);
+              return `${context.label}: ${value} (${percentage}%)`;
+            },
+          },
+        },
+        datalabels: {
+          color: "#fff",
+          formatter: function (value, context) {
+            const total = thisYearSum + lastYearSum;
+            const percentage = ((value / total) * 100).toFixed(2);
+            return value + " (" + percentage + "%)";
+          },
+          font: {
+            weight: "bold",
+            size: 12,
+          },
+        },
+      },
+    },
+    plugins: [ChartDataLabels],
+  });
+</script>
+
+{% endblock extra_js %}
