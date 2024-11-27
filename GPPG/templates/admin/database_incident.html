@@ -790,4 +790,10 @@
 <script src="{% static 'js/admin/data.js' %}"></script>
 <script src="{% static 'js/admin/jquery.min.js' %}"></script>
 <script src="{% static 'js/admin/dataTables.min.js' %}"></script>
+<script>
+  document.getElementById("exportButton").onclick = function () {
+    let selectedStatus = document.querySelector('input[name="status"]:checked')?.value || "";
+    window.location.href = `/export-incidents/?status=${selectedStatus}`;
+  };
+</script>
 {% endblock extra_js %}

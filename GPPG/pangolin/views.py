@@ -7,6 +7,7 @@ from .models import *
 from django.db import transaction
 from botocore.exceptions import ClientError
 import boto3
+import csv
 from datetime import datetime
 from django.http import JsonResponse, HttpResponse
 from django.template.response import TemplateResponse
@@ -2154,3 +2155,32 @@ def chart_user_accounts(request):
     return render(request, 'admin/charts/user_accounts.html')
 def chart_illegal_trade(request):
     return render(request, 'admin/charts/illegal_trade.html')
+
+def export_incidents_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="pangolins_data.csv"'
+    incidents = Incident.objects.all()
+    selected_status = request.GET.get('status')
+    if selected_status:
+        incidents = incidents.filter(status=selected_status)
+    writer = csv.writer(response)
+    writer.writerow([
+        'Municipality/City', 'Status', 'Date', 'Life History',
+        'Body Weight', 'Sex', 'OBL (Rolled)', 'OBL (Stretched)',
+        'Ticks', 'Feces', 'Other Remarks'
+    ])
+    for incident in incidents:
+        writer.writerow([
+            incident.municity,
+            incident.status,
+            incident.date_reported,
+            incident.life_history,
+            incident.weight,
+            incident.sex,
+            incident.obl_rolled,
+            incident.obl_stretched,
+            incident.ticks,
+            incident.feces,
+            incident.description
+        ])
+    return response

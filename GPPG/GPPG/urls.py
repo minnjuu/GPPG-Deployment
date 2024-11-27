@@ -118,6 +118,8 @@ urlpatterns = [
     path('password-reset/', PasswordResetView.as_view(), name='password_reset'),
     path('reset/<uidb64>/<token>/', PasswordResetConfirmView.as_view(),
          name='password_reset_confirm'),
+    path('export-incidents/', views.export_incidents_csv,
+         name='export_incidents_csv'),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
